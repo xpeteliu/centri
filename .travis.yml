@@ -1,9 +1,25 @@
 language: node_js
 node_js:
   - "14"
+cache:
+  directories:
+    - node_modules
 
-script:
-  - cd client
-  - npm install
-  - npm run lint
-  - npm run build
+jobs:
+  include:
+    - stage: Lint, Test, Build
+      name: Lint
+      script:
+        - cd client
+        - npm install
+        - npm run lint
+    - name: Test
+      script:
+        - cd client
+        - npm install
+        - npm test --coverage
+    - name: Build
+      script:
+        - cd client
+        - npm install
+        - npm run build
