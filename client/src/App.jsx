@@ -4,7 +4,7 @@ import {
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import { GroupListItem } from './Groups';
+import { GroupListItem } from './features/Groups';
 
 function App() {
   return (
