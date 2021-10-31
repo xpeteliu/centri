@@ -37,6 +37,15 @@
                     }
                 ]
             }
+        },
+        {
+            "files": [
+                "*.js",
+                "*.jsx"
+            ],
+            "rules": {
+                "linebreak-style": 0
+            }
         }
     ]
 }
