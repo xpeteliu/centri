@@ -1,60 +1,57 @@
 import React from 'react';
-import logo from './logo.svg';
+import {
+  Button, Container, Row, Col, Navbar, Nav, Image, Stack,
+} from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import { GroupListItem } from './Groups';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit
-          {' '}
-          <code>src/App.js</code>
-          {' '}
-          and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,
-          <span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
-    </div>
+    <Container className="App">
+      <HeaderBar />
+      <Stack direction="vertical" gap={5} className="mainContent">
+        <Row className="groupButtons">
+          <Col xs="4">
+            <Button variant="secondary">Private Groups</Button>
+          </Col>
+          <Col xs="4">
+            <Button variant="secondary">Public Groups</Button>
+          </Col>
+          <Col xs="4">
+            <Button variant="primary">Create Group</Button>
+          </Col>
+        </Row>
+        <Row className="groupList">
+          <Stack direction="vertical" gap={5}>
+            <GroupListItem name="Group Name" />
+            <GroupListItem name="Group Name 2" />
+            <GroupListItem name="Group Name 3" />
+          </Stack>
+        </Row>
+      </Stack>
+    </Container>
+  );
+}
+
+function HeaderBar() {
+  return (
+    <Navbar bg="light" expand="md" className="headerBar">
+      <Container>
+        <Navbar.Brand href="/">Logo</Navbar.Brand>
+        <Navbar.Toggle />
+        <Navbar.Collapse>
+          <Nav className="me-auto">
+            <Nav.Link href="/groups">Groups</Nav.Link>
+            <Nav.Link href="/messages">Messages</Nav.Link>
+          </Nav>
+          <Stack direction="horizontal" gap={2}>
+            <Image src="./photo.jpg" width="30" height="30" roundedCircle />
+            <Navbar.Text>Justin Dong</Navbar.Text>
+          </Stack>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
   );
 }
 
