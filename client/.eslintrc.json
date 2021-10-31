@@ -18,16 +18,34 @@
     "plugins": [
         "react"
     ],
-    "rules": {
-        "no-param-reassign": [
-            "error",
-            {
-                "props": true,
-                "ignorePropertyModificationsFor": [
-                    "state",
-                    "draft"
+    // Piazza @ 253: Disable ESLint "no-param-reassign" rule for Redux
+    "overrides": [
+        {
+            "files": [
+                "*Slice.js",
+                "*Slice.jsx"
+            ],
+            "rules": {
+                "no-param-reassign": [
+                    "error",
+                    {
+                        "props": true,
+                        "ignorePropertyModificationsFor": [
+                            "state",
+                            "draft"
+                        ]
+                    }
                 ]
             }
-        ]
-    }
+        },
+        {
+            "files": [
+                "*.js",
+                "*.jsx"
+            ],
+            "rules": {
+                "linebreak-style": 0
+            }
+        }
+    ]
 }
