@@ -5,7 +5,7 @@ import '../../App.css';
 export default function SignInPage() {
   return (
     <div className="text-center m-5-auto">
-      <h2>Sign in to us</h2>
+      <h2>Sign In</h2>
       <form action="/home">
         <p>
           <>{ /* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }</>
