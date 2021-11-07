@@ -1,13 +1,11 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-// import { Provider } from 'react-redux';
-// import store from './features/common/store';
+import ReactDOM from 'react-dom';
 import App from './App';
 
-test('renders create group button', () => {
-  render(<App />);
-  const button = screen.getByText('Create Group');
-  expect(button).toBeInTheDocument();
+it('renders without crashing', () => {
+  const div = document.createElement('div');
+  ReactDOM.render(<App />, div);
+  ReactDOM.unmountComponentAtNode(div);
 });
 
 // test('renders learn react link', () => {
@@ -19,3 +17,4 @@ test('renders create group button', () => {
 
 //   expect(getByText(/learn/i)).toBeInTheDocument();
 // });
+
