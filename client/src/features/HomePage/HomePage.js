@@ -1,15 +1,13 @@
-import React, { Component } from 'react';
-import NavBar from '../NavBar/NavBar';
+import React from 'react'
+import { Link } from 'react-router-dom'
 
-class HomePage extends Component {
-  render() {
+export default function HomePage() {
     return (
-      <div className="HomePage">
-        <NavBar />
-        <h2>Home Page</h2>
-      </div>
-    );
-  }
+        <div className="text-center">
+            <h1 className="main-title home-page-title">Welcome to Our App</h1>
+            <Link to="/">
+                <button className="primary-button">Log out</button>
+            </Link>
+        </div>
+    )
 }
-
-export default HomePage;
