@@ -8,15 +8,16 @@ export default function SignInPage() {
       <h2>Sign In</h2>
       <form action="/home">
         <p>
-          <>{ /* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }</>
-          <label>Username or email address</label>
-          {/* <br/> */}
-          <input type="text" name="first_name" required />
+          <label htmlFor="first_name">
+            Username or email address
+            <input id="first_name" type="text" name="first_name" required />
+          </label>
         </p>
         <p>
-          <>{ /* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }</>
-          <label>Password</label>
-          <input type="password" name="password" required />
+          <label htmlFor="password">
+            Password
+            <input id="password" type="password" name="password" required />
+          </label>
         </p>
         <p>
           <button id="sub_btn" type="submit">Login</button>
