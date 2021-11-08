@@ -11,7 +11,6 @@ import GroupListItem from './Groups';
 describe('Displays single group list item', () => {
   beforeAll(() => { mockServer.listen(); });
   afterAll(() => { mockServer.close(); });
-
   beforeEach(() => {
     act(() => {
       render(
