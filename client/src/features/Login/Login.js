@@ -16,9 +16,6 @@ export default function SignInPage() {
         <p>
           <>{ /* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }</>
           <label>Password</label>
-          <>{ /* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }</>
-          <Link to="/forget-password"><label className="right-label">Forget password?</label></Link>
-          {/* <br/> */}
           <input type="password" name="password" required />
         </p>
         <p>
@@ -26,7 +23,7 @@ export default function SignInPage() {
         </p>
       </form>
       <footer>
-        <p>First time?</p>
+        <p>New user?</p>
         <p><Link to="/register">Create an account</Link></p>
         <p><Link to="/">Back to Homepage</Link></p>
       </footer>
