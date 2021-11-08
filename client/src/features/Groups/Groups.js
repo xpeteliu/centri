@@ -19,4 +19,4 @@ function GroupListItem(props) {
   );
 }
 
-export { GroupListItem };
+export default GroupListItem;
