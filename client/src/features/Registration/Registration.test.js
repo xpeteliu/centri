@@ -33,7 +33,7 @@ describe('Registration page', () => {
     });
   });
 
-  test('should properly handle valid username', async () => {
+  test('should properly handle valid registration info', async () => {
     const inputBoxes = await screen.findAllByRole('textbox');
     const submitBtn = await screen.findByRole('button', { name: /sign up/i });
     expect(inputBoxes.length).toEqual(4);
@@ -52,8 +52,8 @@ describe('Registration page', () => {
     const submitBtn = await screen.findByRole('button', { name: /sign up/i });
     expect(inputBoxes.length).toEqual(4);
     act(() => {
-      userEvent.type(inputBoxes[0], 'testName');
-      userEvent.type(inputBoxes[1], 'testName@email.com');
+      userEvent.type(inputBoxes[0], 'duplicateName');
+      userEvent.type(inputBoxes[1], 'duplicateName@email.com');
       userEvent.type(inputBoxes[2], 'testPwd');
       userEvent.type(inputBoxes[3], 'testPwd');
       userEvent.click(submitBtn);
