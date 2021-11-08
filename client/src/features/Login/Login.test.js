@@ -5,7 +5,7 @@ import {
 import { Router } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
-import mockServer from '../common/MockServer.test';
+import mockServer from '../common/mockServer.test';
 import App from '../../App';
 
 describe('Login page', () => {
