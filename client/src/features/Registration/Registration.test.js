@@ -17,13 +17,24 @@ describe('Registration page', () => {
         : res(ctx.status(204)))),
   );
 
-  const history = createMemoryHistory({ initialEntries: ['/register'] });
-
   beforeAll(() => { mockServer.listen(); });
 
   afterAll(() => { mockServer.close(); });
 
-  beforeEach(() => {
+  test('should match snapshot', async () => {
+    let container;
+    act(() => {
+      ({ container } = render(
+        <Router history={createMemoryHistory({ initialEntries: ['/register'] })}>
+          <App />
+        </Router>,
+      ));
+    });
+    expect(container).toMatchSnapshot();
+  });
+
+  test('should properly handle valid registration info', async () => {
+    const history = createMemoryHistory({ initialEntries: ['/register'] });
     act(() => {
       render(
         <Router history={history}>
@@ -31,9 +42,6 @@ describe('Registration page', () => {
         </Router>,
       );
     });
-  });
-
-  test('should properly handle valid registration info', async () => {
     const inputBoxes = await screen.findAllByRole('textbox');
     const submitBtn = await screen.findByRole('button', { name: /sign up/i });
     expect(inputBoxes.length).toEqual(4);
@@ -48,6 +56,14 @@ describe('Registration page', () => {
   });
 
   test('should properly handle occupied username', async () => {
+    const history = createMemoryHistory({ initialEntries: ['/register'] });
+    act(() => {
+      render(
+        <Router history={history}>
+          <App />
+        </Router>,
+      );
+    });
     const inputBoxes = await screen.findAllByRole('textbox');
     const submitBtn = await screen.findByRole('button', { name: /sign up/i });
     expect(inputBoxes.length).toEqual(4);
@@ -62,6 +78,14 @@ describe('Registration page', () => {
   });
 
   test('should properly handle different passwords for the 2 input boxes', async () => {
+    const history = createMemoryHistory({ initialEntries: ['/register'] });
+    act(() => {
+      render(
+        <Router history={history}>
+          <App />
+        </Router>,
+      );
+    });
     const inputBoxes = await screen.findAllByRole('textbox');
     const submitBtn = await screen.findByRole('button', { name: /sign up/i });
     expect(inputBoxes.length).toEqual(4);

@@ -9,13 +9,24 @@ import mockServer from '../common/mockServer.test';
 import App from '../../App';
 
 describe('Login page', () => {
-  const history = createMemoryHistory({ initialEntries: ['/login'] });
-
   beforeAll(() => { mockServer.listen(); });
 
   afterAll(() => { mockServer.close(); });
 
-  beforeEach(() => {
+  test('should match snapshot', async () => {
+    let container;
+    act(() => {
+      ({ container } = render(
+        <Router history={createMemoryHistory({ initialEntries: ['/login'] })}>
+          <App />
+        </Router>,
+      ));
+    });
+    expect(container).toMatchSnapshot();
+  });
+
+  test('should properly handle valid inputs', async () => {
+    const history = createMemoryHistory({ initialEntries: ['/login'] });
     act(() => {
       render(
         <Router history={history}>
@@ -23,9 +34,6 @@ describe('Login page', () => {
         </Router>,
       );
     });
-  });
-
-  test('should properly handle valid inputs', async () => {
     const inputBoxes = await screen.findAllByRole('textbox');
     const submitBtn = await screen.findByRole('button', { name: /sign in/i });
     expect(inputBoxes.length).toEqual(2);
@@ -39,6 +47,14 @@ describe('Login page', () => {
   });
 
   test('should reject invalid password', async () => {
+    const history = createMemoryHistory({ initialEntries: ['/login'] });
+    act(() => {
+      render(
+        <Router history={history}>
+          <App />
+        </Router>,
+      );
+    });
     const inputBoxes = await screen.findAllByRole('textbox');
     const submitBtn = await screen.findByRole('button', { name: /sign in/i });
     expect(inputBoxes.length).toEqual(2);
