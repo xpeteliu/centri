@@ -31,3 +31,59 @@ describe('Displays single group list item', () => {
     expect(joinButton).toBeInTheDocument();
   });
 });
+
+describe('Groups page', () => {
+  beforeAll(() => { mockServer.listen(); });
+  afterAll(() => { mockServer.close(); });
+
+  const history = createMemoryHistory({ initialEntries: ['/groups'] });
+
+  test('should match snapshot', async () => {
+    let container;
+    act(() => {
+      ({ container } = render(
+        <Router history={history}>
+          <App />
+        </Router>,
+      ));
+    });
+    expect(container).toMatchSnapshot();
+  });
+
+  test('renders groups', async () => {
+    act(() => {
+      render(
+        <Router history={history}>
+          <App />
+        </Router>,
+      );
+    });
+    const group1 = await screen.getByText(/Group Name/);
+    const group2 = await screen.getByText(/Group Name 2/);
+    const group3 = await screen.getByText(/Group Name 3/);
+    expect(group1).toBeInTheDocument();
+    expect(group2).toBeInTheDocument();
+    expect(group3).toBeInTheDocument();
+  });
+
+  test('creates group', async () => {
+    act(() => {
+      render(
+        <Router history={history}>
+          <App />
+        </Router>,
+      );
+    });
+    expect(group4).not.toBeInTheDocument();
+    const createBtn = await screen.findByRole('button', { name: /Create Group/ });
+    act(() => {
+      userEvent.click(createBtn);
+    });
+    const inputName = await screen.findAllByRole('groupName');
+    act(() => {
+      userEvent.type(inputName, 'group4');
+    });
+    const group4 = await screen.getByText(/Group Name 4/);
+    expect(group4).toBeInTheDocument();
+  });
+});
