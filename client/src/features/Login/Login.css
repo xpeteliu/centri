@@ -1,7 +1,14 @@
 body {
-    background-color: #eee;
+    background-color:rgb(178, 224, 178);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh
+}
+
+h2 {
+    font-size: 200;
+}
+#userinfo {
+    font-size: 200;
 }
