@@ -87,3 +87,38 @@ describe('Groups page', () => {
     expect(group4).toBeInTheDocument();
   });
 });
+
+describe('Group page', () => {
+  beforeAll(() => { mockServer.listen(); });
+  afterAll(() => { mockServer.close(); });
+
+  const history = createMemoryHistory({ initialEntries: ['/group'] });
+
+  test('should match snapshot', async () => {
+    let container;
+    act(() => {
+      ({ container } = render(
+        <Router history={history}>
+          <App />
+        </Router>,
+      ));
+    });
+    expect(container).toMatchSnapshot();
+  });
+
+  test('renders group', async () => {
+    act(() => {
+      render(
+        <Router history={history}>
+          <App />
+        </Router>,
+      );
+    });
+    const groupName = await screen.getByText(/Group Name/);
+    expect(groupName).toBeInTheDocument();
+    const groupPostTitle1 = await screen.getByText(/0/);
+    const groupPostTitle2 = await screen.getByText(/1/);
+    expect(groupPostTitle1).toBeInTheDocument();
+    expect(groupPostTitle2).toBeInTheDocument();
+  });
+});
