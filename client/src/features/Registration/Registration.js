@@ -3,12 +3,10 @@ import { Link } from 'react-router-dom';
 import { Button, Card } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Registration.css';
-import './features/user.png';
 
 export default function SignUpPage() {
   return (
     <Card>
-       <Card.Img variant="top" src="./features/user.png" />
       <Card.Body>
         <h2>Join us</h2>
         <h5>Create your personal account</h5>
