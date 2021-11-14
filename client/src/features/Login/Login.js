@@ -14,7 +14,7 @@ export default function SignInPage() {
 
   const handleSubmit = (event) => {
     getLogin(
-      document.getElementById('inputLoginInfo').value,
+      document.getElementById('inputLoginUsername').value,
       document.getElementById('inputLoginPassword').value,
     ).then((resp) => {
       if (resp.status === 401) {
@@ -37,10 +37,10 @@ export default function SignInPage() {
               <h2>Sign In</h2>
             </Card.Header>
             <Card.Body>
-              <Form action="/action_page.php" id="formLogin" style={{ width: '25rem' }} className="container" onSubmit={handleSubmit}>
+              <Form id="formLogin" style={{ width: '25rem' }} className="container" onSubmit={handleSubmit}>
                 <Row>
                   <Col>
-                    <Form.Group className="mb-3 text-start" controlId="inputLoginInfo">
+                    <Form.Group className="mb-3 text-start" controlId="inputLoginUsername">
                       <Form.Label className="ms-0">Username</Form.Label>
                       <Form.Control type="text" placeholder="Enter username here" />
                     </Form.Group>
@@ -50,7 +50,12 @@ export default function SignInPage() {
                   <Col>
                     <Form.Group className="mb-3 text-start" controlId="inputLoginPassword">
                       <Form.Label>Password</Form.Label>
-                      <Form.Control type="password" placeholder="Password" />
+                      <Form.Control
+                        type="password"
+                        placeholder="Enter password here"
+                        pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
+                        title="A password should contain >=8 characters and include both letters and numbers"
+                      />
                     </Form.Group>
                   </Col>
                 </Row>
