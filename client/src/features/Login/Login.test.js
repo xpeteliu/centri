@@ -71,7 +71,6 @@ describe('Login page', () => {
       userEvent.type(passwordInput, 'testPwd');
       userEvent.click(submitBtn);
     });
-    expect(history.location.pathname).toEqual('/login');
-    // console.log(document.cookie);
+    await waitFor(() => { expect(history.location.pathname).toEqual('/login'); });
   });
 });

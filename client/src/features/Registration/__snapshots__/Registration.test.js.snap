@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Login page should match snapshot 1`] = `
+exports[`Registration page should match snapshot 1`] = `
 <div>
   <div
     class="App"
@@ -22,7 +22,7 @@ exports[`Login page should match snapshot 1`] = `
               class="card-header"
             >
               <h2>
-                Sign In
+                Sign Up
               </h2>
             </div>
             <div
@@ -44,13 +44,13 @@ exports[`Login page should match snapshot 1`] = `
                     >
                       <label
                         class="ms-0 form-label"
-                        for="inputLoginUsername"
+                        for="inputRegistrationUsername"
                       >
                         Username
                       </label>
                       <input
                         class="form-control"
-                        id="inputLoginUsername"
+                        id="inputRegistrationUsername"
                         placeholder="Enter username here"
                         type="text"
                       />
@@ -68,15 +68,70 @@ exports[`Login page should match snapshot 1`] = `
                     >
                       <label
                         class="form-label"
-                        for="inputLoginPassword"
+                        for="inputRegistrationEmail"
+                      >
+                        Email
+                      </label>
+                      <input
+                        class="form-control"
+                        id="inputRegistrationEmail"
+                        placeholder="Enter email here"
+                        type="email"
+                      />
+                      <small
+                        class="text-muted form-text"
+                      >
+                        Your email will be kept confidential with us.
+                      </small>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="row"
+                >
+                  <div
+                    class="col"
+                  >
+                    <div
+                      class="mb-3 text-start"
+                    >
+                      <label
+                        class="form-label"
+                        for="inputRegistrationPassword0"
                       >
                         Password
                       </label>
                       <input
                         class="form-control"
-                        id="inputLoginPassword"
+                        id="inputRegistrationPassword0"
                         pattern="^(?=.*[A-Za-z])(?=.*\\\\d)[A-Za-z\\\\d]{8,}$"
                         placeholder="Enter password here"
+                        title="A password should contain >=8 characters and include both letters and numbers"
+                        type="password"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="row"
+                >
+                  <div
+                    class="col"
+                  >
+                    <div
+                      class="mb-3 text-start"
+                    >
+                      <label
+                        class="form-label"
+                        for="inputRegistrationPassword1"
+                      >
+                        Verify Password
+                      </label>
+                      <input
+                        class="form-control"
+                        id="inputRegistrationPassword1"
+                        pattern="^(?=.*[A-Za-z])(?=.*\\\\d)[A-Za-z\\\\d]{8,}$"
+                        placeholder="Enter the same password as above"
                         title="A password should contain >=8 characters and include both letters and numbers"
                         type="password"
                       />
@@ -95,7 +150,7 @@ exports[`Login page should match snapshot 1`] = `
                       form="formLogin"
                       type="submit"
                     >
-                      Login
+                      Register
                     </button>
                   </div>
                 </div>
@@ -112,9 +167,9 @@ exports[`Login page should match snapshot 1`] = `
                 >
                   <a
                     class="card-link"
-                    href="/register"
+                    href="/login"
                   >
-                    Create an account
+                    Already have an account?
                   </a>
                 </div>
                 <div

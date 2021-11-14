@@ -3,6 +3,8 @@
 import { setupServer } from 'msw/node';
 import { rest } from 'msw';
 
+test.skip('Suppress Jest warning for empty test file', () => 1);
+
 const mockServer = setupServer(
   rest.get('http://localhost:8000/user/login', (req, res, ctx) => res(
     // Username: testName; Password: testPwd; mock SID: testSid
