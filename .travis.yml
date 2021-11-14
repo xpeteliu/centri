@@ -18,7 +18,7 @@ jobs:
       script:
         - cd client
         - npm install
-        - npm test -- --coverage
+        - npm run test:coverage
     - name: Build
       script:
         - cd client
