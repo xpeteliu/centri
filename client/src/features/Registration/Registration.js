@@ -1,8 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Card } from 'react-bootstrap';
+import { Button, Card, Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './Registration.css';
 
 export default function SignUpPage() {
   return (
@@ -17,20 +16,29 @@ export default function SignUpPage() {
               <input id="first_name" type="text" name="first_name" required />
             </label>
           </p>
-          <p>
-            <label htmlFor="email">
-              Email address
-              <input id="email" type="email" name="email" required />
-            </label>
-          </p>
+          <Form.Group className="mb-3" controlId="inputRegistrationEmail">
+            <Form.Label>Email address</Form.Label>
+            <Form.Control type="email" placeholder="Enter email here" />
+            <Form.Text className="text-muted">
+              Your email will be kept confidential with us.
+            </Form.Text>
+          </Form.Group>
           <p>
             <label htmlFor="password">
               Password
-              <input id="password" type="password" name="password" requiredc />
+              <input id="password" type="password" name="password" required />
             </label>
           </p>
           <p>
-            <Button variant="secondary">Register</Button>
+            <Button
+              variant="secondary"
+              type="button"
+              onClick={() => {
+                console.log(document.querySelector(':invalid'));
+              }}
+            >
+              Register
+            </Button>
           </p>
         </form>
         <footer>
