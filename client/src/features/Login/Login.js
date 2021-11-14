@@ -1,10 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import {
   Button, Card, Col, Container, Form, Row,
 } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router';
 import { MessageModal } from '../common/MessageModal/MessageModal';
 import { showModal } from '../common/MessageModal/modalSlice';
 import { getLogin } from './fetch';
