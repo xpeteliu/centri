@@ -7,3 +7,14 @@ it('renders without crashing', () => {
   ReactDOM.render(<App />, div);
   ReactDOM.unmountComponentAtNode(div);
 });
+
+// test('renders learn react link', () => {
+//   const { getByText } = render(
+//     <Provider store={store}>
+//       <App />
+//     </Provider>,
+//   );
+
+//   expect(getByText(/learn/i)).toBeInTheDocument();
+// });
+
