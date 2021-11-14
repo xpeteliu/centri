@@ -56,7 +56,7 @@ export default function SignUpPage() {
                 <Row>
                   <Col>
                     <Form.Group className="mb-3 text-start" controlId="inputRegistrationEmail">
-                      <Form.Label>Email address</Form.Label>
+                      <Form.Label>Email</Form.Label>
                       <Form.Control type="email" placeholder="Enter email here" />
                       <Form.Text className="text-muted">
                         Your email will be kept confidential with us.
