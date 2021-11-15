@@ -21,10 +21,15 @@ export default function SignUpPage() {
         document.getElementById('inputRegistrationEmail').value,
         password,
       ).then((resp) => {
-        if (resp.status === 409) {
-          dispatch(showModal({ headerText: 'Unable to Register', bodyText: 'The username has been used. Please try another.' }));
-        } else {
-          history.push('/login');
+        switch (resp.status) {
+          case 204:
+            history.push('/login');
+            break;
+          case 409:
+            dispatch(showModal({ headerText: 'Unable to Register', bodyText: 'The username has been used. Please try another.' }));
+            break;
+          default:
+            throw new Error('Invalid response');
         }
       }).catch(() => {
         dispatch(showModal({ headerText: 'Network Error', bodyText: 'Unable to connect to the server. Please try again later.' }));
