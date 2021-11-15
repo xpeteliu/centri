@@ -1,142 +1,40 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: "Roboto", sans-serif
+.App {
+  text-align: center;
+  height: 100%;
+  background-color: rgb(178, 224, 178);
 }
 
-body {
-  margin: 0 auto
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
 }
 
-.m-5-auto {
-  margin: 5rem auto
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
 }
 
-.primary-button {
-  margin-top: 5rem;
-  margin-right: 1rem;
-  padding: .6rem;
-  width: 10rem;
-  background: #222;
-  border: none;
-  color: #fff;
-  font-size: 1.2rem;
-  transition: all .5s;
-  cursor: pointer;
-  text-transform: capitalize
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
 }
 
-/***    Landing Page     ***/
-.main-title,
-.main-para {
-  color: #f1f1f1
+.App-link {
+  color: #61dafb;
 }
 
-.main-title {
-  padding-top: 10rem;
-  font-size: 5rem;
-  font-family: 'Fascinate', cursive;
-  text-transform: uppercase
-}
-
-.main-para {
-  font-size: 2.5rem;
-  text-Transform: capitalize
-}
-
-#reg_btn span {
-  display: inline-block;
-  position: relative;
-  transition: 0.5s;
-}
-
-#reg_btn span:after {
-  content: '\00bb';
-  position: absolute;
-  opacity: 0;
-  top: 0;
-  right: -20px;
-  transition: 0.5s;
-}
-
-#reg_btn:hover span {
-padding-right: 25px;
-}
-
-#reg_btn:hover span:after {
-opacity: 1;
-right: 0;
-}
-
-/***    Login Page     ***/
-h2 {
-  font-weight: 300
-}
-
-form {
-  display: inline-block;
-  background: #f3f3f3;
-  border: 1px solid #ddd;
-  border-radius: 2px;
-  padding: 2rem;
-  margin: 2rem 0 1rem 0
-}
-
-form label {
-  float: left;
-  font-size: .9rem;
-  margin: 0;
-  padding: 0
-}
-
-.right-label {
-  float: right;
-  cursor: pointer
-}
-
-input {
-  width: 15rem;
-  padding: .3rem;
-  border-radius: 5px;
-  outline: none;
-  border: none
-}
-
-#sub_btn {
-  display: block;
-  width: 100%;
-  padding: .3rem;
-  border: none;
-  background: #222;
-  color: #fff;
-  border-radius: 3px;
-}
-
-#sub_btn:hover {
-  background: #333;
-  transition: all .5s
-}
-
-footer p {
-  margin: 0;
-  font-size: .9rem
-}
-
-/***    Register Page     ***/
-#checkbox {
-  width: 1rem
-}
-
-form span {
-  font-size: .8rem
-}
-
-#reset_pass_lbl {
-  float: left
-}
-
-/***    Home Page     ***/
-.home-page-title {
-  color: #222
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }

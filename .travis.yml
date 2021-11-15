@@ -14,6 +14,7 @@ jobs:
         - npm install
         - npm run lint
     - name: Test
+      if: branch = test
       script:
         - cd client
         - npm install
