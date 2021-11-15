@@ -2,6 +2,6 @@ export const postUser = (username, email, password) => fetch(`${process.env.REAC
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
-    body: JSON.stringify({ username, email, password }),
   },
+  body: JSON.stringify({ username, email, password }),
 });
