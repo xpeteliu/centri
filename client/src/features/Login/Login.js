@@ -17,10 +17,15 @@ export default function SignInPage() {
       document.getElementById('inputLoginUsername').value,
       document.getElementById('inputLoginPassword').value,
     ).then((resp) => {
-      if (resp.status === 401) {
-        dispatch(showModal({ headerText: 'Unable to Log In', bodyText: 'Invalid username or password. Please try again.' }));
-      } else {
-        history.push('/');
+      switch (resp.status) {
+        case 204:
+          history.push('/');
+          break;
+        case 401:
+          dispatch(showModal({ headerText: 'Unable to Log In', bodyText: 'Invalid username or password. Please try again.' }));
+          break;
+        default:
+          throw new Error('Invalid response');
       }
     }).catch(() => {
       dispatch(showModal({ headerText: 'Network Error', bodyText: 'Unable to connect to the server. Please try again later.' }));
