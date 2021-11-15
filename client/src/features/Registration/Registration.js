@@ -54,7 +54,7 @@ export default function SignUpPage() {
                   <Col>
                     <Form.Group className="mb-3 text-start" controlId="inputRegistrationUsername">
                       <Form.Label className="ms-0">Username</Form.Label>
-                      <Form.Control type="text" placeholder="Enter username here" />
+                      <Form.Control type="text" placeholder="Enter username here" required />
                     </Form.Group>
                   </Col>
                 </Row>
@@ -62,7 +62,7 @@ export default function SignUpPage() {
                   <Col>
                     <Form.Group className="mb-3 text-start" controlId="inputRegistrationEmail">
                       <Form.Label>Email</Form.Label>
-                      <Form.Control type="email" placeholder="Enter email here" />
+                      <Form.Control type="email" placeholder="Enter email here" required />
                       <Form.Text className="text-muted">
                         Your email will be kept confidential with us.
                       </Form.Text>
@@ -78,6 +78,7 @@ export default function SignUpPage() {
                         placeholder="Enter password here"
                         pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
                         title="A password should contain >=8 characters and include both letters and numbers"
+                        required
                       />
                     </Form.Group>
                   </Col>
@@ -91,6 +92,7 @@ export default function SignUpPage() {
                         placeholder="Enter the same password as above"
                         pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
                         title="A password should contain >=8 characters and include both letters and numbers"
+                        required
                       />
                     </Form.Group>
                   </Col>

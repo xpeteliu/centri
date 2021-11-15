@@ -47,7 +47,7 @@ export default function SignInPage() {
                   <Col>
                     <Form.Group className="mb-3 text-start" controlId="inputLoginUsername">
                       <Form.Label className="ms-0">Username</Form.Label>
-                      <Form.Control type="text" placeholder="Enter username here" />
+                      <Form.Control type="text" placeholder="Enter username here" required />
                     </Form.Group>
                   </Col>
                 </Row>
@@ -60,6 +60,7 @@ export default function SignInPage() {
                         placeholder="Enter password here"
                         pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
                         title="A password should contain >=8 characters and include both letters and numbers"
+                        required
                       />
                     </Form.Group>
                   </Col>

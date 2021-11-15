@@ -52,6 +52,7 @@ exports[`Login page should match snapshot 1`] = `
                         class="form-control"
                         id="inputLoginUsername"
                         placeholder="Enter username here"
+                        required=""
                         type="text"
                       />
                     </div>
@@ -77,6 +78,7 @@ exports[`Login page should match snapshot 1`] = `
                         id="inputLoginPassword"
                         pattern="^(?=.*[A-Za-z])(?=.*\\\\d)[A-Za-z\\\\d]{8,}$"
                         placeholder="Enter password here"
+                        required=""
                         title="A password should contain >=8 characters and include both letters and numbers"
                         type="password"
                       />
