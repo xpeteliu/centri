@@ -68,9 +68,9 @@ describe('Login page', () => {
     const passwordInput = await screen.findByLabelText('Password');
     act(() => {
       userEvent.type(usernameInput, 'testName');
-      userEvent.type(passwordInput, 'testPwd');
+      userEvent.type(passwordInput, 'wrongPwd');
       userEvent.click(submitBtn);
     });
-    await waitFor(() => { expect(history.location.pathname).toEqual('/login'); });
+    expect(await screen.findByText(/Unable to Log In/i)).toBeInTheDocument();
   });
 });

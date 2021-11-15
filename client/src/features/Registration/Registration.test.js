@@ -86,7 +86,7 @@ describe('Registration page', () => {
       userEvent.type(passwordInput1, 'testPwd');
       userEvent.click(submitBtn);
     });
-    await waitFor(() => { expect(history.location.pathname).toEqual('/register'); });
+    expect(await screen.findByText(/Unable to Register/i)).toBeInTheDocument();
   });
 
   test('should properly handle different passwords for the 2 input boxes', async () => {
