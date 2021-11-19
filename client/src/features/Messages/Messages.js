@@ -2,9 +2,18 @@
 
 import React, { useState, useEffect } from 'react';
 import {
-  Container, Col, Stack, Card,
+  Container, Row, Col, Stack, Card,
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+function Conversation({ messages }) {
+  console.log(messages);
+  return (
+    <h1>
+      hi
+    </h1>
+  );
+}
 
 function Messages() {
   // const tempUser = { id: 1, name: 'user1' };
@@ -13,28 +22,42 @@ function Messages() {
     { id: 2, name: 'user2' },
     { id: 3, name: 'user3' },
   ];
-  const [sender, setSender] = useState(0);
+  const [userId, setUserId] = useState(-1);
 
-  const handleSelectSender = async (senderId) => {
+  const handleSelectSender = async (id) => {
     // await fetch messages from/to sender
-    console.log('id', senderId);
-    setSender(senderId);
+    console.log('id', id);
+    setUserId(id);
   };
 
   useEffect(() => {
-    console.log(sender);
-  }, [sender]);
+    console.log('effect', userId);
+  }, [userId]);
+
+  const filteredMessages = [
+    { id: 1 },
+  ];
+
+  let content;
+  if (userId !== -1) {
+    content = Conversation(filteredMessages);
+  }
 
   return (
     <Container className="App">
-      <Col xs={2}>
-        <Stack direction="vertical" gap={5}>
-          <UserList
-            users={tempUsers}
-            onSelect={handleSelectSender}
-          />
-        </Stack>
-      </Col>
+      <Row>
+        <Col xs={2}>
+          <Stack direction="vertical" gap={1}>
+            <UserList
+              users={tempUsers}
+              onSelect={handleSelectSender}
+            />
+          </Stack>
+        </Col>
+        <Col xs={10}>
+          {content}
+        </Col>
+      </Row>
     </Container>
   );
 }
