@@ -1,3 +1,5 @@
+/* eslint react/prop-types: 0 */
+
 import React, { useState } from 'react';
 import {
   Container, Col, Stack,
@@ -18,7 +20,7 @@ function Messages() {
       <Col xs={4}>
         <Stack direction="vertical" gap={5}>
           <SenderTab
-            handleSelectSender
+            onSelect={handleSelectSender}
           />
         </Stack>
       </Col>
@@ -26,14 +28,14 @@ function Messages() {
   );
 }
 
-function SenderTab({ senderData, handleSelectSender }) {
+function SenderTab({ senderData, onSelect }) {
   function handleClick(event) {
-    handleSelectSender(event.target.name);
+    onSelect(event.target.name);
   }
   const buttonName = `btnSelectUser${senderData.id}`;
   return (
     <Container className="App">
-      <button name={buttonName} onClick={handleClick}>user</button>
+      <button name={buttonName} type="button" onClick={handleClick}>user</button>
     </Container>
   );
 }
