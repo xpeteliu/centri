@@ -5,42 +5,89 @@ import {
   Container, Row, Col, Stack, Card,
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-function Conversation({ messages }) {
-  console.log(messages);
-  return (
-    <h1>
-      hi
-    </h1>
-  );
-}
+import Conversation from './Conversation';
 
 function Messages() {
-  // const tempUser = { id: 1, name: 'user1' };
+  const tempUserId = 0;
   const tempUsers = [
     { id: 1, name: 'user1' },
     { id: 2, name: 'user2' },
-    { id: 3, name: 'user3' },
   ];
-  const [userId, setUserId] = useState(-1);
+  const tempInbox = [
+    {
+      creatorId: 1, readerId: 0, content: '1 to 0, A', createdDate: new Date(1995, 11, 17),
+    },
+    {
+      creatorId: 2, readerId: 0, content: '2 to 0, A', createdDate: new Date(1995, 11, 14),
+    },
+    {
+      creatorId: 2, readerId: 0, content: '2 to 0, C', createdDate: new Date(1995, 11, 16),
+    },
+  ];
+
+  const tempConversation1 = [
+    {
+      creatorId: 1, readerId: 0, content: '1 to 0, A', createdDate: new Date(1995, 11, 17),
+    },
+  ];
+
+  const tempConversation2 = [
+    {
+      creatorId: 2, readerId: 0, content: '2 to 0, A', createdDate: new Date(1995, 11, 14),
+    },
+    {
+      creatorId: 2, readerId: 0, content: '2 to 0, C', createdDate: new Date(1995, 11, 16),
+    },
+    {
+      creatorId: 0, readerId: 2, content: '2 to 0, B', createdDate: new Date(1995, 11, 15),
+    },
+  ];
+
+  const [otherUserId, setOtherUserId] = useState(-1);
+
+  // TODO: Replace with store
+  const userId = tempUserId;
 
   const handleSelectSender = async (id) => {
     // await fetch messages from/to sender
     console.log('id', id);
-    setUserId(id);
+    setOtherUserId(id);
   };
 
   useEffect(() => {
-    console.log('effect', userId);
-  }, [userId]);
+    console.log('effect', otherUserId);
+  }, [otherUserId]);
 
-  const filteredMessages = [
-    { id: 1 },
-  ];
+  // TODO: Replace with GET request
+  const inbox = tempInbox;
+  inbox.sort((a, b) => ((a.createdDate > b.createdDate) ? 1 : -1));
+  const userList = [];
+
+  inbox.forEach((message) => {
+    const senderId = message.creatorId;
+    // TODO: Replace with GET request
+    const filtered = tempUsers.filter((user) => user.id === senderId);
+    const senderName = filtered[0].name;
+
+    if (!userList.some((user) => user.name === senderName)) {
+      userList.push({ id: senderId, name: senderName });
+    }
+  });
 
   let content;
-  if (userId !== -1) {
-    content = Conversation(filteredMessages);
+  if (otherUserId !== -1) {
+    // TODO: Replace with GET request
+    let conversation = [];
+
+    if (otherUserId === 1) {
+      conversation = tempConversation1;
+    } else if (otherUserId === 2) {
+      conversation = tempConversation2;
+    }
+
+    conversation.sort((a, b) => ((a.createdDate > b.createdDate) ? 1 : -1));
+
+    content = Conversation({ messages: conversation, id: userId });
   }
 
   return (
@@ -49,7 +96,7 @@ function Messages() {
         <Col xs={2}>
           <Stack direction="vertical" gap={1}>
             <UserList
-              users={tempUsers}
+              users={userList}
               onSelect={handleSelectSender}
             />
           </Stack>
@@ -80,7 +127,8 @@ function UserList({ users, onSelect }) {
   );
 }
 
-function UserTab({ userId, userName, onSelect }) {
+function UserTab(props) {
+  const { userId, userName, onSelect } = props;
   const handleClick = () => {
     onSelect(userId);
   };
