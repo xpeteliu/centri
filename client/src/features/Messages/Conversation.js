@@ -6,6 +6,24 @@ import {
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+function Conversation(props) {
+  const { messages, id } = props;
+  console.log('u1', id);
+  const rows = [];
+  messages.forEach((message) => {
+    rows.push(<ConversationRow
+      message={message}
+      userId={id}
+    />);
+  });
+
+  return (
+    <Container className="App">
+      {rows}
+    </Container>
+  );
+}
+
 function ConversationRow(props) {
   console.log(props);
   const { message, userId } = props;
@@ -47,24 +65,6 @@ function ConversationRow(props) {
         </Card>
       </Col>
     </Row>
-  );
-}
-
-function Conversation(props) {
-  const { messages, id } = props;
-  console.log('u1', id);
-  const rows = [];
-  messages.forEach((message) => {
-    rows.push(<ConversationRow
-      message={message}
-      userId={id}
-    />);
-  });
-
-  return (
-    <Container className="App">
-      {rows}
-    </Container>
   );
 }
 
