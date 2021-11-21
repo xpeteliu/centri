@@ -2,12 +2,18 @@
 
 import React from 'react';
 import {
-  Container, Card, Row, Col,
+  Container, Card, Row, Col, Form, Button,
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function Conversation(props) {
   const { messages, id } = props;
+
+  const handleSubmitMessage = (event) => {
+    event.preventDefault();
+    const messageText = event.target.formMessageText.value;
+    console.log('event', messageText);
+  };
 
   const rows = [];
   messages.forEach((message) => {
@@ -18,21 +24,32 @@ function Conversation(props) {
   });
 
   return (
-    <Container className="App">
-      <Row className="h-75 p-3">
+    <Container className="d-flex flex-column justify-content-between">
+      <Row>
         {rows}
       </Row>
-      <Row className="h-25 p-3">
-        <Input />
+      <Row>
+        <Input
+          handleSubmit={handleSubmitMessage}
+        />
       </Row>
     </Container>
   );
 }
 
-function Input() {
+function Input(props) {
+  const { handleSubmit } = props;
   return (
-    <Container className="App">
-      Text
+    <Container className="p-3">
+      <Form onSubmit={handleSubmit} controlId="formMessage">
+        <Form.Group>
+          <Form.Label>Chat</Form.Label>
+          <Form.Control name="formMessageText" placeholder="..." />
+        </Form.Group>
+        <Button variant="primary" type="submit">
+          Send
+        </Button>
+      </Form>
     </Container>
   );
 }

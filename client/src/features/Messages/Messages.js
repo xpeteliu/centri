@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import {
-  Container, Row, Col, Stack, Card,
+  Container, Row, Col, Stack, Card, ListGroup, ListGroupItem,
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Conversation from './Conversation';
@@ -91,9 +91,9 @@ function Messages() {
   }
 
   return (
-    <Container>
-      <Row className="h-100 p-3">
-        <Col xs={2} classname="mainContent">
+    <Container classname="w-100">
+      <Row className="h-100 m-3">
+        <Col xs={3}>
           <Stack direction="vertical" gap={1}>
             <UserList
               users={userList}
@@ -101,7 +101,7 @@ function Messages() {
             />
           </Stack>
         </Col>
-        <Col xs={10}>
+        <Col classname="w-75">
           {content}
         </Col>
       </Row>
@@ -124,9 +124,9 @@ function UserList(props) {
     );
   });
   return (
-    <Stack direction="vertical" gap={5}>
+    <ListGroup>
       {rows}
-    </Stack>
+    </ListGroup>
   );
 }
 
@@ -137,13 +137,15 @@ function UserTab(props) {
   };
   return (
     <Container className="App">
-      <Card onClick={handleClick} style={{ cursor: 'pointer' }}>
-        <Card.Body>
-          <Card.Text>
-            {userName}
-          </Card.Text>
-        </Card.Body>
-      </Card>
+      <ListGroupItem action onClick={handleClick}>
+        <Card>
+          <Card.Body>
+            <Card.Text>
+              {userName}
+            </Card.Text>
+          </Card.Body>
+        </Card>
+      </ListGroupItem>
     </Container>
   );
 }
