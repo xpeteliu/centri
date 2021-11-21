@@ -92,7 +92,7 @@ function Messages() {
 
   return (
     <Container>
-      <Row>
+      <Row className="h-100 p-3">
         <Col xs={2} classname="mainContent">
           <Stack direction="vertical" gap={1}>
             <UserList
@@ -109,7 +109,8 @@ function Messages() {
   );
 }
 
-function UserList({ users, onSelect }) {
+function UserList(props) {
+  const { users, onSelect } = props;
   const rows = [];
   users.forEach((user) => {
     rows.push(

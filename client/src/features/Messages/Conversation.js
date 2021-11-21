@@ -19,7 +19,20 @@ function Conversation(props) {
 
   return (
     <Container className="App">
-      {rows}
+      <Row className="h-75 p-3">
+        {rows}
+      </Row>
+      <Row className="h-25 p-3">
+        <Input />
+      </Row>
+    </Container>
+  );
+}
+
+function Input() {
+  return (
+    <Container className="App">
+      Text
     </Container>
   );
 }
