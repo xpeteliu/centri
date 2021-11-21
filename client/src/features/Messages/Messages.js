@@ -91,9 +91,9 @@ function Messages() {
   }
 
   return (
-    <Container className="App">
+    <Container>
       <Row>
-        <Col xs={2}>
+        <Col xs={2} classname="mainContent">
           <Stack direction="vertical" gap={1}>
             <UserList
               users={userList}
@@ -113,11 +113,13 @@ function UserList({ users, onSelect }) {
   const rows = [];
   users.forEach((user) => {
     rows.push(
-      <UserTab
-        userId={user.id}
-        userName={user.name}
-        onSelect={onSelect}
-      />,
+      <Row>
+        <UserTab
+          userId={user.id}
+          userName={user.name}
+          onSelect={onSelect}
+        />
+      </Row>,
     );
   });
   return (

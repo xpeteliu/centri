@@ -8,7 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 function Conversation(props) {
   const { messages, id } = props;
-  console.log('u1', id);
+
   const rows = [];
   messages.forEach((message) => {
     rows.push(<ConversationRow
@@ -27,24 +27,17 @@ function Conversation(props) {
 function ConversationRow(props) {
   console.log(props);
   const { message, userId } = props;
-  const { creatorId, content, createdDate } = message;
-  const dateString = createdDate.toString();
+  const { creatorId } = message;
+
   const alignLeft = creatorId !== userId;
-  console.log('c', creatorId);
-  console.log('u', userId);
+
   if (alignLeft) {
     return (
       <Row>
         <Col xs={6}>
-          <Card>
-            <Card.Body>
-              <Card.Text>
-                {content}
-                <br />
-                {dateString}
-              </Card.Text>
-            </Card.Body>
-          </Card>
+          <Message
+            message={message}
+          />
         </Col>
         <Col />
       </Row>
@@ -54,17 +47,29 @@ function ConversationRow(props) {
     <Row>
       <Col />
       <Col xs={6}>
-        <Card>
-          <Card.Body>
-            <Card.Text>
-              {content}
-              <br />
-              {dateString}
-            </Card.Text>
-          </Card.Body>
-        </Card>
+        <Message
+          message={message}
+        />
       </Col>
     </Row>
+  );
+}
+
+function Message(props) {
+  const { message } = props;
+  const { content, createdDate } = message;
+  const dateString = createdDate.toString();
+
+  return (
+    <Card>
+      <Card.Body>
+        <Card.Text>
+          {content}
+          <br />
+          {dateString}
+        </Card.Text>
+      </Card.Body>
+    </Card>
   );
 }
 
