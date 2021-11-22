@@ -39,7 +39,7 @@ function Messages() {
       creatorId: 2, readerId: 0, content: '2 to 0, C', createdDate: new Date(1995, 11, 16),
     },
     {
-      creatorId: 0, readerId: 2, content: '2 to 0, B', createdDate: new Date(1995, 11, 15),
+      creatorId: 0, readerId: 2, content: '0 to 2, B', createdDate: new Date(1995, 11, 15),
     },
   ];
 
