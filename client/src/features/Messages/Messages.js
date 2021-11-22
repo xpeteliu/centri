@@ -92,11 +92,12 @@ function Messages() {
 
   inbox.forEach((message) => {
     const senderId = message.creatorId;
-    // TODO: Replace with GET request
-    const filtered = tempUsers.filter((user) => user.id === senderId);
-    const senderName = filtered[0].name;
 
     if (!userList.some((user) => user.id === senderId)) {
+      // TODO: Replace with GET request
+      const filtered = tempUsers.filter((user) => user.id === senderId);
+      const senderName = filtered[0].name;
+
       userList.push({ id: senderId, name: senderName });
       userNameDict[senderId] = senderName;
     }
