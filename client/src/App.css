@@ -1,4 +1,39 @@
-.App {
+.mainContent {
+  margin: 20px;
+}
+
+body {
+  background-color: #E4F0D1;
+}
+
+a {
+  color: #000000;
+  text-decoration: none;
+}
+
+.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+  background-color: #96BB88 !important;
+  border-color: #96BB88 !important;
+  color: #000000 !important;
+}
+
+.btn-secondary, .btn-secondary:hover, .btn-secondary:active, .btn-secondary:visited {
+  background-color: #C1D9B8 !important;
+  border-color: #C1D9B8 !important;
+  color: #000000 !important;
+}
+
+.headerBar {
+  background-color: #C1D9B8 !important;
+}
+
+.groupListItem {
+  background-color: #FFFFFF;
+  height: 80px;
+  padding: 20px;
+}
+
+/* .App {
   text-align: center;
   height: 100%;
   background-color: rgb(178, 224, 178);
@@ -38,3 +73,4 @@
     transform: rotate(360deg);
   }
 }
+*/
