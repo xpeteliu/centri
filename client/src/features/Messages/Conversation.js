@@ -7,13 +7,11 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function Conversation(props) {
-  const { messages, id } = props;
+  const {
+    messages, id, otherId, onSubmitMessage,
+  } = props;
 
-  const handleSubmitMessage = (event) => {
-    event.preventDefault();
-    const messageText = event.target.formMessageText.value;
-    console.log('event', messageText);
-  };
+  messages.sort((a, b) => ((a.createdDate > b.createdDate) ? 1 : -1));
 
   const rows = [];
   messages.forEach((message) => {
@@ -30,7 +28,9 @@ function Conversation(props) {
       </Row>
       <Row>
         <Input
-          handleSubmit={handleSubmitMessage}
+          handleSubmit={onSubmitMessage}
+          userId={id}
+          otherUserId={otherId}
         />
       </Row>
     </Container>
@@ -55,7 +55,6 @@ function Input(props) {
 }
 
 function ConversationRow(props) {
-  console.log(props);
   const { message, userId } = props;
   const { creatorId } = message;
 

@@ -44,6 +44,7 @@ function Messages() {
   ];
 
   const [otherUserId, setOtherUserId] = useState(-1);
+  const [localMessages, setLocalMessages] = useState([]);
 
   // TODO: Replace with store
   const userId = tempUserId;
@@ -54,9 +55,33 @@ function Messages() {
     setOtherUserId(id);
   };
 
+  const handleSubmitMessage = (event) => {
+    event.preventDefault();
+    const messageText = event.target.formMessageText.value;
+    console.log('event', messageText);
+    if (messageText.length > 0) {
+      const newMessage = {
+        creatorId: userId,
+        readerId: otherUserId,
+        content: messageText,
+        createdDate: new Date(),
+      };
+      console.log('message', newMessage);
+      // TODO: Replace with request, wait for POST response before adding
+      // new message to localMessages, clear localMessages after receiving
+      // messages from server
+      // Send and await POST request here
+      setLocalMessages([...localMessages, newMessage]);
+    }
+  };
+
   useEffect(() => {
-    console.log('effect', otherUserId);
+    console.log('switched to user', otherUserId);
   }, [otherUserId]);
+
+  useEffect(() => {
+    console.log('local messages updated', localMessages);
+  }, [localMessages]);
 
   // TODO: Replace with GET request
   const inbox = tempInbox;
@@ -85,9 +110,17 @@ function Messages() {
       conversation = tempConversation2;
     }
 
+    const filtered = localMessages.filter(((message) => message.readerId === otherUserId));
+    conversation = conversation.concat(filtered);
+
     conversation.sort((a, b) => ((a.createdDate > b.createdDate) ? 1 : -1));
 
-    content = Conversation({ messages: conversation, id: userId });
+    content = Conversation({
+      messages: conversation,
+      id: userId,
+      otherId: otherUserId,
+      onSubmitMessage: handleSubmitMessage,
+    });
   }
 
   return (
