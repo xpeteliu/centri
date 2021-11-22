@@ -46,11 +46,13 @@ function Messages() {
   const [otherUserId, setOtherUserId] = useState(-1);
   const [localMessages, setLocalMessages] = useState([]);
 
+  const userNameDict = {};
+
   // TODO: Replace with store
   const userId = tempUserId;
 
   const handleSelectSender = async (id) => {
-    // await fetch messages from/to sender
+    // await GET request for messages from selected user
     console.log('id', id);
     setOtherUserId(id);
   };
@@ -96,6 +98,7 @@ function Messages() {
 
     if (!userList.some((user) => user.id === senderId)) {
       userList.push({ id: senderId, name: senderName });
+      userNameDict[senderId] = senderName;
     }
   });
 
@@ -119,6 +122,7 @@ function Messages() {
       messages: conversation,
       id: userId,
       otherId: otherUserId,
+      otherName: userNameDict[otherUserId],
       onSubmitMessage: handleSubmitMessage,
     });
   }

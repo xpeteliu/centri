@@ -8,7 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 function Conversation(props) {
   const {
-    messages, id, otherId, onSubmitMessage,
+    messages, id, otherId, otherName, onSubmitMessage,
   } = props;
 
   messages.sort((a, b) => ((a.createdDate > b.createdDate) ? 1 : -1));
@@ -34,6 +34,9 @@ function Conversation(props) {
   return (
     <div style={convoStyle}>
       <Container className="d-flex flex-column justify-content-between">
+        <h4>
+          {otherName}
+        </h4>
         <div style={listStyle}>
           <Row>
             {rows}
@@ -101,14 +104,28 @@ function ConversationRow(props) {
 function Message(props) {
   const { message } = props;
   const { content, createdDate } = message;
-  const dateString = createdDate.toString();
+  const date = createdDate.toLocaleDateString('en-US');
+
+  const padTime = (timeString) => {
+    if (timeString.length < 2) {
+      return '0'.concat(timeString);
+    }
+    return timeString;
+  };
+  const hours = padTime(createdDate.getHours().toString());
+  const minutes = padTime(createdDate.getMinutes().toString());
+  const seconds = padTime(createdDate.getSeconds().toString());
+
+  const dateString = date.concat(` ${hours}:${minutes}:${seconds}`);
 
   return (
     <Card>
-      <Card.Body>
-        <Card.Text>
+      <Card.Body className="p-4">
+        <Card.Text className="mb-2 h6">
           {content}
-          <br />
+        </Card.Text>
+        <br />
+        <Card.Text className="mb-2 text-muted">
           {dateString}
         </Card.Text>
       </Card.Body>
