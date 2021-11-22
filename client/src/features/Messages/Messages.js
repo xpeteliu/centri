@@ -12,11 +12,6 @@ function Messages() {
   const tempUsers = [
     { id: 1, name: 'user1' },
     { id: 2, name: 'user2' },
-    { id: 3, name: 'user3' },
-    { id: 4, name: 'user4' },
-    { id: 5, name: 'user5' },
-    { id: 6, name: 'user6' },
-    { id: 7, name: 'user7' },
   ];
   const tempInbox = [
     {
@@ -27,21 +22,6 @@ function Messages() {
     },
     {
       creatorId: 2, readerId: 0, content: '2 to 0, C', createdDate: new Date(1995, 11, 16),
-    },
-    {
-      creatorId: 3, readerId: 0, content: '2 to 0, C', createdDate: new Date(1995, 11, 16),
-    },
-    {
-      creatorId: 4, readerId: 0, content: '2 to 0, C', createdDate: new Date(1995, 11, 16),
-    },
-    {
-      creatorId: 5, readerId: 0, content: '2 to 0, C', createdDate: new Date(1995, 11, 16),
-    },
-    {
-      creatorId: 6, readerId: 0, content: '2 to 0, C', createdDate: new Date(1995, 11, 16),
-    },
-    {
-      creatorId: 7, readerId: 0, content: '2 to 0, C', createdDate: new Date(1995, 11, 16),
     },
   ];
 
