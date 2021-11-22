@@ -22,7 +22,7 @@ function Conversation(props) {
   });
 
   const convoStyle = {
-    height: '100vh',
+    height: '95vh',
   };
 
   const listStyle = {
