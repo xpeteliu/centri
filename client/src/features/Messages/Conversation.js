@@ -21,19 +21,33 @@ function Conversation(props) {
     />);
   });
 
+  const convoStyle = {
+    height: '100vh',
+  };
+
+  const listStyle = {
+    'max-height': '75vh',
+    'overflow-y': 'scroll',
+    'overflow-x': 'clip',
+  };
+
   return (
-    <Container className="d-flex flex-column justify-content-between">
-      <Row>
-        {rows}
-      </Row>
-      <Row>
-        <Input
-          handleSubmit={onSubmitMessage}
-          userId={id}
-          otherUserId={otherId}
-        />
-      </Row>
-    </Container>
+    <div style={convoStyle}>
+      <Container className="d-flex flex-column justify-content-between">
+        <div style={listStyle}>
+          <Row>
+            {rows}
+          </Row>
+        </div>
+        <Row>
+          <Input
+            handleSubmit={onSubmitMessage}
+            userId={id}
+            otherUserId={otherId}
+          />
+        </Row>
+      </Container>
+    </div>
   );
 }
 
