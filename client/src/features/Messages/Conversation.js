@@ -22,18 +22,18 @@ function Conversation(props) {
   });
 
   const convoStyle = {
-    height: '95vh',
+    height: '99vh',
   };
 
   const listStyle = {
-    'max-height': '75vh',
+    'max-height': '99vh',
     'overflow-y': 'scroll',
     'overflow-x': 'clip',
   };
 
   return (
     <div style={convoStyle}>
-      <Container className="d-flex flex-column justify-content-between">
+      <Container className="p-3 d-flex flex-column justify-content-between">
         <h4>
           {otherName}
         </h4>

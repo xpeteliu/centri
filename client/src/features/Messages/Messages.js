@@ -129,20 +129,22 @@ function Messages() {
   }
 
   return (
-    <Container classname="w-100">
-      <Row className="h-100 m-3">
-        <Col xs={3}>
-          <Stack direction="vertical" gap={1}>
-            <UserList
-              users={userList}
-              onSelect={handleSelectSender}
-            />
-          </Stack>
-        </Col>
-        <Col classname="w-75">
-          {content}
-        </Col>
-      </Row>
+    <Container classname="w-75">
+      <div className="bg-light">
+        <Row className="h-99 p-1">
+          <Col className="p-3" xs={3}>
+            <Stack direction="vertical" gap={1}>
+              <UserList
+                users={userList}
+                onSelect={handleSelectSender}
+              />
+            </Stack>
+          </Col>
+          <Col classname="w-75">
+            {content}
+          </Col>
+        </Row>
+      </div>
     </Container>
   );
 }
