@@ -57,7 +57,7 @@ function GroupListPage() {
             <Form.Check type="checkbox" label="Make Group Private" />
           </Form.Group>
           <Button variant="primary" onClick={handleClose}>
-            Create Group
+            Create
           </Button>
         </Modal.Footer>
       </Modal>
@@ -99,17 +99,24 @@ function GroupPage() {
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-3" controlId="groupNameField">
               <Form.Label>Name</Form.Label>
-              <Form.Control id="groupNameField" placeholder="Enter group name" />
+              <Form.Control
+                placeholder="Enter group name"
+                required
+              />
             </Form.Group>
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-3" controlId="adminField">
               <Form.Label>Admin</Form.Label>
-              <Form.Control id="adminField" placeholder="Add an admin" />
+              <Form.Control
+                placeholder="Add an admin"
+              />
             </Form.Group>
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-3" controlId="usernameField">
               <Form.Label>Invite a Member</Form.Label>
-              <Form.Control id="adminField" placeholder="Enter username" />
+              <Form.Control
+                placeholder="Enter username"
+              />
             </Form.Group>
           </Form>
         </Modal.Body>
