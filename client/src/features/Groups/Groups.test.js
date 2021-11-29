@@ -8,7 +8,6 @@ import { Router } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import mockServer from '../common/mockServer.test';
-import GroupListItem from './Groups';
 import App from '../../App';
 
 describe('Groups page', () => {
