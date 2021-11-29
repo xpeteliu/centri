@@ -4,14 +4,14 @@
   "description": "Backend API for CIS 557 Group 20 Course Project",
   "main": "src/app.js",
   "scripts": {
-    "start": "node src/app.js",
+    "start": "node --es-module-specifier-resolution=node src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Group 20",
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
-    "mongodb": "^4.2.0"
+    "mongoose": "^6.0.13"
   },
   "devDependencies": {
     "eslint": "^8.3.0",

@@ -1,13 +1,24 @@
-import Message from './Message';
+import mongoose from 'mongoose';
 
-class Comment extends Message {
-  constructor(props) {
-    super(props);
-    this.postingId = props.postingId;
-    this.numOfLikes = props.numOfLikes || 0;
-    this.lastModifiedDate = props.lastModifiedDate;
-    this.version = props.version || 0;
-  }
-}
+const commentSchema = new mongoose.Schema({
+  content: {
+    type: String,
+    required: true,
+  },
+  creatorId: {
+    type: mongoose.ObjectId,
+    required: true,
+  },
+  postingId: {
+    type: mongoose.ObjectId,
+    required: true,
+  },
+  numOfLikes: {
+    type: Number,
+    default: 0,
+  },
+}, { timestamps: true });
+
+const Comment = mongoose.model('Comment', commentSchema);
 
 export default Comment;

@@ -1,10 +1,11 @@
 import * as path from 'path';
 import express from 'express';
+import mongoose from 'mongoose';
 import userRouter from './router/userRouter';
 import commentRouter from './router/commentRouter';
 import groupRouter from './router/groupRouter';
 import postingRouter from './router/postingRouter';
-import privateMessageRouter from './router/privateMessage';
+import privateMessageRouter from './router/privateMessageRouter';
 
 const app = express();
 
@@ -32,14 +33,13 @@ app.use((_, res) => {
 
 // Start server
 const port = process.env.PORT || 5000;
-let dbClient;
 const server = app.listen(port, async () => {
-  // dbClient = await connectDB();
+  await mongoose.connect(process.env.DB_URL);
   app.emit('appStarted');
 });
 
-app.on('appHalting', () => {
-  dbClient.close();
+app.on('appHalting', async () => {
+  await mongoose.connection.close();
   server.close();
 });
 
