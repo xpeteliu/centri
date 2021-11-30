@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -42,6 +43,40 @@ const userSchema = new mongoose.Schema({
     default: 'active',
   },
 }, { timestamps: true });
+
+async function validatePassword(password) {
+  return bcrypt.compare(password, this.password);
+}
+
+userSchema.methods.validatePassword = validatePassword;
+
+async function encryptPassword4ModelOps(next) {
+  try {
+    if (!this.password.match(/^\$2[ayb]\$.{56}$/)) {
+      this.password = await bcrypt.hash(this.password, 6);
+    }
+    next();
+  } catch (e) {
+    next(e);
+  }
+}
+
+userSchema.pre('save', encryptPassword4ModelOps);
+userSchema.pre('updateOne', encryptPassword4ModelOps);
+
+async function encryptPassword4QueryUpdating(next) {
+  try {
+    /* eslint-disable no-underscore-dangle */
+    if (!this._update.password.match(/^\$2[ayb]\$.{56}$/)) {
+      this._update.password = await bcrypt.hash(this._update.password, 6);
+    }
+    next();
+  } catch (e) {
+    next(e);
+  }
+}
+
+userSchema.pre('findOneAndUpdate', encryptPassword4QueryUpdating);
 
 const User = mongoose.model('User', userSchema);
 

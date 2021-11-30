@@ -1,6 +1,7 @@
-export const getLogin = (username, password) => fetch(`${process.env.REACT_APP_API_URL}/user/login`, {
+export const postLogin = (username, password) => fetch('/api/user/login', {
+  method: 'POST',
   headers: {
     'Content-Type': 'application/json',
-    Authorization: `Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`,
   },
+  body: JSON.stringify({ username, password }),
 });

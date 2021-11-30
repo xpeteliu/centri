@@ -1,26 +1,45 @@
 import * as path from 'path';
 import express from 'express';
 import mongoose from 'mongoose';
+import passport from 'passport';
+import session from 'express-session';
 import userRouter from './router/userRouter';
 import commentRouter from './router/commentRouter';
 import groupRouter from './router/groupRouter';
 import postingRouter from './router/postingRouter';
 import privateMessageRouter from './router/privateMessageRouter';
+import initAuth from './utils/auth';
+import excludeRoutes from './utils/excludeRoutes';
 
+initAuth();
+
+const openEndpoints = [
+  {
+    path: '/api/user',
+    method: 'POST',
+  },
+  {
+    path: '/api/user/login',
+    method: 'POST',
+  },
+];
 const app = express();
 
 app.use(express.json());
-app.use(
-  express.urlencoded({
-    extended: true,
-  }),
-);
 app.use(express.static(path.resolve('./build')));
-app.use('/comment', commentRouter);
-app.use('/group', groupRouter);
-app.use('/posting', postingRouter);
-app.use('/privateMessage', privateMessageRouter);
-app.use('/user', userRouter);
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+}));
+app.use(passport.initialize());
+app.use(excludeRoutes(openEndpoints, passport.session()));
+
+app.use('/api/comment', commentRouter);
+app.use('/api/group', groupRouter);
+app.use('/api/posting', postingRouter);
+app.use('/api/privateMessage', privateMessageRouter);
+app.use('/api/user', userRouter);
 
 app.get('/*', (_, res) => {
   res.sendFile(path.resolve('./build/index.html'));

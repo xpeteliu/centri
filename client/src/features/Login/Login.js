@@ -6,14 +6,14 @@ import {
 import { useDispatch } from 'react-redux';
 import { MessageModal } from '../common/MessageModal/MessageModal';
 import { showModal } from '../common/MessageModal/modalSlice';
-import { getLogin } from './fetch';
+import { postLogin } from './fetch';
 
 export default function SignInPage() {
   const dispatch = useDispatch();
   const history = useHistory();
 
   const handleSubmit = (event) => {
-    getLogin(
+    postLogin(
       document.getElementById('inputLoginUsername').value,
       document.getElementById('inputLoginPassword').value,
     ).then((resp) => {
