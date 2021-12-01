@@ -13,10 +13,6 @@ const commentSchema = new mongoose.Schema({
     type: mongoose.ObjectId,
     required: true,
   },
-  numOfLikes: {
-    type: Number,
-    default: 0,
-  },
 }, { timestamps: true });
 
 const Comment = mongoose.model('Comment', commentSchema);

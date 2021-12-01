@@ -1,6 +1,10 @@
 import mongoose from 'mongoose';
 
 const groupSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+  },
   creatorId: {
     type: mongoose.ObjectId,
     required: true,
@@ -13,17 +17,17 @@ const groupSchema = new mongoose.Schema({
     type: [mongoose.ObjectId],
     default: [],
   },
-  postingIds: {
+  pendingMemberIds: {
     type: [mongoose.ObjectId],
     default: [],
   },
-  tagNames: {
+  tags: {
     type: [String],
     default: [],
   },
   status: {
     type: String,
-    default: 'open',
+    default: 'public',
   },
 }, { timestamps: true });
 

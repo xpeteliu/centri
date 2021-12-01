@@ -8,12 +8,37 @@ const initAuth = () => {
       try {
         const user = await User.findOne({ username })
           .exec();
-        if (user && await user.validatePassword(password)) {
-          return done(null, user);
+        if (!user) {
+          done(null, false, {
+            code: 1,
+            message: 'Nonexistent user',
+          });
+          return;
         }
-        return done(null, false);
+        if (user.lockoutCounter >= 10) {
+          done(null, false, {
+            code: 2,
+            message: 'User is locked out',
+          });
+          return;
+        }
+        if (!await user.validatePassword(password)) {
+          done(null, false, {
+            code: 3,
+            message: 'Incorrect password',
+          });
+          user.lockoutCounter += 1;
+          await user.save();
+          setTimeout(
+            async () => User.updateOne({ _id: user.id }, { lockoutCounter: 0 }),
+            300000,
+          );
+          return;
+        }
+        await User.updateOne({ _id: user.id }, { lockoutCounter: 0 });
+        done(null, user);
       } catch (e) {
-        return done(e);
+        done(e);
       }
     },
   ));

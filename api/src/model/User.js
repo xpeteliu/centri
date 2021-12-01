@@ -14,29 +14,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  relatedPostingIds: {
-    type: [mongoose.ObjectId],
-    default: [],
-  },
-  publishedCommentIds: {
-    type: [mongoose.ObjectId],
-    default: [],
-  },
-  likedCommentIds: {
-    type: [mongoose.ObjectId],
-    default: [],
-  },
-  groupIds: {
-    type: [mongoose.ObjectId],
-    default: [],
-  },
-  followerIds: {
-    type: [mongoose.ObjectId],
-    default: [],
-  },
-  followeeIds: {
-    type: [mongoose.ObjectId],
-    default: [],
+  lockoutCounter: {
+    type: Number,
+    default: 0,
   },
   status: {
     type: String,
@@ -52,7 +32,7 @@ userSchema.methods.validatePassword = validatePassword;
 
 async function encryptPassword4ModelOps(next) {
   try {
-    if (!this.password.match(/^\$2[ayb]\$.{56}$/)) {
+    if (this.password && !this.password.match(/^\$2[ayb]\$.{56}$/)) {
       this.password = await bcrypt.hash(this.password, 6);
     }
     next();
@@ -67,7 +47,7 @@ userSchema.pre('updateOne', encryptPassword4ModelOps);
 async function encryptPassword4QueryUpdating(next) {
   try {
     /* eslint-disable no-underscore-dangle */
-    if (!this._update.password.match(/^\$2[ayb]\$.{56}$/)) {
+    if (this._update.password && !this._update.password.match(/^\$2[ayb]\$.{56}$/)) {
       this._update.password = await bcrypt.hash(this._update.password, 6);
     }
     next();

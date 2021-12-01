@@ -6,7 +6,6 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useDispatch } from 'react-redux';
 import { showModal } from '../common/MessageModal/modalSlice';
-import { MessageModal } from '../common/MessageModal/MessageModal';
 import { postUser } from './fetch';
 
 export default function SignUpPage() {
@@ -22,7 +21,8 @@ export default function SignUpPage() {
         password,
       ).then((resp) => {
         switch (resp.status) {
-          case 204:
+          case 200:
+            dispatch(showModal({ headerText: 'Register', bodyText: 'Successfully registered a new user! Please log in now.' }));
             history.push('/login');
             break;
           case 409:
@@ -113,7 +113,6 @@ export default function SignUpPage() {
           </Card>
         </Col>
       </Row>
-      <MessageModal />
     </Container>
   );
 }

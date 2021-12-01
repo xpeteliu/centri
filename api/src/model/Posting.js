@@ -17,14 +17,6 @@ const postingSchema = new mongoose.Schema({
     type: mongoose.ObjectId,
     required: true,
   },
-  commentIds: {
-    type: [mongoose.ObjectId],
-    default: [],
-  },
-  numOfLikes: {
-    type: Number,
-    default: 0,
-  },
   status: {
     type: String,
     default: 'open',

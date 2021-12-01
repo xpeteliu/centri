@@ -4,9 +4,9 @@ import {
   Button, Card, Col, Container, Form, Row,
 } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
-import { MessageModal } from '../common/MessageModal/MessageModal';
 import { showModal } from '../common/MessageModal/modalSlice';
 import { postLogin } from './fetch';
+import { setUserId } from '../common/userSlice';
 
 export default function SignInPage() {
   const dispatch = useDispatch();
@@ -16,16 +16,16 @@ export default function SignInPage() {
     postLogin(
       document.getElementById('inputLoginUsername').value,
       document.getElementById('inputLoginPassword').value,
-    ).then((resp) => {
-      switch (resp.status) {
-        case 204:
-          history.push('/');
-          break;
-        case 401:
-          dispatch(showModal({ headerText: 'Unable to Log In', bodyText: 'Invalid username or password. Please try again.' }));
-          break;
-        default:
-          throw new Error('Invalid response');
+    ).then((resp) => resp.json()).then((body) => {
+      if (body.code == null) {
+        throw new Error('Network Error');
+      }
+      if (body.code === 0) {
+        dispatch(setUserId(body.id));
+        dispatch(showModal({ headerText: 'Log In', bodyText: 'Successfully logged in!' }));
+        history.push('/');
+      } else {
+        dispatch(showModal({ headerText: 'Unable to Log In', bodyText: body.code === 2 ? 'User has been locked out. Try again later.' : 'Invalid username or password. Please try again.' }));
       }
     }).catch(() => {
       dispatch(showModal({ headerText: 'Network Error', bodyText: 'Unable to connect to the server. Please try again later.' }));
@@ -81,7 +81,6 @@ export default function SignInPage() {
           </Card>
         </Col>
       </Row>
-      <MessageModal />
     </Container>
   );
 }

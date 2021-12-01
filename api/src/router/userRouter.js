@@ -1,15 +1,14 @@
 import express from 'express';
 import passport from 'passport';
 import User from '../model/User';
-import Posting from '../model/Posting';
-import Comment from '../model/Comment';
+import Group from '../model/Group';
 
 const userRouter = express.Router();
 
 userRouter.post('/', async (req, res) => {
   try {
     const saved = await (new User(req.body)).save();
-    res.status(204)
+    res.status(200)
       .json(saved);
   } catch (e) {
     res.status(e.code === 11000 ? 409 : 400)
@@ -19,10 +18,28 @@ userRouter.post('/', async (req, res) => {
 
 userRouter.post(
   '/login',
-  passport.authenticate('local'),
-  (_, res) => {
-    res.status(204)
-      .end();
+  (req, res, next) => {
+    passport.authenticate('local', (err, user, info) => {
+      if (err) {
+        next(err);
+        return;
+      }
+      if (!user) {
+        res.status(401)
+          .json(info);
+        return;
+      }
+      req.login(user, (error) => {
+        if (error) {
+          next(error);
+          return;
+        }
+        res.json({
+          code: 0,
+          id: user.id,
+        });
+      });
+    })(req, res, next);
   },
 );
 
@@ -35,12 +52,44 @@ userRouter.post(
   },
 );
 
-userRouter.get('/:userId', async (req, res) => {
+userRouter.post('/filter/paginate', async (req, res) => {
   try {
-    res.json(await User.findById(req.params.userId)
+    res.json(await User.find(req.body.filter)
+      .sort(req.body.sort)
+      .skip(req.body.skip)
+      .limit(req.body.limit)
       .exec());
   } catch (e) {
-    res.status(404)
+    res.status(400)
+      .json({ message: e.message });
+  }
+});
+
+userRouter.post('/filter/count', async (req, res) => {
+  try {
+    res.json({
+      ...req.body,
+      count: await User.countDocuments(req.body.filter)
+        .exec(),
+    });
+  } catch (e) {
+    res.status(400)
+      .json({ message: e.message });
+  }
+});
+
+userRouter.get('/:userId', async (req, res) => {
+  try {
+    const result = res.json(await User.findById(req.params.userId)
+      .exec());
+    if (result == null) {
+      res.status(404)
+        .json({ message: 'No record found' });
+      return;
+    }
+    res.json(result);
+  } catch (e) {
+    res.status(400)
       .json({ message: e.message });
   }
 });
@@ -75,66 +124,30 @@ userRouter.delete('/:userId', async (req, res) => {
   }
 });
 
-userRouter.post('/:userId/relatedPosting/pagination', async (req, res) => {
+userRouter.get('/:userId/joinedGroup', async (req, res) => {
   try {
-    const user = await User.findById(req.params.userId)
-      .exec();
-    res.json(await Posting.where('_id')
-      .in(user.toObject().relatedPostingIds)
-      .sort(req.body.sort)
-      .skip(req.body.skip)
-      .limit(req.body.limit)
+    res.json(await Group.find({
+      $or: [
+        { creatorId: req.params.userId },
+        { adminIds: { $all: [req.params.userId] } },
+        { memberIds: { $all: [req.params.userId] } },
+      ],
+    })
       .exec());
   } catch (e) {
-    res.status(404)
+    res.status(400)
       .json({ message: e.message });
   }
 });
 
-userRouter.post('/:userId/publishedComment/pagination', async (req, res) => {
+userRouter.get('/:userId/pendingGroup', async (req, res) => {
   try {
-    const user = await User.findById(req.params.userId)
-      .exec();
-    res.json(await Comment.where('id')
-      .in(user.toObject().publishedCommentIds)
-      .sort(req.body.sort)
-      .skip(req.body.skip)
-      .limit(req.body.limit)
+    res.json(await Group.find(
+      { pendingMemberIds: { $all: [req.params.userId] } },
+    )
       .exec());
   } catch (e) {
-    res.status(404)
-      .json({ message: e.message });
-  }
-});
-
-userRouter.post('/:userId/likedComment/pagination', async (req, res) => {
-  try {
-    const user = await User.findById(req.params.userId)
-      .exec();
-    res.json(await Comment.where('_id')
-      .in(user.toObject().likedCommentIds)
-      .sort(req.body.sort)
-      .skip(req.body.skip)
-      .limit(req.body.limit)
-      .exec());
-  } catch (e) {
-    res.status(404)
-      .json({ message: e.message });
-  }
-});
-
-userRouter.post('/:userId/group/pagination', async (req, res) => {
-  try {
-    const user = await User.findById(req.params.userId)
-      .exec();
-    res.json(await Comment.where('_id')
-      .in(user.toObject().groupIds)
-      .sort(req.body.sort)
-      .skip(req.body.skip)
-      .limit(req.body.limit)
-      .exec());
-  } catch (e) {
-    res.status(404)
+    res.status(400)
       .json({ message: e.message });
   }
 });
