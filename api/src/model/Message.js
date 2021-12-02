@@ -1,32 +1,28 @@
 import mongoose from 'mongoose';
 
-const postingSchema = new mongoose.Schema({
+const messageSchema = new mongoose.Schema({
   content: {
     type: String,
     required: true,
   },
-  heading: {
+  contentType: {
     type: String,
-    required: true,
+    default: 'text',
   },
-  creatorId: {
+  senderId: {
     type: mongoose.ObjectId,
     required: true,
   },
-  groupId: {
+  recipientId: {
     type: mongoose.ObjectId,
     required: true,
   },
-  flaggerId: {
+  invitingGroupId: {
     type: mongoose.ObjectId,
     required: false,
   },
-  status: {
-    type: String,
-    default: 'open',
-  },
 }, { timestamps: true });
 
-const Posting = mongoose.model('Posting', postingSchema);
+const Message = mongoose.model('Message', messageSchema);
 
-export default Posting;
+export default Message;

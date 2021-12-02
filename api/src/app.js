@@ -7,7 +7,7 @@ import userRouter from './router/userRouter';
 import commentRouter from './router/commentRouter';
 import groupRouter from './router/groupRouter';
 import postingRouter from './router/postingRouter';
-import privateMessageRouter from './router/privateMessageRouter';
+import messageRouter from './router/messageRouter';
 import initAuth from './utils/auth';
 import excludeRoutes from './utils/excludeRoutes';
 
@@ -38,7 +38,7 @@ app.use(excludeRoutes(openEndpoints, passport.session()));
 app.use('/api/comment', commentRouter);
 app.use('/api/group', groupRouter);
 app.use('/api/posting', postingRouter);
-app.use('/api/privateMessage', privateMessageRouter);
+app.use('/api/message', messageRouter);
 app.use('/api/user', userRouter);
 
 app.get('/*', (_, res) => {

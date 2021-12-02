@@ -80,8 +80,8 @@ userRouter.post('/filter/count', async (req, res) => {
 
 userRouter.get('/:userId', async (req, res) => {
   try {
-    const result = res.json(await User.findById(req.params.userId)
-      .exec());
+    const result = await User.findById(req.params.userId)
+      .exec();
     if (result == null) {
       res.status(404)
         .json({ message: 'No record found' });
@@ -129,8 +129,8 @@ userRouter.get('/:userId/joinedGroup', async (req, res) => {
     res.json(await Group.find({
       $or: [
         { creatorId: req.params.userId },
-        { adminIds: { $all: [req.params.userId] } },
-        { memberIds: { $all: [req.params.userId] } },
+        { adminIds: req.params.userId },
+        { memberIds: req.params.userId },
       ],
     })
       .exec());
@@ -143,7 +143,7 @@ userRouter.get('/:userId/joinedGroup', async (req, res) => {
 userRouter.get('/:userId/pendingGroup', async (req, res) => {
   try {
     res.json(await Group.find(
-      { pendingMemberIds: { $all: [req.params.userId] } },
+      { pendingMemberIds: req.params.userId },
     )
       .exec());
   } catch (e) {

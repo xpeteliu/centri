@@ -14,6 +14,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  avatar: {
+    type: Buffer,
+  },
   lockoutCounter: {
     type: Number,
     default: 0,
@@ -30,7 +33,7 @@ async function validatePassword(password) {
 
 userSchema.methods.validatePassword = validatePassword;
 
-async function encryptPassword4ModelOps(next) {
+async function encryptPassword4DocumentOps(next) {
   try {
     if (this.password && !this.password.match(/^\$2[ayb]\$.{56}$/)) {
       this.password = await bcrypt.hash(this.password, 6);
@@ -41,13 +44,16 @@ async function encryptPassword4ModelOps(next) {
   }
 }
 
-userSchema.pre('save', encryptPassword4ModelOps);
-userSchema.pre('updateOne', encryptPassword4ModelOps);
+userSchema.pre('save', encryptPassword4DocumentOps);
+userSchema.pre('updateOne', {
+  document: true,
+  query: false,
+}, encryptPassword4DocumentOps);
 
 async function encryptPassword4QueryUpdating(next) {
   try {
     /* eslint-disable no-underscore-dangle */
-    if (this._update.password && !this._update.password.match(/^\$2[ayb]\$.{56}$/)) {
+    if (this._update && this._update.password && !this._update.password.match(/^\$2[ayb]\$.{56}$/)) {
       this._update.password = await bcrypt.hash(this._update.password, 6);
     }
     next();
@@ -57,6 +63,10 @@ async function encryptPassword4QueryUpdating(next) {
 }
 
 userSchema.pre('findOneAndUpdate', encryptPassword4QueryUpdating);
+userSchema.pre('updateOne', {
+  document: false,
+  query: true,
+}, encryptPassword4QueryUpdating);
 
 const User = mongoose.model('User', userSchema);
 

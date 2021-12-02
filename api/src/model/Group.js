@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const groupSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: true,
+    default: 'Unnamed Group',
   },
   creatorId: {
     type: mongoose.ObjectId,
