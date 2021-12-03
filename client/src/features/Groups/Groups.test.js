@@ -1,5 +1,3 @@
-test.skip('Suppress Jest warning for empty test file', () => 1);
-
 import React from 'react';
 import {
   act, render, screen,
