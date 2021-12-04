@@ -10,6 +10,7 @@ export async function getUser(id) {
     const response = await axios.get(url);
     return response.data;
   } catch (err) {
+    console.log(err);
     return {};
   }
 }
@@ -26,8 +27,10 @@ export async function getMessagesSender(senderId) {
         },
       },
     });
+    console.log('send resp', response);
     return response.data;
   } catch (err) {
+    console.log(err);
     return {};
   }
 }
@@ -44,6 +47,7 @@ export async function getMessagesRecipient(recipientId) {
         },
       },
     });
+    console.log('rec resp', response);
     return response.data;
   } catch (err) {
     return {};

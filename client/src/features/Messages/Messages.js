@@ -23,7 +23,9 @@ function MessagePage() {
 
   const fetchMessages = async (userId) => {
     const messagesSent = await getMessagesSender(userId);
+    console.log('sent', messagesSent);
     const messagesRecieved = await getMessagesRecipient(userId);
+    console.log('received', messagesRecieved);
     const messagesAll = messagesSent.concat(messagesRecieved);
     return messagesAll;
   };
@@ -69,6 +71,7 @@ function MessagePage() {
   }, [localMessages]);
 
   useEffect(async () => {
+    console.log('messages', messages);
     messages.sort((a, b) => ((a.createdDate > b.createdDate) ? 1 : -1));
     messages.forEach(async (message) => {
       const { senderId } = message;
