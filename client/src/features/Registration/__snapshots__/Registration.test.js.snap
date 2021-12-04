@@ -1,0 +1,197 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Registration page should match snapshot 1`] = `
+<div>
+  <div
+    class="App"
+  >
+    <div
+      class="h-100 container"
+    >
+      <div
+        class="h-100 row"
+      >
+        <div
+          class="my-auto col"
+        >
+          <div
+            class="mx-auto card"
+            style="width: 30rem;"
+          >
+            <div
+              class="card-header"
+            >
+              <h2>
+                Sign Up
+              </h2>
+            </div>
+            <div
+              class="card-body"
+            >
+              <form
+                class="container"
+                id="formLogin"
+                style="width: 25rem;"
+              >
+                <div
+                  class="row"
+                >
+                  <div
+                    class="col"
+                  >
+                    <div
+                      class="mb-3 text-start"
+                    >
+                      <label
+                        class="ms-0 form-label"
+                        for="inputRegistrationUsername"
+                      >
+                        Username
+                      </label>
+                      <input
+                        class="form-control"
+                        id="inputRegistrationUsername"
+                        placeholder="Enter username here"
+                        required=""
+                        type="text"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="row"
+                >
+                  <div
+                    class="col"
+                  >
+                    <div
+                      class="mb-3 text-start"
+                    >
+                      <label
+                        class="form-label"
+                        for="inputRegistrationEmail"
+                      >
+                        Email
+                      </label>
+                      <input
+                        class="form-control"
+                        id="inputRegistrationEmail"
+                        placeholder="Enter email here"
+                        required=""
+                        type="email"
+                      />
+                      <small
+                        class="text-muted form-text"
+                      >
+                        Your email will be kept confidential with us.
+                      </small>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="row"
+                >
+                  <div
+                    class="col"
+                  >
+                    <div
+                      class="mb-3 text-start"
+                    >
+                      <label
+                        class="form-label"
+                        for="inputRegistrationPassword0"
+                      >
+                        Password
+                      </label>
+                      <input
+                        class="form-control"
+                        id="inputRegistrationPassword0"
+                        pattern="^(?=.*[A-Za-z])(?=.*\\\\d)[A-Za-z\\\\d]{8,}$"
+                        placeholder="Enter password here"
+                        required=""
+                        title="A password should contain >=8 characters and include both letters and numbers"
+                        type="password"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="row"
+                >
+                  <div
+                    class="col"
+                  >
+                    <div
+                      class="mb-3 text-start"
+                    >
+                      <label
+                        class="form-label"
+                        for="inputRegistrationPassword1"
+                      >
+                        Verify Password
+                      </label>
+                      <input
+                        class="form-control"
+                        id="inputRegistrationPassword1"
+                        pattern="^(?=.*[A-Za-z])(?=.*\\\\d)[A-Za-z\\\\d]{8,}$"
+                        placeholder="Enter the same password as above"
+                        required=""
+                        title="A password should contain >=8 characters and include both letters and numbers"
+                        type="password"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="row"
+                  style="margin-top: 1rem;"
+                >
+                  <div
+                    class="col"
+                  >
+                    <button
+                      class="btn btn-primary"
+                      form="formLogin"
+                      type="submit"
+                    >
+                      Register
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div
+              class="container card-footer"
+            >
+              <div
+                class="text-center row"
+              >
+                <div
+                  class="col"
+                >
+                  <a
+                    class="card-link"
+                    href="/login"
+                  >
+                    Already have an account?
+                  </a>
+                </div>
+                <div
+                  class="col"
+                >
+                  <a
+                    class="card-link"
+                    href="/"
+                  >
+                    Back to Home Page
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
