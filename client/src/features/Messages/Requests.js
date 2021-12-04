@@ -1,6 +1,8 @@
+/* eslint import/no-extraneous-dependencies: 0 */
+
 import axios from 'axios';
 
-const baseUrl = 'https://team20-backend.com';
+const baseUrl = 'http://cis557-group20-project.herokuapp.com/api';
 
 export async function getUser(id) {
   try {
@@ -12,35 +14,45 @@ export async function getUser(id) {
   }
 }
 
-export async function getInbox(id) {
+export async function getMessagesSender(senderId) {
   try {
-    const url = baseUrl.concat(`/privateMessage/${id}`);
-    const response = await axios.get(url);
+    const url = baseUrl.concat('/message/filter/paginate');
+    const response = await axios({
+      method: 'get',
+      url,
+      data: {
+        filter: {
+          senderId,
+        },
+      },
+    });
     return response.data;
   } catch (err) {
     return {};
   }
 }
 
-export async function getConversation(userId, otherUserId) {
+export async function getMessagesRecipient(recipientId) {
   try {
-    const urlA = baseUrl.concat(`/privateMessage/${userId}/${otherUserId}`);
-    const responseA = await axios.get(urlA);
-    const messagesA = responseA.data;
-
-    const urlB = baseUrl.concat(`/privateMessage/${otherUserId}/${userId}`);
-    const responseB = await axios.get(urlB);
-    const messagesB = responseB.data;
-
-    return messagesA.concat(messagesB);
+    const url = baseUrl.concat('/message/filter/paginate');
+    const response = await axios({
+      method: 'get',
+      url,
+      data: {
+        filter: {
+          recipientId,
+        },
+      },
+    });
+    return response.data;
   } catch (err) {
     return {};
   }
 }
 
-export async function postPrivateMessage(message) {
+export async function postMessage(message) {
   try {
-    const url = baseUrl.concat(`/privateMessage`, message);
+    const url = baseUrl.concat('/message', message);
     const response = await axios.post(url);
     return response.data;
   } catch (err) {

@@ -1,58 +1,36 @@
 /* eslint react/prop-types: 0 */
 
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 import {
   Container, Row, Col, Stack, Card, ListGroup, ListGroupItem,
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Conversation from './Conversation';
 import { HeaderBar } from '../common/HeaderBar';
+import { getUser, getMessagesSender, getMessagesRecipient } from './Requests';
 
 function MessagePage() {
-  // const tempUserId = 0;
-  const tempUsers = [
-    { id: 1, name: 'user1' },
-    { id: 2, name: 'user2' },
-  ];
-  const tempInbox = [
-    {
-      creatorId: 1, readerId: 0, content: '1 to 0, A', createdDate: new Date(1995, 11, 17),
-    },
-    {
-      creatorId: 2, readerId: 0, content: '2 to 0, A', createdDate: new Date(1995, 11, 14),
-    },
-    {
-      creatorId: 2, readerId: 0, content: '2 to 0, C', createdDate: new Date(1995, 11, 16),
-    },
-  ];
-
-  const tempConversation1 = [
-    {
-      creatorId: 1, readerId: 0, content: '1 to 0, A', createdDate: new Date(1995, 11, 17),
-    },
-  ];
-
-  const tempConversation2 = [
-    {
-      creatorId: 2, readerId: 0, content: '2 to 0, A', createdDate: new Date(1995, 11, 14),
-    },
-    {
-      creatorId: 2, readerId: 0, content: '2 to 0, C', createdDate: new Date(1995, 11, 16),
-    },
-    {
-      creatorId: 0, readerId: 2, content: '0 to 2, B', createdDate: new Date(1995, 11, 15),
-    },
-  ];
-
   const [otherUserId, setOtherUserId] = useState(-1);
   const [localMessages, setLocalMessages] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [messages, setMessages] = useState([]);
+
+  const fetchUser = async (userId) => {
+    const user = await getUser(userId);
+    return user;
+  };
+
+  const fetchMessages = async (userId) => {
+    const messagesSent = await getMessagesSender(userId);
+    const messagesRecieved = await getMessagesRecipient(userId);
+    const messagesAll = messagesSent.concat(messagesRecieved);
+    return messagesAll;
+  };
 
   const userNameDict = {};
 
-  // TODO: Replace with store
-  // const userId = tempUserId;
-  const userId = useSelector((state) => state.user.id);
+  const userId = 0; // useSelector((state) => state.user.id);
 
   const handleSelectSender = async (id) => {
     setOtherUserId(id);
@@ -79,6 +57,10 @@ function MessagePage() {
   };
 
   useEffect(() => {
+    setMessages(fetchMessages(userId));
+  });
+
+  useEffect(() => {
     console.log('switched to user', otherUserId);
   }, [otherUserId]);
 
@@ -86,34 +68,28 @@ function MessagePage() {
     console.log('local messages updated', localMessages);
   }, [localMessages]);
 
-  // TODO: Replace with GET request
-  const inbox = tempInbox;
-  inbox.sort((a, b) => ((a.createdDate > b.createdDate) ? 1 : -1));
-  const userList = [];
+  useEffect(async () => {
+    messages.sort((a, b) => ((a.createdDate > b.createdDate) ? 1 : -1));
+    messages.forEach(async (message) => {
+      const { senderId } = message;
+      if (!users.some((user) => user._id === senderId) && senderId !== userId) {
+        const otherUser = await fetchUser(senderId);
+        userNameDict[senderId] = otherUser.username;
+        setUsers([...users, otherUser]);
+      }
+    });
+  }, [messages]);
 
-  inbox.forEach((message) => {
-    const senderId = message.creatorId;
-
-    if (!userList.some((user) => user.id === senderId)) {
-      // TODO: Replace with GET request
-      const filtered = tempUsers.filter((user) => user.id === senderId);
-      const senderName = filtered[0].name;
-
-      userList.push({ id: senderId, name: senderName });
-      userNameDict[senderId] = senderName;
-    }
-  });
+  useEffect(() => {
+    console.log('users updated', users);
+  }, [users]);
 
   let content;
   if (otherUserId !== -1) {
     // TODO: Replace with GET request
     let conversation = [];
 
-    if (otherUserId === 1) {
-      conversation = tempConversation1;
-    } else if (otherUserId === 2) {
-      conversation = tempConversation2;
-    }
+    conversation = localMessages.filter(((message) => message.recipientId === otherUserId));
 
     const filtered = localMessages.filter(((message) => message.readerId === otherUserId));
     conversation = conversation.concat(filtered);
@@ -138,7 +114,7 @@ function MessagePage() {
             <Col className="p-3" xs={3}>
               <Stack direction="vertical" gap={1}>
                 <UserList
-                  users={userList}
+                  users={users}
                   onSelect={handleSelectSender}
                 />
               </Stack>
@@ -160,8 +136,8 @@ function UserList(props) {
     rows.push(
       <Row>
         <UserTab
-          userId={user.id}
-          userName={user.name}
+          userId={user._id}
+          userName={user.username}
           onSelect={onSelect}
         />
       </Row>,
