@@ -27,3 +27,6 @@ yarn-debug.log*
 yarn-error.log*
 
 test.http
+test-remote.http
+test_pic.jpg
+test_video.mp4

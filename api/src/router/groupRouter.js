@@ -212,7 +212,7 @@ groupRouter.delete('/:groupId/member/:userId', async (req, res) => {
     if (req.user == null || (req.user.id !== req.params.userId
       && (group.adminIds.find((id) => id.toString() === req.user.id)) == null)) {
       res.status(401)
-        .json({ message: 'Operation requires logging as the leaving user or an admin user' });
+        .json({ message: 'Operation requires logging-in as the leaving user or an admin user' });
       return;
     }
 

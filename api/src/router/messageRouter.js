@@ -6,6 +6,11 @@ const messageRouter = express.Router();
 
 messageRouter.post('/', async (req, res) => {
   try {
+    if (req.body.content == null && req.body.attachmentId == null) {
+      res.status(400)
+        .json({ message: 'Unable to save an empty message' });
+      return;
+    }
     const saved = await (new Message(req.body)).save();
     res.status(200)
       .json(saved);
