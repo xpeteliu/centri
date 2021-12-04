@@ -53,7 +53,7 @@ function Messages() {
 
   const handleSelectSender = async (id) => {
     // await GET request for messages from selected user
-    console.log('id', id);
+    // console.log('id', id);
     setOtherUserId(id);
   };
 
