@@ -1,18 +1,23 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Messages from './features/Messages/Messages';
+import { Route, Switch } from 'react-router-dom';
+import SignInPage from './features/Login/Login';
+import SignUpPage from './features/Registration/Registration';
+import HomePage from './features/HomePage/HomePage';
+import { GroupPage, GroupListPage } from './features/Groups/Groups';
+import { MessageModal } from './features/common/MessageModal/MessageModal';
+import './App.css';
 
-function App() {
+export default function App() {
   return (
-    <Router>
+    <div className="App">
       <Switch>
-        <Route path="/messaging">
-          <Messages />
-        </Route>
+        <Route exact path="/" component={HomePage} />
+        <Route path="/login" component={SignInPage} />
+        <Route path="/register" component={SignUpPage} />
+        <Route path="/group" component={GroupPage} />
+        <Route path="/groups" component={GroupListPage} />
       </Switch>
-    </Router>
+      <MessageModal />
+    </div>
   );
 }
-
-export default App;
