@@ -7,7 +7,7 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Conversation from './Conversation';
 
-function Messages() {
+function MessagePage() {
   const tempUserId = 0;
   const tempUsers = [
     { id: 1, name: 'user1' },
@@ -200,4 +200,4 @@ function UserTab(props) {
   );
 }
 
-export default Messages;
+export default MessagePage;
