@@ -21,9 +21,17 @@ const postingSchema = new mongoose.Schema({
     type: mongoose.ObjectId,
     required: false,
   },
-  status: {
+  hiderIds: {
+    type: [mongoose.ObjectId],
+    default: [],
+  },
+  attachmentId: {
+    type: mongoose.ObjectId,
+    required: false,
+  },
+  attachmentType: {
     type: String,
-    default: 'open',
+    default: 'other',
   },
 }, { timestamps: true });
 
