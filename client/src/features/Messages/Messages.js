@@ -1,14 +1,16 @@
 /* eslint react/prop-types: 0 */
 
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import {
   Container, Row, Col, Stack, Card, ListGroup, ListGroupItem,
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Conversation from './Conversation';
+import { HeaderBar } from '../common/HeaderBar';
 
 function MessagePage() {
-  const tempUserId = 0;
+  // const tempUserId = 0;
   const tempUsers = [
     { id: 1, name: 'user1' },
     { id: 2, name: 'user2' },
@@ -49,11 +51,10 @@ function MessagePage() {
   const userNameDict = {};
 
   // TODO: Replace with store
-  const userId = tempUserId;
+  // const userId = tempUserId;
+  const userId = useSelector((state) => state.user.id);
 
   const handleSelectSender = async (id) => {
-    // await GET request for messages from selected user
-    console.log('id', id);
     setOtherUserId(id);
   };
 
@@ -129,22 +130,25 @@ function MessagePage() {
   }
 
   return (
-    <Container classname="w-75">
-      <div className="bg-light">
-        <Row className="h-99 p-1">
-          <Col className="p-3" xs={3}>
-            <Stack direction="vertical" gap={1}>
-              <UserList
-                users={userList}
-                onSelect={handleSelectSender}
-              />
-            </Stack>
-          </Col>
-          <Col classname="w-75">
-            {content}
-          </Col>
-        </Row>
-      </div>
+    <Container classname="App">
+      <HeaderBar />
+      <Container classname="w-75">
+        <div className="bg-light">
+          <Row className="h-99 p-1">
+            <Col className="p-3" xs={3}>
+              <Stack direction="vertical" gap={1}>
+                <UserList
+                  users={userList}
+                  onSelect={handleSelectSender}
+                />
+              </Stack>
+            </Col>
+            <Col classname="w-75">
+              {content}
+            </Col>
+          </Row>
+        </div>
+      </Container>
     </Container>
   );
 }
