@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 
-const baseUrl = 'http://cis557-group20-project.herokuapp.com/api';
+const baseUrl = 'http://localhost:5000/api';
 
 export async function getUser(id) {
   try {
