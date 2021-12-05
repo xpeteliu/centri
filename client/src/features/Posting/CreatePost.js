@@ -1,27 +1,29 @@
 import React, { useState } from 'react';
 import { useHistory, Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Row, Col, Card,
 } from 'react-bootstrap';
 import { showModal } from '../common/MessageModal/modalSlice';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-export default function Post() {
+export default function CreatePost() {
   const dispatch = useDispatch();
   const history = useHistory();
+  const userId = useSelector((state) => state.user.id);
 
   const [heading, setHeading] = useState('');
   const [content, setContent] = useState('');
-  
+
   const baseUrl = 'https://cis557-group20-project.herokuapp.com/api';
   const url = baseUrl.concat('/posting');
   const handleSubmit = (event) => {
     fetch(url, {
       method: 'POST',
-      headers: { "Content-Type": "application/json" },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-      })
+        userId,
+      }),
     }).then((resp) => {
       switch (resp.status) {
         case 200:
@@ -33,12 +35,15 @@ export default function Post() {
       }
     }).catch(() => {
       dispatch(showModal({ headerText: 'Network Error', bodyText: 'Unable to connect to the server. Please try again later.' }));
-    })
+    });
     event.preventDefault();
   };
 
   return (
     <Card>
+      <Card.Title>
+        <h2>Create a new post</h2>
+      </Card.Title>
       <Card.Body>
         <Row className="h-100">
           <Col className="my-auto">

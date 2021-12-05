@@ -1,18 +1,21 @@
-import React, { useState } from 'react';
-import { useHistory, Link } from 'react-router-dom';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import {
-  Row, Col, Card,
+  Card, Button,
 } from 'react-bootstrap';
+import { showModal } from '../common/MessageModal/modalSlice';
 
-function DeletePost(postingId) {
+export default function DeletePost() {
+  const dispatch = useDispatch();
+  const history = useHistory();
 
   const handleSubmit = (event) => {
     fetch('https://cis557-group20-project.herokuapp.com/api/${postingId}', {
       method: 'DELETE',
-      headers: { "Content-Type": "application/json" },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-      })
+      }),
     }).then((resp) => {
       switch (resp.status) {
         case 200:
@@ -32,7 +35,7 @@ function DeletePost(postingId) {
       }
     }).catch(() => {
       dispatch(showModal({ headerText: 'Network Error', bodyText: 'Unable to connect to the server. Please try again later.' }));
-    })
+    });
     event.preventDefault();
   };
 
@@ -41,7 +44,7 @@ function DeletePost(postingId) {
       <Card.Body>
         <Card.Title>
           Post Title (id:
-          {postId}
+          {postingId}
           )
         </Card.Title>
         <Card.Text>
@@ -50,9 +53,8 @@ function DeletePost(postingId) {
         Dolor, tortor aliquet dictumst mattis mi, netus in. Egestas blandit nunc nulla eget in lacus a, sit. Nulla.'}
         </Card.Text>
         <div className="ms-auto">
-        {requested ? <Button variant="primary" disabled>Requested</Button>
-          : <Button variant="secondary" onClick={() => setRequested(true)}>Delete</Button>}
-      </div>
+          <Button variant="secondary" onClick={handleSubmit}>Delete</Button>
+        </div>
       </Card.Body>
     </Card>
   );
