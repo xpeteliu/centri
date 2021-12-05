@@ -18,17 +18,16 @@ export async function getUser(id) {
 export async function getMessagesSender(senderId) {
   try {
     const url = baseUrl.concat('/message/filter/paginate');
-    const response = await axios({
-      method: 'post',
-      url,
-      data: {
-        filter: {
-          senderId,
-        },
+    const data = {
+      filter: {
+        senderId,
       },
+    };
+    const response = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(data),
     });
-    console.log('send resp', response);
-    return response.data;
+    return response.json();
   } catch (err) {
     console.log('send err', err);
     return {};
@@ -38,17 +37,16 @@ export async function getMessagesSender(senderId) {
 export async function getMessagesRecipient(recipientId) {
   try {
     const url = baseUrl.concat('/message/filter/paginate');
-    const response = await axios({
-      method: 'post',
-      url,
-      data: {
-        filter: {
-          recipientId,
-        },
+    const data = {
+      filter: {
+        recipientId,
       },
+    };
+    const response = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(data),
     });
-    console.log('rec resp', response);
-    return response.data;
+    return response.json();
   } catch (err) {
     console.log('rec err', err);
     return {};

@@ -1,5 +1,4 @@
 /* eslint react/prop-types: 0 */
-/* eslint no-unused-vars: 1 */
 
 import React, { useState, useEffect } from 'react';
 // import { useSelector } from 'react-redux';
@@ -16,11 +15,15 @@ function MessagePage() {
   const [localMessages, setLocalMessages] = useState([]);
   const [users, setUsers] = useState([]);
   const [messages, setMessages] = useState([]);
+  const [conversation, setConversation] = useState([]);
+  // const [messages, setMessages] = useState([]);
 
   const fetchUser = async (userId) => {
     const user = await getUser(userId);
     return user;
   };
+
+  const userNameDict = {};
 
   const fetchMessages = async (userId) => {
     const messagesSent = await getMessagesSender(userId);
@@ -28,23 +31,38 @@ function MessagePage() {
     const messagesRecieved = await getMessagesRecipient(userId);
     // console.log('received', messagesRecieved);
     const messagesAll = messagesSent.concat(messagesRecieved);
+
+    messagesAll.sort((a, b) => ((a.createdDate > b.createdDate) ? 1 : -1));
+
+    const tempIds = [];
+    messagesAll.forEach(async (message) => {
+      const { senderId } = message;
+      console.log('id', senderId);
+      if (!tempIds.some((id) => id === senderId) && senderId !== userId) {
+        tempIds.push(senderId);
+      }
+      /*
+      if (!tempUsers.some((user) => user._id === senderId) && senderId !== userId) {
+        const otherUser = await fetchUser(senderId);
+        userNameDict[senderId] = otherUser.username;
+        tempUsers = [...tempUsers, otherUser];
+        console.log('temp', tempUsers);
+      }
+      */
+    });
+
+    console.log('ids', tempIds);
+
+    const tempUsers = await Promise.all(tempIds.map((id) => fetchUser(id)));
+    setUsers(tempUsers);
+
     return messagesAll;
   };
 
-  const userNameDict = {};
-
   const userId = 0; // useSelector((state) => state.user.id);
-
-  setMessages(fetchMessages(userId));
-
-  return (
-    <Container className="App">
-      <HeaderBar />
-    </Container>
-  );
-
-  /*
-  setMessages(fetchMessages(userId));
+  if (messages.length === 0) {
+    setMessages(fetchMessages(userId));
+  }
 
   const handleSelectSender = async (id) => {
     setOtherUserId(id);
@@ -71,10 +89,6 @@ function MessagePage() {
   };
 
   useEffect(() => {
-    setMessages(fetchMessages(userId));
-  });
-
-  useEffect(() => {
     console.log('switched to user', otherUserId);
   }, [otherUserId]);
 
@@ -82,17 +96,19 @@ function MessagePage() {
     console.log('local messages updated', localMessages);
   }, [localMessages]);
 
-  useEffect(async () => {
-    // console.log('messages', messages);
-    messages.sort((a, b) => ((a.createdDate > b.createdDate) ? 1 : -1));
-    messages.forEach(async (message) => {
-      const { senderId } = message;
-      if (!users.some((user) => user._id === senderId) && senderId !== userId) {
-        const otherUser = await fetchUser(senderId);
-        userNameDict[senderId] = otherUser.username;
-        setUsers([...users, otherUser]);
-      }
-    });
+  useEffect(() => {
+    if (otherUserId !== -1) {
+      let tempConversation = [];
+      console.log('messages', messages);
+      tempConversation = messages.filter(((message) => message.recipientId === otherUserId));
+
+      const filtered = localMessages.filter(((message) => message.recipientId === otherUserId));
+      tempConversation = tempConversation.concat(filtered);
+
+      tempConversation.sort((a, b) => ((a.createdDate > b.createdDate) ? 1 : -1));
+
+      setConversation(tempConversation);
+    }
   }, [messages]);
 
   useEffect(() => {
@@ -100,17 +116,8 @@ function MessagePage() {
   }, [users]);
 
   let content;
+
   if (otherUserId !== -1) {
-    // TODO: Replace with GET request
-    let conversation = [];
-
-    conversation = messages.filter(((message) => message.recipientId === otherUserId));
-
-    const filtered = localMessages.filter(((message) => message.recipientId === otherUserId));
-    conversation = conversation.concat(filtered);
-
-    conversation.sort((a, b) => ((a.createdDate > b.createdDate) ? 1 : -1));
-
     content = Conversation({
       messages: conversation,
       id: userId,
@@ -142,7 +149,6 @@ function MessagePage() {
       </Container>
     </Container>
   );
-  */
 }
 
 function UserList(props) {
