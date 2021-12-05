@@ -22,11 +22,11 @@ function Conversation(props) {
   });
 
   const convoStyle = {
-    height: '99vh',
+    'max-height': '90vh',
   };
 
   const listStyle = {
-    'max-height': '99vh',
+    'max-height': '65vh',
     'overflow-y': 'scroll',
     'overflow-x': 'clip',
   };
@@ -103,8 +103,10 @@ function ConversationRow(props) {
 
 function Message(props) {
   const { message } = props;
-  const { content, createdDate } = message;
-  const date = createdDate.toLocaleDateString('en-US');
+  console.log('message', message);
+  const { content, createdAt } = message;
+  const parsedDate = new Date(createdAt);
+  const date = parsedDate.toLocaleDateString('en-US');
 
   const padTime = (timeString) => {
     if (timeString.length < 2) {
@@ -112,9 +114,9 @@ function Message(props) {
     }
     return timeString;
   };
-  const hours = padTime(createdDate.getHours().toString());
-  const minutes = padTime(createdDate.getMinutes().toString());
-  const seconds = padTime(createdDate.getSeconds().toString());
+  const hours = padTime(parsedDate.getHours().toString());
+  const minutes = padTime(parsedDate.getMinutes().toString());
+  const seconds = padTime(parsedDate.getSeconds().toString());
 
   const dateString = date.concat(` ${hours}:${minutes}:${seconds}`);
 

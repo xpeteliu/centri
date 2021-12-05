@@ -12,9 +12,11 @@ import { getUser, getMessagesSender, getMessagesRecipient } from './Requests';
 
 function MessagePage() {
   const [otherUserId, setOtherUserId] = useState(-1);
-  const [localMessages, setLocalMessages] = useState([]);
+
   const [users, setUsers] = useState([]);
+
   const [messages, setMessages] = useState([]);
+  const [localMessages, setLocalMessages] = useState([]);
   const [conversation, setConversation] = useState([]);
   // const [messages, setMessages] = useState([]);
 
@@ -33,6 +35,8 @@ function MessagePage() {
     const messagesAll = messagesSent.concat(messagesRecieved);
 
     messagesAll.sort((a, b) => ((a.createdDate > b.createdDate) ? 1 : -1));
+
+    console.log('messages', messagesAll);
 
     const tempIds = [];
     messagesAll.forEach(async (message) => {
@@ -56,10 +60,25 @@ function MessagePage() {
     const tempUsers = await Promise.all(tempIds.map((id) => fetchUser(id)));
     setUsers(tempUsers);
 
+    console.log('otherUser', otherUserId);
+
+    if (otherUserId !== -1) {
+      let tempConversation = [];
+      console.log('messages', messagesAll);
+      tempConversation = messagesAll.filter(((message) => message.recipientId === otherUserId));
+
+      const filtered = localMessages.filter(((message) => message.recipientId === otherUserId));
+      tempConversation = tempConversation.concat(filtered);
+
+      tempConversation.sort((a, b) => ((a.createdDate > b.createdDate) ? 1 : -1));
+
+      setConversation(tempConversation);
+    }
+
     return messagesAll;
   };
 
-  const userId = 0; // useSelector((state) => state.user.id);
+  const userId = '61a65336c4a2d7594d3f58f6'; // useSelector((state) => state.user._id);
   if (messages.length === 0) {
     setMessages(fetchMessages(userId));
   }
@@ -90,6 +109,7 @@ function MessagePage() {
 
   useEffect(() => {
     console.log('switched to user', otherUserId);
+    fetchMessages(userId);
   }, [otherUserId]);
 
   useEffect(() => {
@@ -97,19 +117,12 @@ function MessagePage() {
   }, [localMessages]);
 
   useEffect(() => {
-    if (otherUserId !== -1) {
-      let tempConversation = [];
-      console.log('messages', messages);
-      tempConversation = messages.filter(((message) => message.recipientId === otherUserId));
-
-      const filtered = localMessages.filter(((message) => message.recipientId === otherUserId));
-      tempConversation = tempConversation.concat(filtered);
-
-      tempConversation.sort((a, b) => ((a.createdDate > b.createdDate) ? 1 : -1));
-
-      setConversation(tempConversation);
-    }
+    console.log('otherUser', otherUserId);
   }, [messages]);
+
+  useEffect(() => {
+    console.log('conversation updated', conversation);
+  }, [conversation]);
 
   useEffect(() => {
     console.log('users updated', users);
