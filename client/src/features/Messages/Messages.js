@@ -8,7 +8,9 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Conversation from './Conversation';
 import { HeaderBar } from '../common/HeaderBar';
-import { getUser, getMessagesSender, getMessagesRecipient } from './Requests';
+import {
+  getUser, getMessagesSender, getMessagesRecipient, postMessage,
+} from './Requests';
 
 function MessagePage() {
   const [otherUserId, setOtherUserId] = useState(-1);
@@ -16,7 +18,7 @@ function MessagePage() {
   const [users, setUsers] = useState([]);
 
   const [messages, setMessages] = useState([]);
-  const [localMessages, setLocalMessages] = useState([]);
+  // const [localMessages, setLocalMessages] = useState([]);
   const [conversation, setConversation] = useState([]);
   // const [messages, setMessages] = useState([]);
 
@@ -29,14 +31,12 @@ function MessagePage() {
 
   const fetchMessages = async (userId) => {
     const messagesSent = await getMessagesSender(userId);
-    // console.log('sent', messagesSent);
     const messagesRecieved = await getMessagesRecipient(userId);
-    // console.log('received', messagesRecieved);
     const messagesAll = messagesSent.concat(messagesRecieved);
 
-    messagesAll.sort((a, b) => ((a.createdDate > b.createdDate) ? 1 : -1));
+    messagesAll.sort((a, b) => (((new Date(a.createdAt)) > (new Date(b.createdAt))) ? 1 : -1));
 
-    console.log('messages', messagesAll);
+    // console.log('messages', messagesAll);
 
     const tempIds = [];
     messagesAll.forEach(async (message) => {
@@ -45,37 +45,29 @@ function MessagePage() {
       if (!tempIds.some((id) => id === senderId) && senderId !== userId) {
         tempIds.push(senderId);
       }
-      /*
-      if (!tempUsers.some((user) => user._id === senderId) && senderId !== userId) {
-        const otherUser = await fetchUser(senderId);
-        userNameDict[senderId] = otherUser.username;
-        tempUsers = [...tempUsers, otherUser];
-        console.log('temp', tempUsers);
-      }
-      */
     });
-
-    console.log('ids', tempIds);
 
     const tempUsers = await Promise.all(tempIds.map((id) => fetchUser(id)));
     setUsers(tempUsers);
 
-    console.log('otherUser', otherUserId);
-
-    if (otherUserId !== -1) {
-      let tempConversation = [];
-      console.log('messages', messagesAll);
-      tempConversation = messagesAll.filter(((message) => message.recipientId === otherUserId));
-
-      const filtered = localMessages.filter(((message) => message.recipientId === otherUserId));
-      tempConversation = tempConversation.concat(filtered);
-
-      tempConversation.sort((a, b) => ((a.createdDate > b.createdDate) ? 1 : -1));
-
-      setConversation(tempConversation);
-    }
-
     return messagesAll;
+  };
+
+  const fetchConvo = async (userId) => {
+    const messagesSent = await getMessagesSender(userId);
+    const messagesRecieved = await getMessagesRecipient(userId);
+    const messagesAll = messagesSent.concat(messagesRecieved);
+
+    let tempConversation = [];
+    // console.log('messages', messagesAll);
+    tempConversation = messagesAll.filter(((message) => message.recipientId === otherUserId));
+    // console.log('local', localMessages);
+    // const filtered = localMessages.filter(((message) => message.recipientId === otherUserId));
+    // tempConversation = tempConversation.concat(filtered);
+
+    tempConversation.sort((a, b) => (((new Date(a.createdAt)) > (new Date(b.createdAt))) ? 1 : -1));
+
+    setConversation(tempConversation);
   };
 
   const userId = '61a65336c4a2d7594d3f58f6'; // useSelector((state) => state.user._id);
@@ -87,34 +79,33 @@ function MessagePage() {
     setOtherUserId(id);
   };
 
-  const handleSubmitMessage = (event) => {
+  const handleSubmitMessage = async (event) => {
     event.preventDefault();
     const messageText = event.target.formMessageText.value;
     console.log('event', messageText);
     if (messageText.length > 0) {
       const newMessage = {
-        creatorId: userId,
-        readerId: otherUserId,
+        senderId: userId,
+        recipientId: otherUserId,
         content: messageText,
-        createdDate: new Date(),
+        createdAt: (new Date()).toString(),
       };
-      console.log('message', newMessage);
-      // TODO: Replace with request, wait for POST response before adding
-      // new message to localMessages, clear localMessages after receiving
-      // messages from server
-      // Send and await POST request here
-      setLocalMessages([...localMessages, newMessage]);
+      console.log('POSTING MESSAGE', newMessage);
+      await postMessage(newMessage);
+      fetchConvo(userId);
+      // setLocalMessages([...localMessages, newMessage]);
     }
   };
 
   useEffect(() => {
     console.log('switched to user', otherUserId);
-    fetchMessages(userId);
+    fetchConvo(userId);
   }, [otherUserId]);
 
-  useEffect(() => {
-    console.log('local messages updated', localMessages);
-  }, [localMessages]);
+  // useEffect(() => {
+  //   console.log('local messages updated', localMessages);
+  //   fetchConvo(userId);
+  // }, [localMessages]);
 
   useEffect(() => {
     console.log('otherUser', otherUserId);

@@ -55,10 +55,12 @@ export async function getMessagesRecipient(recipientId) {
 
 export async function postMessage(message) {
   try {
-    const url = baseUrl.concat('/message', message);
-    const response = await axios.post(url);
+    const url = baseUrl.concat('/message');
+    const response = await axios.post(url, message);
+    console.log('post response', response);
     return response.data;
   } catch (err) {
+    console.log('post err', err);
     return {};
   }
 }

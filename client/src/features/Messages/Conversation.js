@@ -103,7 +103,6 @@ function ConversationRow(props) {
 
 function Message(props) {
   const { message } = props;
-  console.log('message', message);
   const { content, createdAt } = message;
   const parsedDate = new Date(createdAt);
   const date = parsedDate.toLocaleDateString('en-US');
