@@ -17,6 +17,7 @@ function MessagePage() {
 
   const [users, setUsers] = useState([]);
 
+  const [waiting, setWaiting] = useState(true);
   const [messages, setMessages] = useState([]);
   // const [localMessages, setLocalMessages] = useState([]);
   const [conversation, setConversation] = useState([]);
@@ -73,8 +74,9 @@ function MessagePage() {
   };
 
   const userId = '61a65336c4a2d7594d3f58f6'; // useSelector((state) => state.user._id);
-  if (messages.length === 0) {
+  if (waiting) {
     setMessages(fetchMessages(userId));
+    setWaiting(false);
   }
 
   const handleSelectSender = async (id) => {
