@@ -19,7 +19,7 @@ export async function getMessagesSender(senderId) {
   try {
     const url = baseUrl.concat('/message/filter/paginate');
     const response = await axios({
-      method: 'get',
+      method: 'post',
       url,
       data: {
         filter: {
@@ -30,7 +30,7 @@ export async function getMessagesSender(senderId) {
     console.log('send resp', response);
     return response.data;
   } catch (err) {
-    console.log(err);
+    console.log('send err', err);
     return {};
   }
 }
@@ -39,7 +39,7 @@ export async function getMessagesRecipient(recipientId) {
   try {
     const url = baseUrl.concat('/message/filter/paginate');
     const response = await axios({
-      method: 'get',
+      method: 'post',
       url,
       data: {
         filter: {
@@ -50,6 +50,7 @@ export async function getMessagesRecipient(recipientId) {
     console.log('rec resp', response);
     return response.data;
   } catch (err) {
+    console.log('rec err', err);
     return {};
   }
 }

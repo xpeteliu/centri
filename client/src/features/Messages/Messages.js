@@ -1,4 +1,5 @@
 /* eslint react/prop-types: 0 */
+/* eslint no-unused-vars: 1 */
 
 import React, { useState, useEffect } from 'react';
 // import { useSelector } from 'react-redux';
@@ -23,9 +24,9 @@ function MessagePage() {
 
   const fetchMessages = async (userId) => {
     const messagesSent = await getMessagesSender(userId);
-    console.log('sent', messagesSent);
+    // console.log('sent', messagesSent);
     const messagesRecieved = await getMessagesRecipient(userId);
-    console.log('received', messagesRecieved);
+    // console.log('received', messagesRecieved);
     const messagesAll = messagesSent.concat(messagesRecieved);
     return messagesAll;
   };
@@ -33,6 +34,17 @@ function MessagePage() {
   const userNameDict = {};
 
   const userId = 0; // useSelector((state) => state.user.id);
+
+  setMessages(fetchMessages(userId));
+
+  return (
+    <Container className="App">
+      <HeaderBar />
+    </Container>
+  );
+
+  /*
+  setMessages(fetchMessages(userId));
 
   const handleSelectSender = async (id) => {
     setOtherUserId(id);
@@ -71,7 +83,7 @@ function MessagePage() {
   }, [localMessages]);
 
   useEffect(async () => {
-    console.log('messages', messages);
+    // console.log('messages', messages);
     messages.sort((a, b) => ((a.createdDate > b.createdDate) ? 1 : -1));
     messages.forEach(async (message) => {
       const { senderId } = message;
@@ -92,9 +104,9 @@ function MessagePage() {
     // TODO: Replace with GET request
     let conversation = [];
 
-    conversation = localMessages.filter(((message) => message.recipientId === otherUserId));
+    conversation = messages.filter(((message) => message.recipientId === otherUserId));
 
-    const filtered = localMessages.filter(((message) => message.readerId === otherUserId));
+    const filtered = localMessages.filter(((message) => message.recipientId === otherUserId));
     conversation = conversation.concat(filtered);
 
     conversation.sort((a, b) => ((a.createdDate > b.createdDate) ? 1 : -1));
@@ -130,6 +142,7 @@ function MessagePage() {
       </Container>
     </Container>
   );
+  */
 }
 
 function UserList(props) {
