@@ -31,7 +31,9 @@ function MessagePage() {
 
   const fetchMessages = async (userId) => {
     const messagesSent = await getMessagesSender(userId);
+    console.log(`sent by ${userId}`, messagesSent);
     const messagesRecieved = await getMessagesRecipient(userId);
+    console.log(`received by ${userId}`, messagesRecieved);
     const messagesAll = messagesSent.concat(messagesRecieved);
 
     messagesAll.sort((a, b) => (((new Date(a.createdAt)) > (new Date(b.createdAt))) ? 1 : -1));

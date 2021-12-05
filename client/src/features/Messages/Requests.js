@@ -25,6 +25,9 @@ export async function getMessagesSender(senderId) {
     };
     const response = await fetch(url, {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify(data),
     });
     return response.json();
@@ -44,6 +47,9 @@ export async function getMessagesRecipient(recipientId) {
     };
     const response = await fetch(url, {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify(data),
     });
     return response.json();
