@@ -215,4 +215,31 @@ postingRouter.delete('/:postingId', async (req, res) => {
   }
 });
 
+postingRouter.put('/:postingId/hide', async (req, res) => {
+  try {
+    if (req.user == null || req.user.id == null) {
+      res.status(401)
+        .json({ message: 'Unable to hide a post without logging-in as an authorized user' });
+    }
+
+    const postingWriteResult = await Posting.updateOne(
+      { _id: req.params.postingId },
+      { $addToSet: { hiderIds: req.user.id } },
+    )
+      .exec();
+
+    if (postingWriteResult.matchedCount === 0) {
+      res.status(404)
+        .json({ message: 'Posting not found' });
+      return;
+    }
+
+    res.status(204)
+      .end();
+  } catch (e) {
+    res.status(400)
+      .json({ message: e.message });
+  }
+});
+
 export default postingRouter;

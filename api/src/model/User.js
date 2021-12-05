@@ -14,9 +14,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  avatar: {
-    type: Buffer,
-  },
   lockoutCounter: {
     type: Number,
     default: 0,

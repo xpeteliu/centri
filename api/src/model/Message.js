@@ -1,14 +1,6 @@
 import mongoose from 'mongoose';
 
 const messageSchema = new mongoose.Schema({
-  content: {
-    type: String,
-    required: true,
-  },
-  contentType: {
-    type: String,
-    default: 'text',
-  },
   senderId: {
     type: mongoose.ObjectId,
     required: true,
@@ -17,9 +9,21 @@ const messageSchema = new mongoose.Schema({
     type: mongoose.ObjectId,
     required: true,
   },
+  content: {
+    type: String,
+    required: false,
+  },
   invitingGroupId: {
     type: mongoose.ObjectId,
     required: false,
+  },
+  attachmentId: {
+    type: mongoose.ObjectId,
+    required: false,
+  },
+  attachmentType: {
+    type: String,
+    default: 'other',
   },
 }, { timestamps: true });
 
