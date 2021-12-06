@@ -13,6 +13,8 @@ import {
 } from './Requests';
 
 function MessagePage() {
+  const ACCEPTED_FILE_TYPES = ['image/jpeg'];
+
   const [otherUserId, setOtherUserId] = useState(-1);
 
   const [users, setUsers] = useState([]);
@@ -21,7 +23,7 @@ function MessagePage() {
   const [messages, setMessages] = useState([]);
   const [conversation, setConversation] = useState([]);
 
-  const [attachedFile, setAttachedFile] = useState([]);
+  const [attachedFile, setAttachedFile] = useState(null);
 
   const fetchUser = async (userId) => {
     const user = await getUser(userId);
@@ -78,8 +80,9 @@ function MessagePage() {
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
-    setAttachedFile(file);
-    console.log(attachedFile);
+    if (ACCEPTED_FILE_TYPES.includes(file.type)) {
+      setAttachedFile(file);
+    }
   };
 
   const handleSubmitMessage = async (event) => {
@@ -124,6 +127,10 @@ function MessagePage() {
       clearInterval(pollConvo);
     };
   }, [otherUserId]);
+
+  useEffect(() => {
+    console.log('attached file', attachedFile);
+  }, [attachedFile]);
 
   useEffect(() => {
     console.log('messages updated', messages);
