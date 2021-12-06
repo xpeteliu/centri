@@ -2,13 +2,13 @@
 
 import React from 'react';
 import {
-  Container, Card, Row, Col, Form, Button,
+  Container, Card, Row, Col, Form, Button, Stack,
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function Conversation(props) {
   const {
-    messages, id, otherId, otherName, onSubmitMessage,
+    messages, id, otherId, otherName, onSubmitMessage, onFileUpload,
   } = props;
 
   messages.sort((a, b) => ((a.createdDate > b.createdDate) ? 1 : -1));
@@ -45,7 +45,8 @@ function Conversation(props) {
         </div>
         <Row>
           <Input
-            handleSubmit={onSubmitMessage}
+            onSubmitMessage={onSubmitMessage}
+            onFileUpload={onFileUpload}
             userId={id}
             otherUserId={otherId}
           />
@@ -56,18 +57,35 @@ function Conversation(props) {
 }
 
 function Input(props) {
-  const { handleSubmit } = props;
+  const { onSubmitMessage, onFileUpload } = props;
   return (
     <Container className="p-3">
-      <Form onSubmit={handleSubmit} controlid="formMessage">
-        <Form.Group>
-          <Form.Label>Chat</Form.Label>
-          <Form.Control name="formMessageText" placeholder="..." />
-        </Form.Group>
-        <Button variant="primary" type="submit">
-          Send
-        </Button>
-      </Form>
+      <Stack direction="horizontal">
+        <Col xs={8}>
+          <Form onSubmit={onSubmitMessage} controlid="formMessage">
+            <Form.Group>
+              <Row>
+                <Col xs={1}>
+                  <Form.Label>Chat</Form.Label>
+                </Col>
+                <Col xs={9}>
+                  <Form.Control name="formMessageText" placeholder="..." />
+                </Col>
+                <Col xs={1}>
+                  <Button variant="primary" type="submit">
+                    Send
+                  </Button>
+                </Col>
+              </Row>
+            </Form.Group>
+          </Form>
+        </Col>
+        <Col xs={4}>
+          <Form onChange={onFileUpload} controlid="formMessage">
+            <Form.Control type="file" />
+          </Form>
+        </Col>
+      </Stack>
     </Container>
   );
 }

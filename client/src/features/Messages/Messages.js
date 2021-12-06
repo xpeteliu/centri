@@ -19,9 +19,9 @@ function MessagePage() {
 
   const [waiting, setWaiting] = useState(true);
   const [messages, setMessages] = useState([]);
-  // const [localMessages, setLocalMessages] = useState([]);
   const [conversation, setConversation] = useState([]);
-  // const [messages, setMessages] = useState([]);
+
+  const [attachedFile, setAttachedFile] = useState([]);
 
   const fetchUser = async (userId) => {
     const user = await getUser(userId);
@@ -59,11 +59,7 @@ function MessagePage() {
     const messagesAll = messagesSent.concat(messagesRecieved);
 
     let tempConversation = [];
-    // console.log('messages', messagesAll);
     tempConversation = messagesAll.filter(((message) => message.recipientId === otherUserId));
-    // console.log('local', localMessages);
-    // const filtered = localMessages.filter(((message) => message.recipientId === otherUserId));
-    // tempConversation = tempConversation.concat(filtered);
 
     tempConversation.sort((a, b) => (((new Date(a.createdAt)) > (new Date(b.createdAt))) ? 1 : -1));
 
@@ -78,6 +74,12 @@ function MessagePage() {
 
   const handleSelectSender = async (id) => {
     setOtherUserId(id);
+  };
+
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    setAttachedFile(file);
+    console.log(attachedFile);
   };
 
   const handleSubmitMessage = async (event) => {
@@ -144,6 +146,7 @@ function MessagePage() {
       otherId: otherUserId,
       otherName: userNameDict[otherUserId],
       onSubmitMessage: handleSubmitMessage,
+      onFileUpload: handleFileUpload,
     });
   }
 
