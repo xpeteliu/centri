@@ -1,4 +1,5 @@
 /* eslint react/prop-types: 0 */
+/* eslint no-unused-vars: 1 */
 
 import React, { useState, useEffect } from 'react';
 // import { useSelector } from 'react-redux';
@@ -9,7 +10,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Conversation from './Conversation';
 import { HeaderBar } from '../common/HeaderBar';
 import {
-  getUser, getMessagesSender, getMessagesRecipient, postMessage,
+  getUser, getMessagesSender, getMessagesRecipient, postMessage, postFile,
 } from './Requests';
 
 function MessagePage() {
@@ -90,16 +91,35 @@ function MessagePage() {
     const messageText = event.target.formMessageText.value;
     console.log('event', messageText);
     if (messageText.length > 0) {
-      const newMessage = {
-        content: messageText,
-        attachmentType: 'NONE',
-        createdAt: (new Date()).toString(),
-        senderId: userId,
-        recipientId: otherUserId,
-      };
-      console.log('POSTING MESSAGE', newMessage);
-      await postMessage(newMessage);
-      fetchConvo(userId);
+      if (attachedFile === null) {
+        const newMessage = {
+          content: messageText,
+          attachmentType: 'none',
+          createdAt: (new Date()).toString(),
+          senderId: userId,
+          recipientId: otherUserId,
+        };
+        console.log('POSTING MESSAGE', newMessage);
+        await postMessage(newMessage);
+        fetchConvo(userId);
+      } else {
+        console.log(attachedFile);
+        /*
+        const fileId = await postFile(attachedFile);
+        console.log(response);
+        const newMessage = {
+          content: messageText,
+          attachmentId: fileId,
+          attachmentType: attachedFile.type,
+          createdAt: (new Date()).toString(),
+          senderId: userId,
+          recipientId: otherUserId,
+        };
+        console.log('POSTING MESSAGE', newMessage);
+        await postMessage(newMessage);
+        fetchConvo(userId);
+        */
+      }
     }
   };
 

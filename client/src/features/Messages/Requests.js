@@ -70,3 +70,15 @@ export async function postMessage(message) {
     return {};
   }
 }
+
+export async function postFile(file) {
+  try {
+    const url = baseUrl.concat('/file');
+    const response = await axios.post(url, file);
+    console.log('upload post response', response);
+    return response.data;
+  } catch (err) {
+    console.log('upload post err', err);
+    return {};
+  }
+}
