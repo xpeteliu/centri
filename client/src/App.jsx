@@ -5,6 +5,7 @@ import SignUpPage from './features/Registration/Registration';
 import HomePage from './features/HomePage/HomePage';
 import { GroupPage, GroupListPage } from './features/Groups/Groups';
 import { MessageModal } from './features/common/MessageModal/MessageModal';
+import ResetPassword from './features/ResetPassword/ResetPassword';
 import './App.css';
 
 export default function App() {
@@ -16,6 +17,7 @@ export default function App() {
         <Route path="/register" component={SignUpPage} />
         <Route path="/group" component={GroupPage} />
         <Route path="/groups" component={GroupListPage} />
+        <Route path="/resetPassword" component={ResetPassword} />
       </Switch>
       <MessageModal />
     </div>

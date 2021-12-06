@@ -96,7 +96,8 @@ userRouter.get('/:userId', async (req, res) => {
 
 userRouter.put('/:userId', async (req, res) => {
   try {
-    if (req.user == null || req.params.userId !== req.user.id) {
+    if ((req.user == null || req.params.userId !== req.user.id)
+      && (!(Object.keys(req.body).length === 1 && req.body.password))) {
       res.status(401)
         .json({ message: 'Not operating as an authorized user' });
       return;
