@@ -3,5 +3,9 @@ export const postUser = (username, email, password) => fetch('/api/user', {
   headers: {
     'Content-Type': 'application/json',
   },
-  body: JSON.stringify({ username, email, password }),
+  body: JSON.stringify({
+    username,
+    email,
+    password,
+  }),
 });
