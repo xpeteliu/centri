@@ -105,8 +105,9 @@ function MessagePage() {
       } else {
         console.log(attachedFile);
         /*
-        const fileId = await postFile(attachedFile);
+        const response = await postFile(attachedFile);
         console.log(response);
+        const fileId = response.id;
         const newMessage = {
           content: messageText,
           attachmentId: fileId,
