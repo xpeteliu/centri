@@ -32,9 +32,7 @@ function MessagePage() {
 
   const fetchMessages = async (userId) => {
     const messagesSent = await getMessagesSender(userId);
-    console.log(`sent by ${userId}`, messagesSent);
     const messagesRecieved = await getMessagesRecipient(userId);
-    console.log(`received by ${userId}`, messagesRecieved);
     const messagesAll = messagesSent.concat(messagesRecieved);
 
     messagesAll.sort((a, b) => (((new Date(a.createdAt)) > (new Date(b.createdAt))) ? 1 : -1));
@@ -44,7 +42,6 @@ function MessagePage() {
     const tempIds = [];
     messagesAll.forEach(async (message) => {
       const { senderId } = message;
-      console.log('id', senderId);
       if (!tempIds.some((id) => id === senderId) && senderId !== userId) {
         tempIds.push(senderId);
       }
@@ -89,34 +86,49 @@ function MessagePage() {
     console.log('event', messageText);
     if (messageText.length > 0) {
       const newMessage = {
+        content: messageText,
+        attachmentType: 'NONE',
+        createdAt: (new Date()).toString(),
         senderId: userId,
         recipientId: otherUserId,
-        content: messageText,
-        createdAt: (new Date()).toString(),
       };
       console.log('POSTING MESSAGE', newMessage);
       await postMessage(newMessage);
       fetchConvo(userId);
-      // setLocalMessages([...localMessages, newMessage]);
     }
   };
 
   useEffect(() => {
-    console.log('switched to user', otherUserId);
-    fetchConvo(userId);
-  }, [otherUserId]);
+    console.log('rendered');
+    const pollMessages = setInterval(() => {
+      fetchMessages(userId);
+    }, 5000);
 
-  // useEffect(() => {
-  //   console.log('local messages updated', localMessages);
-  //   fetchConvo(userId);
-  // }, [localMessages]);
+    return () => {
+      clearInterval(pollMessages);
+    };
+  }, []);
 
   useEffect(() => {
-    console.log('otherUser', otherUserId);
+    console.log('switched to user', otherUserId);
+    fetchConvo(userId);
+    const pollConvo = setInterval(() => {
+      if (otherUserId !== -1) {
+        fetchConvo(userId);
+      }
+    }, 1000);
+
+    return () => {
+      clearInterval(pollConvo);
+    };
+  }, [otherUserId]);
+
+  useEffect(() => {
+    console.log('messages updated', messages);
   }, [messages]);
 
   useEffect(() => {
-    console.log('conversation updated', conversation);
+    console.log('conversation updated', conversation, ', ', otherUserId);
   }, [conversation]);
 
   useEffect(() => {
@@ -136,9 +148,9 @@ function MessagePage() {
   }
 
   return (
-    <Container classname="App">
+    <Container className="App">
       <HeaderBar />
-      <Container classname="w-75">
+      <Container className="w-100">
         <div className="bg-light">
           <Row className="h-99 p-1">
             <Col className="p-3" xs={3}>
@@ -149,7 +161,7 @@ function MessagePage() {
                 />
               </Stack>
             </Col>
-            <Col classname="w-75">
+            <Col className="w-100">
               {content}
             </Col>
           </Row>
@@ -164,7 +176,7 @@ function UserList(props) {
   const rows = [];
   users.forEach((user) => {
     rows.push(
-      <Row>
+      <Row key={user._id}>
         <UserTab
           userId={user._id}
           userName={user.username}
@@ -174,9 +186,9 @@ function UserList(props) {
     );
   });
   const listStyle = {
-    'max-height': '90vh',
-    'overflow-y': 'scroll',
-    'overflow-x': 'clip',
+    maxHeight: '90vh',
+    overflowY: 'scroll',
+    overflowX: 'clip',
   };
   return (
     <div style={listStyle}>

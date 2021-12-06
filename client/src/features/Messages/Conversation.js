@@ -16,19 +16,20 @@ function Conversation(props) {
   const rows = [];
   messages.forEach((message) => {
     rows.push(<ConversationRow
+      key={message._id}
       message={message}
       userId={id}
     />);
   });
 
   const convoStyle = {
-    'max-height': '90vh',
+    maxHeight: '90vh',
   };
 
   const listStyle = {
-    'max-height': '65vh',
-    'overflow-y': 'scroll',
-    'overflow-x': 'clip',
+    maxHeight: '65vh',
+    overflowY: 'scroll',
+    overflowX: 'clip',
   };
 
   return (
@@ -58,7 +59,7 @@ function Input(props) {
   const { handleSubmit } = props;
   return (
     <Container className="p-3">
-      <Form onSubmit={handleSubmit} controlId="formMessage">
+      <Form onSubmit={handleSubmit} controlid="formMessage">
         <Form.Group>
           <Form.Label>Chat</Form.Label>
           <Form.Control name="formMessageText" placeholder="..." />
