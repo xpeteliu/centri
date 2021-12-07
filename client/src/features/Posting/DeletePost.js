@@ -6,7 +6,7 @@ import {
 } from 'react-bootstrap';
 import { showModal } from '../common/MessageModal/modalSlice';
 
-export default function DeletePost() {
+export default function DeletePost(postingId) {
   const dispatch = useDispatch();
   const history = useHistory();
 

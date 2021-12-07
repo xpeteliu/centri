@@ -6,7 +6,7 @@ import HomePage from './features/HomePage/HomePage';
 import { GroupPage, GroupListPage } from './features/Groups/Groups';
 import { MessageModal } from './features/common/MessageModal/MessageModal';
 import CreatePost from './features/Posting/CreatePost';
-import DeletePost from './features/Posting/DeletePost';
+// import DeletePost from './features/Posting/DeletePost';
 import './App.css';
 
 export default function App() {
@@ -19,7 +19,7 @@ export default function App() {
         <Route path="/group" component={GroupPage} />
         <Route path="/groups" component={GroupListPage} />
         <Route path="/posting" component={CreatePost} />
-        <Route path="/posting/:postingId" component={DeletePost} />
+        {/* <Route path="/posting/:postingId" component={DeletePost} /> */}
       </Switch>
       <MessageModal />
     </div>
