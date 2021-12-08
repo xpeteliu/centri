@@ -47,7 +47,8 @@ export default function CreatePost() {
               <br />
               <Link to="/"><button className="btn btn-secondary float-right" type="button">Cancel</button></Link>
               &nbsp;&nbsp;&nbsp;
-              <button className="btn btn-primary float-right" type="button">Post</button>
+              {/* <button className="btn btn-primary float-right" type="button">Post</button> */}
+              <input type="submit" value="Submit" className="btn btn-secondary float-right" />
             </form>
           </Col>
         </Row>
