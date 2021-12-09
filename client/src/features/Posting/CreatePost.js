@@ -1,28 +1,49 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useHistory } from 'react-router-dom';
 import {
-  Row, Col, Card,
+  Button, Row, Col, Card,
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { MakePost } from './PostingMethods';
+import { showModal } from '../common/MessageModal/modalSlice';
 
 export default function CreatePost() {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  // const creatorId = 1;
   const creatorId = useSelector((state) => state.user.id);
-  const groupId = 1;
+  // const groupId = useSelector((state) => state.user.id);
 
-  const [heading, setHeading] = useState('');
-  const [content, setContent] = useState('');
-  // const [attachedFile, setAttachedFile] = useState(null);
-  // const handleUploadAttachment = (event) => {
-  //   const file = event.target.files[0];
-  //   if (ACCEPTED_FILE_TYPES.includes(file.type)) {
-  //     setAttachedFile(file);
-  //   }
-  // };
+  const [title, setTitle] = useState('');
+  const [body, setBody] = useState('');
+
+  const baseUrl = 'https://cis557-group20-project.herokuapp.com/api';
+  const url = baseUrl.concat('/posting');
 
   const handleSubmit = (event) => {
-    MakePost(creatorId, groupId);
+    const heading = document.getElementById('inputHeading').value;
+    const content = document.getElementById('inputContent').value;
+    fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        groupId,
+        heading,
+        creatorId,
+        content,
+      }),
+    }).then((resp) => {
+      switch (resp.status) {
+        case 200:
+          dispatch(showModal({ headerText: 'Post', bodyText: 'Successfully created a new post' }));
+          history.push('/posting');
+          break;
+        default:
+          throw new Error('Invalid response');
+      }
+    }).catch(() => {
+      dispatch(showModal({ headerText: 'Network Error', bodyText: 'Unable to connect to the server. Please try again later.' }));
+    });
     event.preventDefault();
   };
 
@@ -37,18 +58,18 @@ export default function CreatePost() {
             <form className="post-form" onSubmit={handleSubmit}>
               <label htmlFor="title">
                 Title
-                <input className="form-control" name="title" rows={1} cols={300} value={heading} onChange={(event) => setHeading(event.target.value)} required />
+                <input id="inputHeading" className="form-control" name="title" rows={1} cols={300} value={title} onChange={(event) => setTitle(event.target.value)} required />
               </label>
               <br />
               <br />
               <label htmlFor="body">
-                <textarea className="form-control" name="body" type="textarea" rows={10} cols={300} value={content} onChange={(event) => setContent(event.target.value)} required />
+                <textarea id="inputContent" className="form-control" name="body" type="textarea" rows={10} cols={300} value={body} onChange={(event) => setBody(event.target.value)} required />
               </label>
               <br />
               <Link to="/"><button className="btn btn-secondary float-right" type="button">Cancel</button></Link>
               &nbsp;&nbsp;&nbsp;
               {/* <button className="btn btn-primary float-right" type="button">Post</button> */}
-              <input type="submit" value="Submit" className="btn btn-secondary float-right" />
+              <Button variant="secondary" onClick={handleSubmit}>Post</Button>
             </form>
           </Col>
         </Row>
