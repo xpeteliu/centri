@@ -7,18 +7,26 @@ import {
 import { showModal } from '../common/MessageModal/modalSlice';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-export default function UpdatePost() {
+export default function UpdatePost(postingId) {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const [heading, setHeading] = useState('');
-  const [content, setContent] = useState('');
+  const post = fetch(`https://cis557-group20-project.herokuapp.com/api/${postingId}`, {
+    method: 'GET',
+    headers: { "Content-Type": "application/json" }
+    }
+  )
+  const [title, setTitle] = useState(post.data.heading);
+  const [body, setBody] = useState(post.data.content);
+  const creatorId = post.data.creatorId;
+  const groupId = post.data.groupId;
   
   const handleSubmit = (event) => {
-    fetch('https://cis557-group20-project.herokuapp.com/api/${postingId}', {
+    fetch(`https://cis557-group20-project.herokuapp.com/api/${postingId}`, {
       method: 'PUT',
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
+      body: JSON.stringify({ 
+        
       })
     }).then((resp) => {
       switch (resp.status) {
@@ -52,12 +60,12 @@ export default function UpdatePost() {
             <form className="post-form" onSubmit={handleSubmit}>
               <label htmlFor="title">
                 Title
-                <input className="form-control" name="title" rows={1} cols={300} value={heading} onChange={(event) => setHeading(event.target.value)} required />
+                <input className="form-control" name="title" rows={1} cols={300} value={title} onChange={(event) => setTitle(event.target.value)} required />
               </label>
               <br />
               <label htmlFor="body">
                 Body
-                <textarea className="form-control" name="body" type="textarea" rows={10} cols={300} value={content} onChange={(event) => setContent(event.target.value)} required />
+                <textarea className="form-control" name="body" type="textarea" rows={10} cols={300} value={body} onChange={(event) => setBody(event.target.value)} required />
               </label>
               <br />
               <Link to="/"><button className="btn btn-secondary float-right" type="button">Cancel</button></Link>
