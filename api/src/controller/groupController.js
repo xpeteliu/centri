@@ -72,7 +72,7 @@ export const queryGroups = async (req, res) => {
         return;
       case 'numOfMembers':
         res.json(await agg.addFields({
-          numOfMembers: { $add: [{ $size: '$adminIds' }, { $size: '$memberIds' }, 1] },
+          numOfMembers: { $add: [{ $size: '$adminIds' }, { $size: '$memberIds' }] },
         })
           .sort({ numOfMembers: -1 })
           .exec());
