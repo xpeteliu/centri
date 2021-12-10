@@ -19,12 +19,12 @@ export default function CreatePost(groupId) {
   // const groupId = currUrl.split('/').pop();
   const url = baseUrl.concat('/posting');
 
-  const [attachedFile, setAttachedFile] = useState(null);
+  const [file, setFile] = useState(null);
   const handleFileUpload = (event) => {
-    setAttachedFile({ attachedFile: event.target.files[0] });
+    setFile({ file: event.target.files[0] });
     const formData = new FormData();
     formData.append(
-      attachedFile,
+      file,
     );
     const fileUrl = baseUrl.concat('/file');
     fetch(fileUrl, {
