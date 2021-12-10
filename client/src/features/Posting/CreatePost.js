@@ -39,7 +39,8 @@ export default function CreatePost() {
         default:
           throw new Error('Invalid response');
       }
-    }).catch(() => {
+    }).catch((error) => {
+      console.log(error);
       dispatch(showModal({ headerText: 'Network Error', bodyText: 'Unable to connect to the server. Please try again later.' }));
     });
     event.preventDefault();
