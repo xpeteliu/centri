@@ -4,13 +4,15 @@ import {
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useHistory } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { HeaderBar } from '../common/HeaderBar';
-import { getGroups, createGroup } from './FetchGroups';
+import { getGroups, createGroup, getGroupById } from './FetchGroups';
 
 // TODO: change this to user id from Redux store
-const userId = '61a8e7c806aea993b4bb7545';
+// const userId = '61a8e7c806aea993b4bb7545';
 
 function GroupListPage() {
+  const userId = useSelector((state) => state.user.id);
   const [show, setShow] = useState(false); // show create group popup
   const handleOpen = () => setShow(true);
   const handleClose = () => setShow(false);
@@ -21,7 +23,7 @@ function GroupListPage() {
   useEffect(async () => {
     if (groups.length === 0) {
       const groupList = await getGroups(userId);
-      setGroups(groupList.map((group) => group.title));
+      setGroups(groupList.map((group) => String(group._id)));
     }
   });
   const createGroupButtonClicked = async () => {
@@ -31,7 +33,7 @@ function GroupListPage() {
     // newGroups.push(String(groupName));
     // setGroups(newGroups);
     const groupList = await getGroups(userId);
-    setGroups(groupList.map((group) => group.title));
+    setGroups(groupList.map((group) => String(group._id)));
     handleClose();
   };
   return (
@@ -51,7 +53,7 @@ function GroupListPage() {
         </Row>
         <Row>
           <Stack direction="vertical" gap={5} id="groupList">
-            {groups.map((group) => <GroupListItem name={group} key={group} />)}
+            {groups.map((group) => <GroupListItem groupId={group} key={group} />)}
           </Stack>
         </Row>
         <Row>
@@ -177,7 +179,15 @@ function GroupPage() {
 }
 
 function GroupListItem(props) {
-  const { name } = props;
+  const { groupId } = props;
+  // store group info
+  const [group, setGroup] = useState({});
+  useEffect(async () => {
+    if (!group.title) {
+      const groupData = await getGroupById(groupId);
+      setGroup(groupData);
+    }
+  });
   const [requested, setRequested] = useState(false);
   return (
     <Stack direction="horizontal" gap={4} className="groupListItem">
@@ -186,7 +196,7 @@ function GroupListItem(props) {
       </div>
       <div>
         <h3>
-          <a href="./group">{name}</a>
+          <a href="./group">{group.title}</a>
         </h3>
       </div>
       <div className="ms-auto">
