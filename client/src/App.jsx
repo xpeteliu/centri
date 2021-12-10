@@ -15,7 +15,7 @@ export default function App() {
         <Route exact path="/" component={HomePage} />
         <Route path="/login" component={SignInPage} />
         <Route path="/register" component={SignUpPage} />
-        <Route path="/group" component={GroupPage} />
+        <Route path="/group/:groupId" component={GroupPage} />
         <Route path="/groups" component={GroupListPage} />
         <Route path="/resetPassword" component={ResetPassword} />
       </Switch>

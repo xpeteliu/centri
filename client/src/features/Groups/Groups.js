@@ -3,10 +3,12 @@ import {
   Button, Image, Stack, Row, Col, Container, Card, Modal, Form,
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { HeaderBar } from '../common/HeaderBar';
-import { getGroups, createGroup, getGroupById } from './FetchGroups';
+import {
+  getGroups, createGroup, getGroupById, getPostsByGroupId, getPostById,
+} from './FetchGroups';
 
 // TODO: change this to user id from Redux store
 // const userId = '61a8e7c806aea993b4bb7545';
@@ -29,9 +31,6 @@ function GroupListPage() {
   const createGroupButtonClicked = async () => {
     const groupName = document.getElementById('groupNameField').value;
     await createGroup(userId, groupName);
-    // const newGroups = groups.slice();
-    // newGroups.push(String(groupName));
-    // setGroups(newGroups);
     const groupList = await getGroups(userId);
     setGroups(groupList.map((group) => String(group._id)));
     handleClose();
@@ -109,6 +108,23 @@ function GroupListPage() {
 }
 
 function GroupPage() {
+  const { groupId } = useParams();
+  const [group, setGroup] = useState({});
+  useEffect(async () => {
+    if (!group.title) {
+      const groupData = await getGroupById(groupId);
+      setGroup(groupData);
+    }
+  });
+
+  const [posts, setPosts] = useState([]);
+  useEffect(async () => {
+    if (posts.length === 0) {
+      const postList = await getPostsByGroupId(groupId);
+      setPosts(postList.map((post) => String(post._id)));
+    }
+  });
+
   const [show, setShow] = useState(false); // show edit group popup
   const handleOpen = () => setShow(true);
   const handleClose = () => setShow(false);
@@ -126,7 +142,7 @@ function GroupPage() {
               <Image src="./photo.jpg" width="30" height="30" roundedCircle />
             </div>
             <div>
-              <h3>Group Name</h3>
+              <h3>{group.title}</h3>
             </div>
             <div className="ms-auto">
               <Stack direction="horizontal" gap={3}>
@@ -139,8 +155,9 @@ function GroupPage() {
         </Row>
         <Row className="groupPostList">
           <Stack direction="vertical" gap={5}>
-            <GroupPost postId={0} />
-            <GroupPost postId={1} />
+            {/* <GroupPost postId={0} />
+            <GroupPost postId={1} /> */}
+            {posts.map((postId) => <GroupPost postId={postId} />)}
           </Stack>
         </Row>
       </Stack>
@@ -179,6 +196,7 @@ function GroupPage() {
 }
 
 function GroupListItem(props) {
+  const history = useHistory();
   const { groupId } = props;
   // store group info
   const [group, setGroup] = useState({});
@@ -196,7 +214,8 @@ function GroupListItem(props) {
       </div>
       <div>
         <h3>
-          <a href="./group">{group.title}</a>
+          {/* <a href={`./group/${groupId}`}>{group.title}</a> */}
+          <span role="presentation" onClick={() => history.push(`./group/${groupId}`)} onKeyPress={() => null}>{group.title}</span>
         </h3>
       </div>
       <div className="ms-auto">
@@ -210,18 +229,21 @@ function GroupListItem(props) {
 function GroupPost(props) {
   const { postId } = props;
   // TODO: use post id to get title and text
+  const [post, setPost] = useState({});
+  useEffect(async () => {
+    if (!post.heading) {
+      const newPost = await getPostById(postId);
+      setPost(newPost);
+    }
+  });
   return (
     <Card>
       <Card.Body>
         <Card.Title>
-          Post Title (id:
-          {postId}
-          )
+          {`${post.heading} (id:${postId})`}
         </Card.Title>
         <Card.Text>
-          {'Vitae massa id tortor sed tortor, commodo. Platea blandit mauris elementum est maecenas iaculis. Ut sodales diam, nam commodo gravida faucibus nisl. Aliquet id pulvinar id lacinia. Lectus auctor vel elementum tristique. Vitae non morbi dolor quisque amet faucibus justo. Sollicitudin vitae augue tortor lobortis sem ultrices neque. Eget ornare et varius in lectus. Lectus est ante morbi ipsum. \
-        Aliquam sit non viverra suspendisse eleifend. Et mauris, et quam dolor duis. Lacus porttitor felis, a, vel sed enim. Quam nisi, est nulla scelerisque sollicitudin faucibus erat. Tincidunt purus mauris felis fringilla sit. Commodo dignissim amet vel in ultrices sagittis ultrices. Sem malesuada donec nam eget a, risus laoreet. Egestas malesuada ipsum lacus, quis. A eleifend dolor, id tincidunt diam tincidunt. Tellus suspendisse ut luctus mauris bibendum. Eu sed in convallis neque. In amet convallis sit eros, leo. Id volutpat sit morbi sagittis neque. \
-        Dolor, tortor aliquet dictumst mattis mi, netus in. Egestas blandit nunc nulla eget in lacus a, sit. Nulla.'}
+          {post.content}
         </Card.Text>
       </Card.Body>
     </Card>

@@ -44,5 +44,25 @@ export const getGroupById = async (groupId) => {
   }
 };
 
-// export default getGroups;
-// export { getGroups, createGroup };
+export const getPostsByGroupId = async (groupId) => {
+  try {
+    const postsRequest = {
+      filter: {
+        groupId,
+      },
+    };
+    const posts = await axios.post(`${url}/posting/filter/paginate`, postsRequest);
+    return posts.data;
+  } catch (err) {
+    return null;
+  }
+};
+
+export const getPostById = async (postId) => {
+  try {
+    const post = await axios.get(`${url}/posting/${postId}`);
+    return post.data;
+  } catch (err) {
+    return null;
+  }
+};
