@@ -6,6 +6,7 @@ import HomePage from './features/HomePage/HomePage';
 import { GroupPage, GroupListPage } from './features/Groups/Groups';
 import { MessageModal } from './features/common/MessageModal/MessageModal';
 import CreatePost from './features/Posting/CreatePost';
+import AddComment from './features/Posting/AddComments';
 // import DeletePost from './features/Posting/DeletePost';
 import './App.css';
 
@@ -19,6 +20,7 @@ export default function App() {
         <Route path="/group" component={GroupPage} />
         <Route path="/groups" component={GroupListPage} />
         <Route path="/posting" component={CreatePost} />
+        <Route path="/comment" component={AddComment} />
       </Switch>
       <MessageModal />
     </div>

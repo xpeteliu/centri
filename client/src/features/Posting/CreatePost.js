@@ -1,5 +1,6 @@
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState } from 'react';
+// import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import {
   Button, Row, Col, Card,
@@ -7,16 +8,31 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { showModal } from '../common/MessageModal/modalSlice';
 
-export default function CreatePost() {
+export default function CreatePost(groupId) {
   const dispatch = useDispatch();
   const history = useHistory();
-  const creatorId = useSelector((state) => state.user.id);
-  // const [title, setTitle] = useState('');
-  // const [body, setBody] = useState('');
+  const creatorId = '61a65336c4a2d7594d3f58f6';
+  // const groupId = '61b23e2b9e59d62b561baae3';
+  // const creatorId = useSelector((state) => state.user._id);
   const baseUrl = 'https://cis557-group20-project.herokuapp.com/api';
-  const currUrl = window.location.href;
-  const groupId = currUrl.split('/').pop();
+  // const currUrl = window.location.href;
+  // const groupId = currUrl.split('/').pop();
   const url = baseUrl.concat('/posting');
+
+  const [attachedFile, setAttachedFile] = useState(null);
+  const handleFileUpload = (event) => {
+    setAttachedFile({ attachedFile: event.target.files[0] });
+    const formData = new FormData();
+    formData.append(
+      attachedFile,
+    );
+    const fileUrl = baseUrl.concat('/file');
+    fetch(fileUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'multipart/form-data' },
+      body: formData,
+    });
+  };
 
   const handleSubmit = (event) => {
     const heading = document.getElementById('inputHeading').value;
@@ -65,6 +81,8 @@ export default function CreatePost() {
                 <textarea id="inputContent" className="form-control" name="body" type="textarea" rows={10} cols={300} required />
               </label>
               <br />
+              <Button variant="secondary" onClick={handleFileUpload}>Attachment</Button>
+              &nbsp;&nbsp;&nbsp;
               <Link to="/"><button className="btn btn-secondary float-right" type="button">Cancel</button></Link>
               &nbsp;&nbsp;&nbsp;
               {/* <button className="btn btn-primary float-right" type="button">Post</button> */}

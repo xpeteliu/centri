@@ -40,7 +40,7 @@ export async function getConversation(userId, otherUserId) {
 
 export async function postPrivateMessage(message) {
   try {
-    const url = baseUrl.concat(`/privateMessage`, message);
+    const url = baseUrl.concat('/privateMessage', message);
     const response = await axios.post(url);
     return response.data;
   } catch (err) {

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import {
-  Row, Col, Card,
+  Row, Col, Card, Button,
 } from 'react-bootstrap';
 import { showModal } from '../common/MessageModal/modalSlice';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -13,26 +13,25 @@ export default function UpdatePost(postingId) {
 
   const post = fetch(`https://cis557-group20-project.herokuapp.com/api/${postingId}`, {
     method: 'GET',
-    headers: { "Content-Type": "application/json" }
-    }
-  )
+    headers: { 'Content-Type': 'application/json' },
+  });
   const originalHeading = post.data.heading;
   const originalContent = post.data.content;
-  const creatorId = post.data.creatorId;
-  const groupId = post.data.groupId;
-  
+  const { creatorId } = post.data;
+  const { groupId } = post.data;
+
   const handleSubmit = (event) => {
     const heading = document.getElementById('inputHeading').value;
     const content = document.getElementById('inputContent').value;
     fetch(`https://cis557-group20-project.herokuapp.com/api/${postingId}`, {
       method: 'PUT',
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ 
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
         groupId,
         heading,
         creatorId,
         content,
-      })
+      }),
     }).then((resp) => {
       switch (resp.status) {
         case 200:
@@ -53,7 +52,7 @@ export default function UpdatePost(postingId) {
       }
     }).catch(() => {
       dispatch(showModal({ headerText: 'Network Error', bodyText: 'Unable to connect to the server. Please try again later.' }));
-    })
+    });
     event.preventDefault();
   };
 

@@ -2,15 +2,15 @@ import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { showModal } from '../common/MessageModal/modalSlice';
 
-export default function DeletePost(postingId) {
+export default function DeleteComment(commentId) {
   const dispatch = useDispatch();
   const history = useHistory();
-  const url = `https://cis557-group20-project.herokuapp.com/api/${postingId}`;
+  const url = `https://cis557-group20-project.herokuapp.com/api/${commentId}`;
   fetch(url, {
     method: 'DELETE',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      postingId,
+      commentId,
     }),
   }).then((resp) => {
     switch (resp.status) {
@@ -23,7 +23,7 @@ export default function DeletePost(postingId) {
         history.push(url);
         break;
       case 404:
-        dispatch(showModal({ headerText: 'Unable to delete', bodyText: 'Posting not found' }));
+        dispatch(showModal({ headerText: 'Unable to delete', bodyText: 'Posting or comment not found' }));
         history.push(url);
         break;
       default:
