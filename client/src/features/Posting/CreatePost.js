@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import {
@@ -10,14 +10,12 @@ import { showModal } from '../common/MessageModal/modalSlice';
 export default function CreatePost() {
   const dispatch = useDispatch();
   const history = useHistory();
-  // const creatorId = 1;
   const creatorId = useSelector((state) => state.user.id);
-  // const groupId = useSelector((state) => state.user.id);
-
-  const [title, setTitle] = useState('');
-  const [body, setBody] = useState('');
-
+  // const [title, setTitle] = useState('');
+  // const [body, setBody] = useState('');
   const baseUrl = 'https://cis557-group20-project.herokuapp.com/api';
+  const currUrl = window.location.href;
+  const groupId = currUrl.split('/').pop();
   const url = baseUrl.concat('/posting');
 
   const handleSubmit = (event) => {
@@ -55,15 +53,15 @@ export default function CreatePost() {
       <Card.Body>
         <Row className="h-100">
           <Col className="my-auto">
-            <form className="post-form" onSubmit={handleSubmit}>
+            <form className="post-form">
               <label htmlFor="title">
                 Title
-                <input id="inputHeading" className="form-control" name="title" rows={1} cols={300} value={title} onChange={(event) => setTitle(event.target.value)} required />
+                <input id="inputHeading" className="form-control" name="title" rows={1} cols={300} required />
               </label>
               <br />
               <br />
               <label htmlFor="body">
-                <textarea id="inputContent" className="form-control" name="body" type="textarea" rows={10} cols={300} value={body} onChange={(event) => setBody(event.target.value)} required />
+                <textarea id="inputContent" className="form-control" name="body" type="textarea" rows={10} cols={300} required />
               </label>
               <br />
               <Link to="/"><button className="btn btn-secondary float-right" type="button">Cancel</button></Link>

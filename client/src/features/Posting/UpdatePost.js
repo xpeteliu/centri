@@ -16,17 +16,22 @@ export default function UpdatePost(postingId) {
     headers: { "Content-Type": "application/json" }
     }
   )
-  const [title, setTitle] = useState(post.data.heading);
-  const [body, setBody] = useState(post.data.content);
+  const originalHeading = post.data.heading;
+  const originalContent = post.data.content;
   const creatorId = post.data.creatorId;
   const groupId = post.data.groupId;
   
   const handleSubmit = (event) => {
+    const heading = document.getElementById('inputHeading').value;
+    const content = document.getElementById('inputContent').value;
     fetch(`https://cis557-group20-project.herokuapp.com/api/${postingId}`, {
       method: 'PUT',
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ 
-        
+        groupId,
+        heading,
+        creatorId,
+        content,
       })
     }).then((resp) => {
       switch (resp.status) {
@@ -54,22 +59,27 @@ export default function UpdatePost(postingId) {
 
   return (
     <Card>
+      <Card.Title>
+        <h2>Update the post</h2>
+      </Card.Title>
       <Card.Body>
         <Row className="h-100">
           <Col className="my-auto">
-            <form className="post-form" onSubmit={handleSubmit}>
+            <form className="post-form">
               <label htmlFor="title">
                 Title
-                <input className="form-control" name="title" rows={1} cols={300} value={title} onChange={(event) => setTitle(event.target.value)} required />
+                <input id="inputHeading" className="form-control" name="title" rows={1} cols={300} value={originalHeading} required />
               </label>
               <br />
+              <br />
               <label htmlFor="body">
-                Body
-                <textarea className="form-control" name="body" type="textarea" rows={10} cols={300} value={body} onChange={(event) => setBody(event.target.value)} required />
+                <textarea id="inputContent" className="form-control" name="body" type="textarea" rows={10} cols={300} value={originalContent} required />
               </label>
               <br />
               <Link to="/"><button className="btn btn-secondary float-right" type="button">Cancel</button></Link>
-              <button className="btn btn-primary float-right" type="button">Post</button>
+              &nbsp;&nbsp;&nbsp;
+              {/* <button className="btn btn-primary float-right" type="button">Post</button> */}
+              <Button variant="secondary" onClick={handleSubmit}>Save</Button>
             </form>
           </Col>
         </Row>
