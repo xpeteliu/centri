@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import Group from '../model/Group';
 import Message from '../model/Message';
 
@@ -16,6 +17,24 @@ export const addGroup = async (req, res) => {
   }
 };
 
+const convertObjectId = (obj) => {
+  if (typeof obj === 'string' && /^[0-9a-f]{24}$/i.test(obj)) {
+    return new mongoose.Types.ObjectId(obj);
+  }
+  if (Array.isArray(obj)) {
+    return obj.map((elem) => convertObjectId(elem));
+  }
+  if (obj && typeof obj === 'object') {
+    const result = {};
+    Object.keys(obj)
+      .forEach((key) => {
+        result[key] = convertObjectId(obj[key]);
+      });
+    return result;
+  }
+  return obj;
+};
+
 export const queryGroups = async (req, res) => {
   try {
     if (req.body.sortMethod && !['latestUpdates', 'numOfPosts', 'numOfMembers'].includes(req.body.sortMethod)) {
@@ -23,7 +42,7 @@ export const queryGroups = async (req, res) => {
         .json({ message: `Unrecognized sortMethod parameter: ${req.body.sortMethod}` });
       return;
     }
-    const agg = Group.aggregate([{ $match: req.body.filter || {} }]);
+    const agg = Group.aggregate([{ $match: convertObjectId(req.body.filter || {}) }]);
     switch (req.body.sortMethod) {
       case 'latestUpdates':
         res.json(await agg.lookup({
@@ -66,7 +85,6 @@ export const queryGroups = async (req, res) => {
       .json({ message: e.message });
   }
 };
-
 export const findGroup = async (req, res) => {
   try {
     const result = await Group.findById(req.params.groupId)
