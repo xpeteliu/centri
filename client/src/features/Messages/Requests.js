@@ -1,6 +1,7 @@
 /* eslint import/no-extraneous-dependencies: 0 */
 
 import axios from 'axios';
+import FormData from 'form-data';
 
 const baseUrl = 'http://cis557-group20-project.herokuapp.com/api';
 
