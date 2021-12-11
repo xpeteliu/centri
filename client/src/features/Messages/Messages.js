@@ -17,6 +17,7 @@ function MessagePage() {
   const ACCEPTED_FILE_TYPES = ['image/jpeg'];
 
   const [otherUserId, setOtherUserId] = useState(-1);
+  const [otherUsername, setOtherUsername] = useState('');
 
   const [users, setUsers] = useState([]);
 
@@ -30,8 +31,6 @@ function MessagePage() {
     const user = await getUser(userId);
     return user;
   };
-
-  const userNameDict = {};
 
   const fetchMessages = async (userId) => {
     const messagesSent = await getMessagesSender(userId);
@@ -76,8 +75,9 @@ function MessagePage() {
     setWaiting(false);
   }
 
-  const handleSelectSender = async (id) => {
-    setOtherUserId(id);
+  const handleSelectSender = async (user) => {
+    setOtherUserId(user.userId);
+    setOtherUsername(user.userName);
   };
 
   const handleFileUpload = (event) => {
@@ -129,7 +129,7 @@ function MessagePage() {
     console.log('rendered');
     const pollMessages = setInterval(() => {
       fetchMessages(userId);
-    }, 5000);
+    }, 10000);
 
     return () => {
       clearInterval(pollMessages);
@@ -143,7 +143,7 @@ function MessagePage() {
       if (otherUserId !== -1) {
         fetchConvo(userId);
       }
-    }, 1000);
+    }, 5000);
 
     return () => {
       clearInterval(pollConvo);
@@ -173,7 +173,7 @@ function MessagePage() {
       messages: conversation,
       id: userId,
       otherId: otherUserId,
-      otherName: userNameDict[otherUserId],
+      otherName: otherUsername,
       onSubmitMessage: handleSubmitMessage,
       onFileUpload: handleFileUpload,
     });
@@ -234,7 +234,7 @@ function UserList(props) {
 function UserTab(props) {
   const { userId, userName, onSelect } = props;
   const handleClick = () => {
-    onSelect(userId);
+    onSelect({ userId, userName });
   };
   return (
     <Container className="App">

@@ -32,12 +32,14 @@ function Conversation(props) {
     overflowX: 'clip',
   };
 
+  console.log('name', otherName);
+
   return (
     <div style={convoStyle}>
+      <h4 align="left">
+        {otherName}
+      </h4>
       <Container className="p-3 d-flex flex-column justify-content-between">
-        <h4>
-          {otherName}
-        </h4>
         <div style={listStyle}>
           <Row>
             {rows}
@@ -93,7 +95,6 @@ function Input(props) {
 function ConversationRow(props) {
   const { message, userId } = props;
   const { senderId } = message;
-  console.log('ids', userId, senderId);
   const alignLeft = senderId !== userId;
 
   if (alignLeft) {
