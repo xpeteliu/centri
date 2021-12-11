@@ -92,9 +92,9 @@ function Input(props) {
 
 function ConversationRow(props) {
   const { message, userId } = props;
-  const { creatorId } = message;
-
-  const alignLeft = creatorId !== userId;
+  const { senderId } = message;
+  console.log('ids', userId, senderId);
+  const alignLeft = senderId !== userId;
 
   if (alignLeft) {
     return (
