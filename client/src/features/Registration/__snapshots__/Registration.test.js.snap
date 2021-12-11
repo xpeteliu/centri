@@ -49,6 +49,7 @@ exports[`Registration page should match snapshot 1`] = `
                         Username
                       </label>
                       <input
+                        autocomplete="username"
                         class="form-control"
                         id="inputRegistrationUsername"
                         placeholder="Enter username here"
@@ -74,6 +75,7 @@ exports[`Registration page should match snapshot 1`] = `
                         Email
                       </label>
                       <input
+                        autocomplete="email"
                         class="form-control"
                         id="inputRegistrationEmail"
                         placeholder="Enter email here"
@@ -104,6 +106,7 @@ exports[`Registration page should match snapshot 1`] = `
                         Password
                       </label>
                       <input
+                        autocomplete="new-password"
                         class="form-control"
                         id="inputRegistrationPassword0"
                         pattern="^(?=.*[A-Za-z])(?=.*\\\\d)[A-Za-z\\\\d]{8,}$"
@@ -131,6 +134,7 @@ exports[`Registration page should match snapshot 1`] = `
                         Verify Password
                       </label>
                       <input
+                        autocomplete="new-password"
                         class="form-control"
                         id="inputRegistrationPassword1"
                         pattern="^(?=.*[A-Za-z])(?=.*\\\\d)[A-Za-z\\\\d]{8,}$"
