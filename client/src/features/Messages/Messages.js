@@ -82,6 +82,7 @@ function MessagePage() {
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
+    console.log('files', event.target.files);
     if (ACCEPTED_FILE_TYPES.includes(file.type)) {
       setAttachedFile(file);
     }

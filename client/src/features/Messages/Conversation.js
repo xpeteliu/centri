@@ -83,9 +83,9 @@ function Input(props) {
           </Form>
         </Col>
         <Col xs={4}>
-          <Form onChange={onFileUpload} controlid="formMessage">
-            <Form.Control type="file" />
-          </Form>
+          <form encType="multipart/form-data">
+            <input type="file" name="file" onChange={onFileUpload} />
+          </form>
         </Col>
       </Stack>
     </Container>
