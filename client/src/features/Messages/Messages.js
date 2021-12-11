@@ -39,8 +39,6 @@ function MessagePage() {
 
     messagesAll.sort((a, b) => (((new Date(a.createdAt)) > (new Date(b.createdAt))) ? 1 : -1));
 
-    // console.log('messages', messagesAll);
-
     const tempIds = [];
     messagesAll.forEach(async (message) => {
       const { senderId } = message;
@@ -60,15 +58,17 @@ function MessagePage() {
     const messagesRecieved = await getMessagesRecipient(userId);
     const messagesAll = messagesSent.concat(messagesRecieved);
 
+    const id = otherUserId;
+
     let tempConversation = [];
-    tempConversation = messagesAll.filter(((message) => message.recipientId === otherUserId));
+    tempConversation = messagesAll.filter(((m) => m.recipientId === id || m.senderId === id));
 
     tempConversation.sort((a, b) => (((new Date(a.createdAt)) > (new Date(b.createdAt))) ? 1 : -1));
 
     setConversation(tempConversation);
   };
 
-  const userId = '61a65bf45915a4279a04ac35';// useSelector((state) => state.user._id);
+  const userId = '61a65336c4a2d7594d3f58f6';// useSelector((state) => state.user._id);
 
   if (waiting) {
     setMessages(fetchMessages(userId));
