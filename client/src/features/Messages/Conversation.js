@@ -32,8 +32,6 @@ function Conversation(props) {
     overflowX: 'clip',
   };
 
-  console.log('name', otherName);
-
   return (
     <div style={convoStyle}>
       <h4 align="left">
@@ -97,13 +95,27 @@ function ConversationRow(props) {
   const { senderId } = message;
   const alignLeft = senderId === userId;
 
+  let content;
+
+  if (message.attachmentType === 'none') {
+    content = (
+      <Message
+        message={message}
+      />
+    );
+  } else if (message.attachmentType.startsWith('image')) {
+    content = (
+      <MessageWithImage
+        message={message}
+      />
+    );
+  }
+
   if (alignLeft) {
     return (
       <Row>
         <Col xs={6}>
-          <Message
-            message={message}
-          />
+          {content}
         </Col>
         <Col />
       </Row>
@@ -113,18 +125,13 @@ function ConversationRow(props) {
     <Row>
       <Col />
       <Col xs={6}>
-        <Message
-          message={message}
-        />
+        {content}
       </Col>
     </Row>
   );
 }
 
-function Message(props) {
-  const { message } = props;
-  const { content, createdAt } = message;
-  const parsedDate = new Date(createdAt);
+function getDateString(parsedDate) {
   const date = parsedDate.toLocaleDateString('en-US');
 
   const padTime = (timeString) => {
@@ -137,11 +144,43 @@ function Message(props) {
   const minutes = padTime(parsedDate.getMinutes().toString());
   const seconds = padTime(parsedDate.getSeconds().toString());
 
-  const dateString = date.concat(` ${hours}:${minutes}:${seconds}`);
+  return date.concat(` ${hours}:${minutes}:${seconds}`);
+}
+
+function Message(props) {
+  const { message } = props;
+  const { content, createdAt } = message;
+  const parsedDate = new Date(createdAt);
+
+  const dateString = getDateString(parsedDate);
 
   return (
     <Card>
       <Card.Body className="p-4">
+        <Card.Text className="mb-2 h6">
+          {content}
+        </Card.Text>
+        <br />
+        <Card.Text className="mb-2 text-muted">
+          {dateString}
+        </Card.Text>
+      </Card.Body>
+    </Card>
+  );
+}
+
+function MessageWithImage(props) {
+  const { message } = props;
+  const { content, createdAt, attachmentId } = message;
+  const parsedDate = new Date(createdAt);
+
+  const dateString = getDateString(parsedDate);
+  const attachmentUrl = `http://cis557-group20-project.herokuapp.com/api/file/${attachmentId}`;
+
+  return (
+    <Card>
+      <Card.Body className="p-4">
+        <img src={attachmentUrl} alt="attached img" width="200px" />
         <Card.Text className="mb-2 h6">
           {content}
         </Card.Text>
