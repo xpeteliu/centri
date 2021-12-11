@@ -83,9 +83,7 @@ export async function postFile(file) {
       method: 'POST',
       body: formData,
     });
-    console.log('upload post response', response);
-    console.log('upload post response body', response.body);
-    return response.data;
+    return response.json();
   } catch (err) {
     console.log('upload post err', err);
     return {};

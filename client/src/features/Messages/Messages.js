@@ -107,7 +107,6 @@ function MessagePage() {
         console.log('UPLOADING FILE', attachedFile);
         const response = await postFile(attachedFile);
         console.log('UPLOADING FILE RESPONSE', response);
-        /*
         const fileId = response.id;
         const newMessage = {
           content: messageText,
@@ -119,7 +118,6 @@ function MessagePage() {
         console.log('POSTING MESSAGE', newMessage);
         await postMessage(newMessage);
         fetchConvo(userId);
-        */
       }
     }
   };
