@@ -181,10 +181,11 @@ function MessageWithImage(props) {
     <Card>
       <Card.Body className="p-4">
         <img src={attachmentUrl} alt="attached img" width="200px" />
-        <Card.Text className="mb-2 h6">
-          {content}
+        <Card.Text className="mb-2 h6 p-2">
+          <p align="left">
+            {content}
+          </p>
         </Card.Text>
-        <br />
         <Card.Text className="mb-2 text-muted">
           {dateString}
         </Card.Text>
