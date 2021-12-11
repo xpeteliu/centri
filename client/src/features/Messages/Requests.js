@@ -75,7 +75,14 @@ export async function postMessage(message) {
 export async function postFile(file) {
   try {
     const url = baseUrl.concat('/file');
-    const response = await axios.post(url, file);
+    console.log('REQ POSTS FILE', file);
+    const formData = new FormData();
+    formData.append('file', file);
+    console.log('FORM DATA', formData);
+    const response = await fetch(url, {
+      method: 'POST',
+      body: formData,
+    });
     console.log('upload post response', response);
     return response.data;
   } catch (err) {

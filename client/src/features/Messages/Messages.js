@@ -97,7 +97,6 @@ function MessagePage() {
         const newMessage = {
           content: messageText,
           attachmentType: 'none',
-          createdAt: (new Date()).toString(),
           senderId: userId,
           recipientId: otherUserId,
         };
@@ -105,16 +104,15 @@ function MessagePage() {
         await postMessage(newMessage);
         fetchConvo(userId);
       } else {
-        console.log(attachedFile);
-        /*
+        console.log('UPLOADING FILE', attachedFile);
         const response = await postFile(attachedFile);
-        console.log(response);
+        console.log('UPLOADING FILE RESPONSE', response);
+        /*
         const fileId = response.id;
         const newMessage = {
           content: messageText,
           attachmentId: fileId,
           attachmentType: attachedFile.type,
-          createdAt: (new Date()).toString(),
           senderId: userId,
           recipientId: otherUserId,
         };
