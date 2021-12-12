@@ -14,7 +14,7 @@ import {
 } from './Requests';
 
 function MessagePage() {
-  const ACCEPTED_FILE_TYPES = ['image/jpeg'];
+  const ACCEPTED_FILE_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
 
   const [otherUserId, setOtherUserId] = useState(-1);
   const [otherUsername, setOtherUsername] = useState('');
