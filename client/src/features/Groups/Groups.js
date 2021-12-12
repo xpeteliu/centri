@@ -7,7 +7,8 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { HeaderBar } from '../common/HeaderBar';
 import {
-  getGroups, createGroup, getGroupById, getPostsByGroupId, getPostById,
+  getMyGroups, createGroup, getGroupById, getPostsByGroupId, getPostById,
+  filterGroupsByTag, getPublicGroups, getUsersByName, inviteUser,
 } from './FetchGroups';
 
 // TODO: change this to user id from Redux store
@@ -24,16 +25,30 @@ function GroupListPage() {
   const [groups, setGroups] = useState([]);
   useEffect(async () => {
     if (groups.length === 0) {
-      const groupList = await getGroups(userId);
+      const groupList = await getPublicGroups();
       setGroups(groupList.map((group) => String(group._id)));
     }
   });
   const createGroupButtonClicked = async () => {
     const groupName = document.getElementById('groupNameField').value;
-    await createGroup(userId, groupName);
-    const groupList = await getGroups(userId);
+    const groupType = document.getElementById('groupTypeCheckBox').checked ? 'private' : 'public';
+    await createGroup(userId, groupName, groupType);
+    const groupList = await getMyGroups(userId);
     setGroups(groupList.map((group) => String(group._id)));
     handleClose();
+  };
+  const filterByTagButtonClicked = async () => {
+    const tag = document.getElementById('tagField').value;
+    const filteredGroups = await filterGroupsByTag(tag);
+    setGroups(filteredGroups.map((group) => group._id));
+  };
+  const publicGroupsButtonClicked = async () => {
+    const publicGroups = await getPublicGroups();
+    setGroups(publicGroups.map((group) => group._id));
+  };
+  const myGroupsButtonClicked = async () => {
+    const myGroups = await getMyGroups(userId);
+    setGroups(myGroups.map((group) => group._id));
   };
   return (
     <Container className="App">
@@ -41,10 +56,10 @@ function GroupListPage() {
       <Stack direction="vertical" gap={5} className="mainContent">
         <Row className="groupButtons">
           <Col xs="4">
-            <Button variant="secondary">Private Groups</Button>
+            <Button variant="secondary" onClick={() => myGroupsButtonClicked()}>My Groups</Button>
           </Col>
           <Col xs="4">
-            <Button variant="secondary">Public Groups</Button>
+            <Button variant="secondary" onClick={() => publicGroupsButtonClicked()}>Public Groups</Button>
           </Col>
           <Col xs="4">
             <Button variant="primary" onClick={handleOpen}>Create Group</Button>
@@ -60,10 +75,10 @@ function GroupListPage() {
             <Form>
               <Form.Group as={Row} className="mb-3">
                 <Col xs={2}>
-                  <Button onClick={() => {}}>Filter by Tag</Button>
+                  <Button onClick={() => filterByTagButtonClicked()}>Filter by Tag</Button>
                 </Col>
                 <Col xs={2}>
-                  <Form.Control placeholder="Tag" />
+                  <Form.Control id="tagField" placeholder="Tag" />
                 </Col>
               </Form.Group>
             </Form>
@@ -84,19 +99,11 @@ function GroupListPage() {
               <Form.Label>Topics</Form.Label>
               <Form.Control id="groupTopicField" placeholder="Add a topic" />
             </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Admin</Form.Label>
-              <Form.Control id="adminField" placeholder="Add an admin" />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Invite a Member</Form.Label>
-              <Form.Control id="adminField" placeholder="Enter username" />
-            </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
           <Form.Group className="mb-3 me-auto" controlId="formBasicCheckbox">
-            <Form.Check type="checkbox" label="Make Group Private" />
+            <Form.Check id="groupTypeCheckBox" type="checkbox" label="Make Group Private" />
           </Form.Group>
           <Button variant="primary" onClick={() => createGroupButtonClicked()}>
             Create Group
@@ -132,6 +139,18 @@ function GroupPage() {
   const leaveGroup = () => {
     history.push('/groups');
   };
+
+  const editGroupButtonClicked = async () => {
+    const newMemberName = document.getElementById('inviteField').value;
+    if (newMemberName !== '') {
+      const userArray = await getUsersByName(newMemberName);
+      if (userArray.length > 0) {
+        const newMemberId = userArray[0]._id;
+        await inviteUser(groupId, newMemberId);
+      }
+    }
+    handleClose();
+  };
   return (
     <Container className="App">
       <HeaderBar />
@@ -155,9 +174,7 @@ function GroupPage() {
         </Row>
         <Row className="groupPostList">
           <Stack direction="vertical" gap={5}>
-            {/* <GroupPost postId={0} />
-            <GroupPost postId={1} /> */}
-            {posts.map((postId) => <GroupPost postId={postId} />)}
+            {posts.map((postId) => <GroupPost postId={postId} key={postId} />)}
           </Stack>
         </Row>
       </Stack>
@@ -168,25 +185,17 @@ function GroupPage() {
         <Modal.Body>
           <Form>
             <Form.Group className="mb-3">
-              <Form.Label>Name</Form.Label>
-              <Form.Control id="groupNameField" placeholder="Enter group name" />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Topics</Form.Label>
+              <Form.Label>Topic</Form.Label>
               <Form.Control id="groupTopicField" placeholder="Add a topic" />
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>Admin</Form.Label>
-              <Form.Control id="adminField" placeholder="Add an admin" />
-            </Form.Group>
-            <Form.Group className="mb-3">
               <Form.Label>Invite a Member</Form.Label>
-              <Form.Control id="adminField" placeholder="Enter username" />
+              <Form.Control id="inviteField" placeholder="Enter username" />
             </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="primary" onClick={handleClose}>
+          <Button variant="primary" onClick={() => editGroupButtonClicked()}>
             Save Changes
           </Button>
         </Modal.Footer>

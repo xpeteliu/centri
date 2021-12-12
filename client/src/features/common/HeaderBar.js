@@ -2,9 +2,11 @@ import React from 'react';
 import {
   Navbar, Nav, Image, Stack, Container,
 } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function HeaderBar() {
+  const userId = useSelector((state) => state.user.id);
   return (
     <Navbar bg="light" expand="md" className="headerBar">
       <Container>
@@ -17,7 +19,7 @@ function HeaderBar() {
           </Nav>
           <Stack direction="horizontal" gap={2}>
             <Image src="./photo.jpg" width="30" height="30" roundedCircle />
-            <Navbar.Text>Justin Dong</Navbar.Text>
+            <Navbar.Text>{userId}</Navbar.Text>
           </Stack>
         </Navbar.Collapse>
       </Container>
