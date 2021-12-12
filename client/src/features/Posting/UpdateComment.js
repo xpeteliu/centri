@@ -9,12 +9,14 @@ import { showModal } from '../common/MessageModal/modalSlice';
 import { GetComment } from './PostMethods';
 
 export default function UpdateComment(commentId) {
+  const baseUrl = 'http://cis557-group20-project.herokuapp.com/api';
+  const url = baseUrl.concat(`/${commentId}`);
   const dispatch = useDispatch();
   const history = useHistory();
   const response = GetComment(commentId);
-  const creatorId = response.creatorId;
+  const { creatorId } = response;
   const originalContent = response.content;
-  const postingId = response.postingId;
+  const { postingId } = response;
 
   const handleSubmit = (event) => {
     const content = document.getElementById('inputContent').value;

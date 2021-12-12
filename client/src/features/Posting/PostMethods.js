@@ -10,9 +10,9 @@ export async function PostFile(file) {
     formData.append('file', file);
     const response = await fetch(fileUrl, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'multipart/form-data; ',
-      },
+      // headers: {
+      //   'Content-Type': 'multipart/form-data; ',
+      // },
       body: formData,
     });
     return response.json();
