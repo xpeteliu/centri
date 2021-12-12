@@ -12,13 +12,14 @@ export default function UpdateComment(commentId) {
   const history = useHistory();
   const baseUrl = 'https://cis557-group20-project.herokuapp.com/api/comment';
   const url = baseUrl.concat(`${commentId}`);
+
   const comment = fetch(url.concat, {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
-  })
-  const creatorId = comment.data.creatorId;
+  });
+  const { creatorId } = comment.data;
   const originalContent = comment.data.content;
-  const postingId = comment.data.postingId;
+  const { postingId } = comment.data;
 
   const handleSubmit = (event) => {
     const content = document.getElementById('inputContent').value;
