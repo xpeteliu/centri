@@ -1,4 +1,5 @@
 /* eslint react/prop-types: 0 */
+/* eslint jsx-a11y/media-has-caption: 1 */
 
 import React from 'react';
 import {
@@ -103,9 +104,9 @@ function ConversationRow(props) {
         message={message}
       />
     );
-  } else if (message.attachmentType.startsWith('image')) {
+  } else {
     content = (
-      <MessageWithImage
+      <MessageMedia
         message={message}
       />
     );
@@ -169,18 +170,36 @@ function Message(props) {
   );
 }
 
-function MessageWithImage(props) {
+function MessageMedia(props) {
   const { message } = props;
-  const { content, createdAt, attachmentId } = message;
+  const {
+    content, createdAt, attachmentId, attachmentType,
+  } = message;
   const parsedDate = new Date(createdAt);
 
   const dateString = getDateString(parsedDate);
   const attachmentUrl = `http://cis557-group20-project.herokuapp.com/api/file/${attachmentId}`;
 
+  let media;
+
+  if (attachmentType.startsWith('image')) {
+    media = (
+      <img src={attachmentUrl} alt="attached img" width="360px" />
+    );
+  } else if (attachmentType.startsWith('audio')) {
+    media = (
+      <audio controls src={attachmentUrl} alt="attached audio" type="{attachmentType}" width="360px" />
+    );
+  } else if (attachmentType.startsWith('video')) {
+    media = (
+      <video controls src={attachmentUrl} alt="attached audio" type="{attachmentType}" width="360px" />
+    );
+  }
+
   return (
     <Card>
       <Card.Body className="p-4">
-        <img src={attachmentUrl} alt="attached img" width="200px" />
+        {media}
         <Card.Text className="mb-2 h6 p-2">
           <p align="left">
             {content}

@@ -14,7 +14,7 @@ import {
 } from './Requests';
 
 function MessagePage() {
-  const ACCEPTED_FILE_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
+  const ACCEPTED_FILE_TYPES = ['image', 'audio', 'video'];
 
   const [otherUserId, setOtherUserId] = useState(-1);
   const [otherUsername, setOtherUsername] = useState('');
@@ -68,7 +68,7 @@ function MessagePage() {
     setConversation(tempConversation);
   };
 
-  const userId = '61a65336c4a2d7594d3f58f6';// useSelector((state) => state.user._id);
+  const userId = '61a65bf45915a4279a04ac35';// useSelector((state) => state.user._id);
 
   if (waiting) {
     setMessages(fetchMessages(userId));
@@ -83,7 +83,7 @@ function MessagePage() {
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     console.log('files', event.target.files);
-    if (ACCEPTED_FILE_TYPES.includes(file.type)) {
+    if (ACCEPTED_FILE_TYPES.some((type) => file.type.startsWith(type))) {
       setAttachedFile(file);
     }
   };
