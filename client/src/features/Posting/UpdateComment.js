@@ -6,20 +6,15 @@ import {
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { showModal } from '../common/MessageModal/modalSlice';
+import { GetComment } from './PostMethods';
 
 export default function UpdateComment(commentId) {
   const dispatch = useDispatch();
   const history = useHistory();
-  const baseUrl = 'https://cis557-group20-project.herokuapp.com/api/comment';
-  const url = baseUrl.concat(`${commentId}`);
-
-  const comment = fetch(url.concat, {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
-  });
-  const { creatorId } = comment.data;
-  const originalContent = comment.data.content;
-  const { postingId } = comment.data;
+  const response = GetComment(commentId);
+  const creatorId = response.creatorId;
+  const originalContent = response.content;
+  const postingId = response.postingId;
 
   const handleSubmit = (event) => {
     const content = document.getElementById('inputContent').value;

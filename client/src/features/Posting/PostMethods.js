@@ -34,3 +34,21 @@ export const MakePost = (groupId, heading, creatorId, content,
     attachmentType,
   }),
 });
+
+export async function GetPost(postingId) {
+  const url = baseUrl.concat(`/${postingId}`);
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+  });
+  return response.json();
+}
+
+export async function GetComment(commentId) {
+  const url = baseUrl.concat(`/${commentId}`);
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+  });
+  return response.json();
+}

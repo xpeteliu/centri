@@ -16,34 +16,36 @@ export default function AddComment(postingId) {
   // const creatorId = useSelector((state) => state.user.id);
   const handleSubmit = (event) => {
     const content = document.getElementById('inputContent').value;
-    fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        content,
-        creatorId,
-        postingId,
-      }),
-    }).then((resp) => {
-      switch (resp.status) {
-        case 200:
-          dispatch(showModal({ headerText: 'Post', bodyText: 'Successfully created a new comment' }));
-          history.push('/comment');
-          break;
-        case 400:
-          dispatch(showModal({ headerText: 'Unable to add comment', bodyText: 'Invalid ID supplied' }));
-          history.push('/comment');
-          break;
-        case 404:
-          dispatch(showModal({ headerText: 'Unable to add comment', bodyText: 'Posting not found' }));
-          history.push('/comment');
-          break;
-        default:
-          throw new Error('Invalid response');
-      }
-    }).catch(() => {
-      dispatch(showModal({ headerText: 'Network Error', bodyText: 'Unable to connect to the server. Please try again later.' }));
-    });
+    if (content.length > 0) {
+      fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          content,
+          creatorId,
+          postingId,
+        }),
+      }).then((resp) => {
+        switch (resp.status) {
+          case 200:
+            dispatch(showModal({ headerText: 'Post', bodyText: 'Successfully created a new comment' }));
+            history.push('/comment');
+            break;
+          case 400:
+            dispatch(showModal({ headerText: 'Unable to add comment', bodyText: 'Invalid ID supplied' }));
+            history.push('/comment');
+            break;
+          case 404:
+            dispatch(showModal({ headerText: 'Unable to add comment', bodyText: 'Posting not found' }));
+            history.push('/comment');
+            break;
+          default:
+            throw new Error('Invalid response');
+        }
+      }).catch(() => {
+        dispatch(showModal({ headerText: 'Network Error', bodyText: 'Unable to connect to the server. Please try again later.' }));
+      });
+    }
     event.preventDefault();
   };
 
