@@ -25,7 +25,7 @@ export default function CreatePost(groupId) {
     }
   };
 
-  const handleSubmitPost = (event) => {
+  const handleSubmitPost = async (event) => {
     event.preventDefault();
     const heading = document.getElementById('inputHeading').value;
     const content = document.getElementById('inputContent').value;
@@ -52,7 +52,7 @@ export default function CreatePost(groupId) {
           dispatch(showModal({ headerText: 'Network Error', bodyText: 'Unable to connect to the server. Please try again later.' }));
         });
       } else {
-        const response = PostFile(attachedFile);
+        const response = await PostFile(attachedFile);
         const attachmentId = response.id;
         const attachmentType = attachedFile.type;
         MakePost(

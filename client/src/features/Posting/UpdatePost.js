@@ -6,19 +6,17 @@ import {
 } from 'react-bootstrap';
 import { showModal } from '../common/MessageModal/modalSlice';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { GetPost } from './PostMethods';
 
 export default function UpdatePost(postingId) {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const post = fetch(`https://cis557-group20-project.herokuapp.com/api/${postingId}`, {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
-  });
-  const originalHeading = post.data.heading;
-  const originalContent = post.data.content;
-  const { creatorId } = post.data.creatorId;
-  const { groupId } = post.data.groupId;
+  const response = GetPost(postingId);
+  const originalHeading = response.heading;
+  const originalContent = response.content;
+  const { creatorId } = response.creatorId;
+  const { groupId } = response.groupId;
 
   const handleSubmit = (event) => {
     const heading = document.getElementById('inputHeading').value;
