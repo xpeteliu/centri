@@ -9,6 +9,7 @@ import { HeaderBar } from '../common/HeaderBar';
 import {
   getMyGroups, createGroup, getGroupById, getPostsByGroupId, getPostById,
   filterGroupsByTag, getPublicGroups, getUsersByName, inviteUser, addTag,
+  leaveGroup,
 } from './FetchGroups';
 
 function GroupListPage() {
@@ -113,6 +114,7 @@ function GroupListPage() {
 
 function GroupPage() {
   const { groupId } = useParams();
+  const userId = useSelector((state) => state.user.id);
   const [group, setGroup] = useState({});
   useEffect(async () => {
     if (!group.title) {
@@ -124,7 +126,6 @@ function GroupPage() {
   const [posts, setPosts] = useState(undefined);
   useEffect(async () => {
     if (!posts) {
-      console.log('requesting posts');
       const postList = await getPostsByGroupId(groupId);
       setPosts(postList.map((post) => String(post._id)));
     }
@@ -134,7 +135,8 @@ function GroupPage() {
   const handleOpen = () => setShow(true);
   const handleClose = () => setShow(false);
   const history = useHistory();
-  const leaveGroup = () => {
+  const leaveGroupButtonClicked = async () => {
+    await leaveGroup(groupId, userId);
     history.push('/groups');
   };
   const goAdminPage = () => {
@@ -171,7 +173,7 @@ function GroupPage() {
               <Stack direction="horizontal" gap={3}>
                 <Button variant="warning" onClick={() => goAdminPage()}>Admin</Button>
                 <Button onClick={handleOpen}>Edit Group</Button>
-                <Button onClick={() => leaveGroup()}>Leave Group</Button>
+                <Button onClick={() => leaveGroupButtonClicked()}>Leave Group</Button>
               </Stack>
             </div>
           </Stack>

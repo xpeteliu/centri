@@ -39,6 +39,7 @@ function AdminPage() {
   });
   const acceptInvitedUser = async (groupIdInvited, userIdInvited) => {
     await acceptUser(groupIdInvited, userIdInvited);
+    history.push(`/group/${groupId}`);
   };
   return (
     <div>

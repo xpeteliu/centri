@@ -32,7 +32,7 @@ function Conversation(props) {
     overflowX: 'clip',
   };
 
-  console.log('name', otherName);
+  // console.log('name', otherName);
 
   return (
     <div style={convoStyle}>

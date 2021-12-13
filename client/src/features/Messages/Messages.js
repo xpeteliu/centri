@@ -68,7 +68,8 @@ function MessagePage() {
     setConversation(tempConversation);
   };
 
-  const userId = '61a65bf45915a4279a04ac35';// useSelector((state) => state.user._id);
+  // const userId = '61a65bf45915a4279a04ac35';
+  const userId = useSelector((state) => state.user._id);
 
   if (waiting) {
     setMessages(fetchMessages(userId));
@@ -82,7 +83,7 @@ function MessagePage() {
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
-    console.log('files', event.target.files);
+    // console.log('files', event.target.files);
     if (ACCEPTED_FILE_TYPES.includes(file.type)) {
       setAttachedFile(file);
     }
@@ -91,7 +92,7 @@ function MessagePage() {
   const handleSubmitMessage = async (event) => {
     event.preventDefault();
     const messageText = event.target.formMessageText.value;
-    console.log('event', messageText);
+    // console.log('event', messageText);
     if (messageText.length > 0) {
       if (attachedFile === null) {
         const newMessage = {
@@ -100,13 +101,13 @@ function MessagePage() {
           senderId: userId,
           recipientId: otherUserId,
         };
-        console.log('POSTING MESSAGE', newMessage);
+        // console.log('POSTING MESSAGE', newMessage);
         await postMessage(newMessage);
         fetchConvo(userId);
       } else {
-        console.log('UPLOADING FILE', attachedFile);
+        // console.log('UPLOADING FILE', attachedFile);
         const response = await postFile(attachedFile);
-        console.log('UPLOADING FILE RESPONSE', response);
+        // console.log('UPLOADING FILE RESPONSE', response);
         const fileId = response.id;
         const newMessage = {
           content: messageText,
@@ -115,7 +116,7 @@ function MessagePage() {
           senderId: userId,
           recipientId: otherUserId,
         };
-        console.log('POSTING MESSAGE', newMessage);
+        // console.log('POSTING MESSAGE', newMessage);
         await postMessage(newMessage);
         fetchConvo(userId);
       }
@@ -123,7 +124,7 @@ function MessagePage() {
   };
 
   useEffect(() => {
-    console.log('rendered');
+    // console.log('rendered');
     const pollMessages = setInterval(() => {
       fetchMessages(userId);
     }, 10000);
@@ -134,7 +135,7 @@ function MessagePage() {
   }, []);
 
   useEffect(() => {
-    console.log('switched to user', otherUserId);
+    // console.log('switched to user', otherUserId);
     fetchConvo(userId);
     const pollConvo = setInterval(() => {
       if (otherUserId !== -1) {
@@ -148,19 +149,19 @@ function MessagePage() {
   }, [otherUserId]);
 
   useEffect(() => {
-    console.log('attached file', attachedFile);
+    // console.log('attached file', attachedFile);
   }, [attachedFile]);
 
   useEffect(() => {
-    console.log('messages updated', messages);
+    // console.log('messages updated', messages);
   }, [messages]);
 
   useEffect(() => {
-    console.log('conversation updated', conversation, ', ', otherUserId);
+    // console.log('conversation updated', conversation, ', ', otherUserId);
   }, [conversation]);
 
   useEffect(() => {
-    console.log('users updated', users);
+    // console.log('users updated', users);
   }, [users]);
 
   let content;

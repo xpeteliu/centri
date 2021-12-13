@@ -153,3 +153,12 @@ export const getUserById = async (userId) => {
     return {};
   }
 };
+
+export const leaveGroup = async (groupId, userId) => {
+  try {
+    const result = await axios.delete(`${url}/group/${groupId}/member/${userId}`);
+    return result.status;
+  } catch (err) {
+    return 400;
+  }
+};
