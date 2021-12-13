@@ -11,6 +11,10 @@
 # production
 /build
 
+/.idea
+
+src/test.http
+
 # misc
 .DS_Store
 .env.local
