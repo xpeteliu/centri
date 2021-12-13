@@ -1,6 +1,6 @@
 import { React, useEffect, useState } from 'react';
 import {
-  Button, Image, Stack, Row, Col, Container, Card, Modal, Form,
+  Button, Stack, Row, Col, Container, Card, Modal, Form,
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useHistory, useParams } from 'react-router-dom';
@@ -8,11 +8,8 @@ import { useSelector } from 'react-redux';
 import { HeaderBar } from '../common/HeaderBar';
 import {
   getMyGroups, createGroup, getGroupById, getPostsByGroupId, getPostById,
-  filterGroupsByTag, getPublicGroups, getUsersByName, inviteUser,
+  filterGroupsByTag, getPublicGroups, getUsersByName, inviteUser, addTag,
 } from './FetchGroups';
-
-// TODO: change this to user id from Redux store
-// const userId = '61a8e7c806aea993b4bb7545';
 
 function GroupListPage() {
   const userId = useSelector((state) => state.user.id);
@@ -139,8 +136,12 @@ function GroupPage() {
   const leaveGroup = () => {
     history.push('/groups');
   };
+  const goAdminPage = () => {
+    history.push(`/group/${groupId}/admin`);
+  };
 
   const editGroupButtonClicked = async () => {
+    // invite user
     const newMemberName = document.getElementById('inviteField').value;
     if (newMemberName !== '') {
       const userArray = await getUsersByName(newMemberName);
@@ -148,6 +149,11 @@ function GroupPage() {
         const newMemberId = userArray[0]._id;
         await inviteUser(groupId, newMemberId);
       }
+    }
+    // add tag
+    const newTag = document.getElementById('groupTopicField').value;
+    if (newTag !== '') {
+      await addTag(groupId, newTag);
     }
     handleClose();
   };
@@ -157,15 +163,12 @@ function GroupPage() {
       <Stack direction="vertical" gap={5} className="mainContent">
         <Row className="groupHeader">
           <Stack direction="horizontal" gap={4} className="groupListItem">
-            <div className="bg-light">
-              <Image src="./photo.jpg" width="30" height="30" roundedCircle />
-            </div>
             <div>
               <h3>{group.title}</h3>
             </div>
             <div className="ms-auto">
               <Stack direction="horizontal" gap={3}>
-                <Button variant="warning">Admin</Button>
+                <Button variant="warning" onClick={() => goAdminPage()}>Admin</Button>
                 <Button onClick={handleOpen}>Edit Group</Button>
                 <Button onClick={() => leaveGroup()}>Leave Group</Button>
               </Stack>
@@ -218,12 +221,8 @@ function GroupListItem(props) {
   const [requested, setRequested] = useState(false);
   return (
     <Stack direction="horizontal" gap={4} className="groupListItem">
-      <div className="bg-light">
-        <Image src="./photo.jpg" width="30" height="30" roundedCircle />
-      </div>
       <div>
         <h3>
-          {/* <a href={`./group/${groupId}`}>{group.title}</a> */}
           <span role="presentation" onClick={() => history.push(`./group/${groupId}`)} onKeyPress={() => null}>{group.title}</span>
         </h3>
       </div>
@@ -249,7 +248,7 @@ function GroupPost(props) {
     <Card>
       <Card.Body>
         <Card.Title>
-          {`${post.heading} (id:${postId})`}
+          {`${post.heading}`}
         </Card.Title>
         <Card.Text>
           {post.content}

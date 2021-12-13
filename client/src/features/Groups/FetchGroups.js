@@ -112,9 +112,9 @@ export const acceptUser = async (groupId, userId) => {
   try {
     const inviteRequest = {
       role: 'member',
-      userId,
+      // userId,
     };
-    const result = await axios.put(`${url}/group/${groupId}/member/${userId}`, inviteRequest);
+    const result = await axios.put(`${url}/group/${groupId}/member/${userId}`, inviteRequest, { withCredentials: true });
     return result.status;
   } catch (err) {
     return 400;
@@ -141,5 +141,14 @@ export const getUsersByName = async (username) => {
     return result.data;
   } catch (err) {
     return [];
+  }
+};
+
+export const getUserById = async (userId) => {
+  try {
+    const result = await axios.get(`${url}/user/${userId}`);
+    return result.data;
+  } catch (err) {
+    return {};
   }
 };
