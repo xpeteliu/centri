@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const url = 'https://cis557-group20-project.herokuapp.com/api';
+// const url = 'https://cis557-group20-project.herokuapp.com/api';
+const url = '/api';
 
 export const getMyGroups = async (userId) => {
   try {
@@ -99,7 +100,7 @@ export const inviteUser = async (groupId, userId) => {
   try {
     const inviteRequest = {
       role: 'pendingMember',
-      userId,
+      // userId,
     };
     const result = await axios.put(`${url}/group/${groupId}/member/${userId}`, inviteRequest);
     return result.status;

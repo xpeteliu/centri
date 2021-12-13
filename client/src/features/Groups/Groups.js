@@ -19,9 +19,9 @@ function GroupListPage() {
   // TODO: this will be a list of unique IDs instead when connected to db
   // console.log(getGroups());
   // const [groups, setGroups] = useState(['Group Name', 'Group Name 2', 'Group Name 3']);
-  const [groups, setGroups] = useState([]);
+  const [groups, setGroups] = useState(undefined);
   useEffect(async () => {
-    if (groups.length === 0) {
+    if (!groups) {
       const groupList = await getPublicGroups();
       setGroups(groupList.map((group) => String(group._id)));
     }
@@ -64,7 +64,7 @@ function GroupListPage() {
         </Row>
         <Row>
           <Stack direction="vertical" gap={5} id="groupList">
-            {groups.map((group) => <GroupListItem groupId={group} key={group} />)}
+            {groups && groups.map((group) => <GroupListItem groupId={group} key={group} />)}
           </Stack>
         </Row>
         <Row>
@@ -121,9 +121,10 @@ function GroupPage() {
     }
   });
 
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState(undefined);
   useEffect(async () => {
-    if (posts.length === 0) {
+    if (!posts) {
+      console.log('requesting posts');
       const postList = await getPostsByGroupId(groupId);
       setPosts(postList.map((post) => String(post._id)));
     }
@@ -177,7 +178,7 @@ function GroupPage() {
         </Row>
         <Row className="groupPostList">
           <Stack direction="vertical" gap={5}>
-            {posts.map((postId) => <GroupPost postId={postId} key={postId} />)}
+            {posts && posts.map((postId) => <GroupPost postId={postId} key={postId} />)}
           </Stack>
         </Row>
       </Stack>
