@@ -70,7 +70,7 @@ function Input(props) {
                   <Form.Label>Chat</Form.Label>
                 </Col>
                 <Col xs={9}>
-                  <Form.Control name="formMessageText" placeholder="..." />
+                  <Form.Control as="textarea" name="formMessageText" placeholder="..." />
                 </Col>
                 <Col xs={1}>
                   <Button variant="primary" type="submit">
@@ -159,7 +159,9 @@ function Message(props) {
     <Card>
       <Card.Body className="p-4">
         <Card.Text className="mb-2 h6">
-          {content}
+          <p align="left" style={{ 'white-space': 'pre-wrap' }}>
+            {content}
+          </p>
         </Card.Text>
         <br />
         <Card.Text className="mb-2 text-muted">
@@ -201,7 +203,7 @@ function MessageMedia(props) {
       <Card.Body className="p-4">
         {media}
         <Card.Text className="mb-2 h6 p-2">
-          <p align="left">
+          <p align="left" style={{ 'white-space': 'pre-wrap' }}>
             {content}
           </p>
         </Card.Text>
