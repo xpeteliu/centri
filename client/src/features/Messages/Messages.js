@@ -68,7 +68,7 @@ function MessagePage() {
     setConversation(tempConversation);
   };
 
-  const userId = useSelector((state) => state.user._id);
+  const userId = useSelector((state) => state.user.id);
 
   if (waiting) {
     setMessages(fetchMessages(userId));
