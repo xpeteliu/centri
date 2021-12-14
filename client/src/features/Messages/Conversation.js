@@ -1,5 +1,5 @@
 /* eslint react/prop-types: 0 */
-/* eslint jsx-a11y/media-has-caption: 1 */
+/* eslint jsx-a11y/media-has-caption: 0 */
 
 import React from 'react';
 import {
