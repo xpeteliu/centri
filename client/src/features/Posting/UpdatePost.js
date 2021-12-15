@@ -15,8 +15,8 @@ export default function UpdatePost(postingId) {
   const response = GetPost(postingId);
   const originalHeading = response.heading;
   const originalContent = response.content;
-  const { creatorId } = response.creatorId;
-  const { groupId } = response.groupId;
+  const creatorId = response.creatorId;
+  const groupId = response.groupId;
 
   const handleSubmit = (event) => {
     const heading = document.getElementById('inputHeading').value;
