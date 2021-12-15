@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-// import { useDispatch, useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+// import { useDispatch } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import {
   Button, Row, Col, Card,
@@ -14,7 +14,7 @@ export default function CreatePost() {
   const history = useHistory();
   // const creatorId = '61a65336c4a2d7594d3f58f6';
   // const groupId = '61b23e2b9e59d62b561baae3';
-  const creatorId = useSelector((state) => state.user._id);
+  const creatorId = useSelector((state) => state.user.id);
   const [attachedFile, setAttachedFile] = useState(null);
   const url = window.location.href;
   const groupId = url.split('/').pop();
