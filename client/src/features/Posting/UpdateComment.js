@@ -14,9 +14,9 @@ export default function UpdateComment(commentId) {
   const dispatch = useDispatch();
   const history = useHistory();
   const response = GetComment(commentId);
-  const { creatorId } = response;
+  const creatorId = response.creatorId;
   const originalContent = response.content;
-  const { postingId } = response;
+  const postingId = response.postingId;
 
   const handleSubmit = (event) => {
     const content = document.getElementById('inputContent').value;

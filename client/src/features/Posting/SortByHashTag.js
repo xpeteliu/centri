@@ -7,11 +7,13 @@ export default function SortCommentsByHashTag(hashTag) {
         "$or": [
             {
               "content": {
-                "$regex": hashTag
+                "$regex": '\\B#'+ hashTag +'\\b'
               }
             },
         ]
-       
+      },
+      "sort": {
+        "updatedAt": -1
       }
   }
   return response.json();
