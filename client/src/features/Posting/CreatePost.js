@@ -21,6 +21,8 @@ export default function CreatePost() {
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
+    const { fileSize } = event.target.files[0].size;
+    console.log(fileSize);
     setAttachedFile(file);
   };
 
@@ -28,14 +30,14 @@ export default function CreatePost() {
     event.preventDefault();
     const heading = document.getElementById('inputHeading').value;
     const content = document.getElementById('inputContent').value;
-    if (heading.length > 0 && content.length > 0) {
+    if (heading.length > 0 && heading.length < 50 && content.length > 0 && content.length < 1000) {
       if (attachedFile == null) {
         MakePost(
           groupId,
           heading,
           creatorId,
           content,
-          'none',
+          null,
           'none',
         ).then((resp) => {
           switch (resp.status) {
@@ -75,6 +77,8 @@ export default function CreatePost() {
           dispatch(showModal({ headerText: 'Network Error', bodyText: 'Unable to connect to the server. Please try again later.' }));
         });
       }
+    } else {
+      dispatch(showModal({ headerText: 'Maximum size reached', bodyText: 'Unable to post' }));
     }
   };
 
