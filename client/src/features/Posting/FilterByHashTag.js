@@ -37,5 +37,5 @@ export default function FilterPostsByHashTag(hashTag) {
         }
     }
     const posts = await axios.post(`${url}`, postFilter);
-  return posts.json();
+    return posts.json();
   }
