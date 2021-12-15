@@ -52,3 +52,12 @@ export async function GetComment(commentId) {
   });
   return response.json();
 }
+
+export async function GetUsernameById(userId) {
+  const url = baseUrl.concat(`/${userId}`);
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+  });
+  return response.json();
+}

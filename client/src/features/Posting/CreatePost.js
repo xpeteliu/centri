@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // import { useDispatch } from 'react-redux';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import {
   Button, Row, Col, Card,
 } from 'react-bootstrap';
@@ -16,8 +16,7 @@ export default function CreatePost() {
   // const groupId = '61b23e2b9e59d62b561baae3';
   const creatorId = useSelector((state) => state.user.id);
   const [attachedFile, setAttachedFile] = useState(null);
-  const url = window.location.href;
-  const groupId = url.split('/').pop();
+  const { groupId } = useParams();
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
