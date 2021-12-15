@@ -1,4 +1,5 @@
 /* eslint react/prop-types: 0 */
+/* eslint jsx-a11y/media-has-caption: 0 */
 
 import React from 'react';
 import {
@@ -31,8 +32,6 @@ function Conversation(props) {
     overflowY: 'scroll',
     overflowX: 'clip',
   };
-
-  console.log('name', otherName);
 
   return (
     <div style={convoStyle}>
@@ -71,7 +70,7 @@ function Input(props) {
                   <Form.Label>Chat</Form.Label>
                 </Col>
                 <Col xs={9}>
-                  <Form.Control name="formMessageText" placeholder="..." />
+                  <Form.Control as="textarea" name="formMessageText" placeholder="..." />
                 </Col>
                 <Col xs={1}>
                   <Button variant="primary" type="submit">
@@ -95,15 +94,29 @@ function Input(props) {
 function ConversationRow(props) {
   const { message, userId } = props;
   const { senderId } = message;
-  const alignLeft = senderId !== userId;
+  const alignLeft = senderId === userId;
+
+  let content;
+
+  if (message.attachmentType === 'none') {
+    content = (
+      <Message
+        message={message}
+      />
+    );
+  } else {
+    content = (
+      <MessageMedia
+        message={message}
+      />
+    );
+  }
 
   if (alignLeft) {
     return (
       <Row>
         <Col xs={6}>
-          <Message
-            message={message}
-          />
+          {content}
         </Col>
         <Col />
       </Row>
@@ -113,18 +126,13 @@ function ConversationRow(props) {
     <Row>
       <Col />
       <Col xs={6}>
-        <Message
-          message={message}
-        />
+        {content}
       </Col>
     </Row>
   );
 }
 
-function Message(props) {
-  const { message } = props;
-  const { content, createdAt } = message;
-  const parsedDate = new Date(createdAt);
+function getDateString(parsedDate) {
   const date = parsedDate.toLocaleDateString('en-US');
 
   const padTime = (timeString) => {
@@ -137,15 +145,68 @@ function Message(props) {
   const minutes = padTime(parsedDate.getMinutes().toString());
   const seconds = padTime(parsedDate.getSeconds().toString());
 
-  const dateString = date.concat(` ${hours}:${minutes}:${seconds}`);
+  return date.concat(` ${hours}:${minutes}:${seconds}`);
+}
+
+function Message(props) {
+  const { message } = props;
+  const { content, createdAt } = message;
+  const parsedDate = new Date(createdAt);
+
+  const dateString = getDateString(parsedDate);
 
   return (
     <Card>
       <Card.Body className="p-4">
         <Card.Text className="mb-2 h6">
-          {content}
+          <p align="left" style={{ 'white-space': 'pre-wrap' }}>
+            {content}
+          </p>
         </Card.Text>
         <br />
+        <Card.Text className="mb-2 text-muted">
+          {dateString}
+        </Card.Text>
+      </Card.Body>
+    </Card>
+  );
+}
+
+function MessageMedia(props) {
+  const { message } = props;
+  const {
+    content, createdAt, attachmentId, attachmentType,
+  } = message;
+  const parsedDate = new Date(createdAt);
+
+  const dateString = getDateString(parsedDate);
+  const attachmentUrl = `http://cis557-group20-project.herokuapp.com/api/file/${attachmentId}`;
+
+  let media;
+
+  if (attachmentType.startsWith('image')) {
+    media = (
+      <img src={attachmentUrl} alt="attached img" width="360px" />
+    );
+  } else if (attachmentType.startsWith('audio')) {
+    media = (
+      <audio controls src={attachmentUrl} alt="attached audio" type="{attachmentType}" width="360px" />
+    );
+  } else if (attachmentType.startsWith('video')) {
+    media = (
+      <video controls src={attachmentUrl} alt="attached audio" type="{attachmentType}" width="360px" />
+    );
+  }
+
+  return (
+    <Card>
+      <Card.Body className="p-4">
+        {media}
+        <Card.Text className="mb-2 h6 p-2">
+          <p align="left" style={{ 'white-space': 'pre-wrap' }}>
+            {content}
+          </p>
+        </Card.Text>
         <Card.Text className="mb-2 text-muted">
           {dateString}
         </Card.Text>
