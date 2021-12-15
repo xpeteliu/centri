@@ -54,7 +54,7 @@ export default function UpdateComment(commentId) {
   return (
     <Card>
       <Card.Title>
-        <h2>Add comment</h2>
+        <h2>Update comment</h2>
       </Card.Title>
       <Card.Body>
         <Row className="h-100">
@@ -67,7 +67,7 @@ export default function UpdateComment(commentId) {
               <Link to="/"><button className="btn btn-secondary float-right" type="button">Cancel</button></Link>
             &nbsp;&nbsp;&nbsp;
               {/* <button className="btn btn-primary float-right" type="button">Post</button> */}
-              <Button variant="secondary" onClick={handleSubmit}>Add</Button>
+              <Button variant="secondary" onClick={handleSubmit}>Save</Button>
             </form>
           </Col>
         </Row>

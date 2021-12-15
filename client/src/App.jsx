@@ -17,9 +17,9 @@ export default function App() {
         <Route exact path="/" component={HomePage} />
         <Route path="/login" component={SignInPage} />
         <Route path="/register" component={SignUpPage} />
-        <Route path="/group" component={GroupPage} />
+        <Route exact path="/group" component={GroupPage} />
         <Route path="/groups" component={GroupListPage} />
-        <Route path="/posting" component={CreatePost} />
+        <Route path="/group/:groupId/posting" component={CreatePost} />
         <Route path="/comment" component={AddComment} />
       </Switch>
       <MessageModal />
