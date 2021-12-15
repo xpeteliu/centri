@@ -2,7 +2,7 @@ const baseUrl = 'http://cis557-group20-project.herokuapp.com/api';
 
 export default function FilterCommentsByHashTag(hashTag) {
   const url = baseUrl.concat('/comment/filter/paginate');
-  const data = {
+  const commentFilter = {
       filter: {
         "$or": [
             {
@@ -15,13 +15,14 @@ export default function FilterCommentsByHashTag(hashTag) {
       "sort": {
         "updatedAt": -1
       }
-  }
-  return response.json();
+  };
+  const comments = await axios.post(`${url}`, commentFilter);
+  return comments.json();
 }
 
 export default function FilterPostsByHashTag(hashTag) {
     const url = baseUrl.concat('/posting/filter/paginate');
-    const data = {
+    const postFilter = {
         filter: {
           "$or": [
               {
@@ -35,5 +36,6 @@ export default function FilterPostsByHashTag(hashTag) {
           "updatedAt": -1
         }
     }
-    return response.json();
+    const posts = await axios.post(`${url}`, postFilter);
+  return posts.json();
   }
