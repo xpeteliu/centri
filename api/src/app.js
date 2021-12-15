@@ -29,7 +29,7 @@ const app = express();
 app.use(express.json());
 app.use(express.static(path.resolve('./build')));
 app.use(session({
-  secret: process.env.SESSION_SECRET,
+  secret: process.env.SESSION_SECRET || 'test',
   resave: false,
   saveUninitialized: false,
   cookie: {
