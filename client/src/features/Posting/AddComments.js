@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import {
   Button, Row, Col, Card,
@@ -12,8 +12,8 @@ export default function AddComment(postingId) {
   const history = useHistory();
   const baseUrl = 'https://cis557-group20-project.herokuapp.com/api';
   const url = baseUrl.concat('/comment');
-  const creatorId = '61a65336c4a2d7594d3f58f6';
-  // const creatorId = useSelector((state) => state.user.id);
+  // const creatorId = '61a65336c4a2d7594d3f58f6';
+  const creatorId = useSelector((state) => state.user.id);
   const handleSubmit = (event) => {
     const content = document.getElementById('inputContent').value;
     if (content.length > 0) {
