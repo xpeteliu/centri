@@ -108,6 +108,7 @@ export const removeUser = async (req, res) => {
         .json({ message: 'Not operating as an authorized user' });
       return;
     }
+    req.logout();
     res.json(await User.findByIdAndDelete(req.params.userId)
       .exec());
   } catch (e) {

@@ -1,4 +1,4 @@
-export const postUser = (username, email, password) => fetch('/api/user', {
+export const postUser = (username, email, password, avatarId) => fetch('/api/user', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -7,5 +7,11 @@ export const postUser = (username, email, password) => fetch('/api/user', {
     username,
     email,
     password,
+    avatarId,
   }),
+});
+
+export const postFile = (form) => fetch('/api/file', {
+  method: 'POST',
+  body: form,
 });
