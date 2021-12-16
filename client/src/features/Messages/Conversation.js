@@ -9,7 +9,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 function Conversation(props) {
   const {
-    messages, id, otherId, otherName, onSubmitMessage, onFileUpload,
+    messages, id, otherId, otherName, onSubmitMessage,
+    onFileUpload, onAcceptInvite, onDeclineInvite,
   } = props;
 
   messages.sort((a, b) => ((a.createdDate > b.createdDate) ? 1 : -1));
@@ -20,6 +21,8 @@ function Conversation(props) {
       key={message._id}
       message={message}
       userId={id}
+      onAcceptInvite={onAcceptInvite}
+      onDeclineInvite={onDeclineInvite}
     />);
   });
 
@@ -92,11 +95,23 @@ function Input(props) {
 }
 
 function ConversationRow(props) {
-  const { message, userId } = props;
+  const {
+    message, userId, onAcceptInvite, onDeclineInvite,
+  } = props;
   const { senderId } = message;
   const alignLeft = senderId === userId;
 
   let content;
+
+  if ('invitingGroupId' in message) {
+    content = (
+      <MessageInvite
+        message={message}
+        onAcceptInvite={onAcceptInvite}
+        onDeclineInvite={onDeclineInvite}
+      />
+    );
+  }
 
   if (message.attachmentType === 'none') {
     content = (
@@ -158,11 +173,11 @@ function Message(props) {
   return (
     <Card>
       <Card.Body className="p-4">
-        <Card.Text className="mb-2 h6">
-          <p align="left" style={{ 'white-space': 'pre-wrap' }}>
+        <div align="left" style={{ whiteSpace: 'pre-wrap' }}>
+          <Card.Text className="mb-2 h6">
             {content}
-          </p>
-        </Card.Text>
+          </Card.Text>
+        </div>
         <br />
         <Card.Text className="mb-2 text-muted">
           {dateString}
@@ -180,7 +195,7 @@ function MessageMedia(props) {
   const parsedDate = new Date(createdAt);
 
   const dateString = getDateString(parsedDate);
-  const attachmentUrl = `http://cis557-group20-project.herokuapp.com/api/file/${attachmentId}`;
+  const attachmentUrl = process.env.REACT_APP_API_URL || `/api/file/${attachmentId}`;
 
   let media;
 
@@ -202,11 +217,41 @@ function MessageMedia(props) {
     <Card>
       <Card.Body className="p-4">
         {media}
-        <Card.Text className="mb-2 h6 p-2">
-          <p align="left" style={{ 'white-space': 'pre-wrap' }}>
+        <div align="left" style={{ whiteSpace: 'pre-wrap' }}>
+          <Card.Text className="mb-2 h6 p-2">
             {content}
-          </p>
+          </Card.Text>
+        </div>
+        <Card.Text className="mb-2 text-muted">
+          {dateString}
         </Card.Text>
+      </Card.Body>
+    </Card>
+  );
+}
+
+function MessageInvite(props) {
+  const { message, onAcceptInvite, onDeclineInvite } = props;
+  const { _id, content, createdAt } = message;
+  const parsedDate = new Date(createdAt);
+
+  const dateString = getDateString(parsedDate);
+
+  return (
+    <Card>
+      <Card.Body className="p-4">
+        <div align="left" style={{ whiteSpace: 'pre-wrap' }}>
+          <Card.Text className="mb-2 h6">
+            {content}
+          </Card.Text>
+        </div>
+        <button type="submit" value={_id} onClick={onAcceptInvite}>
+          Accept
+        </button>
+        <button type="submit" value={_id} onClick={onDeclineInvite}>
+          Decline
+        </button>
+        <br />
         <Card.Text className="mb-2 text-muted">
           {dateString}
         </Card.Text>

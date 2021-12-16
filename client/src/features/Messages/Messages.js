@@ -9,7 +9,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Conversation from './Conversation';
 import { HeaderBar } from '../common/HeaderBar';
 import {
-  getUser, getMessagesSender, getMessagesRecipient, postMessage, postFile,
+  getUser, getMessagesSender, getMessagesRecipient, postMessage,
+  postFile, acceptInvite, declineInvite,
 } from './Requests';
 
 function MessagePage() {
@@ -49,7 +50,6 @@ function MessagePage() {
 
     const tempUsers = await Promise.all(tempIds.map((id) => fetchUser(id)));
     setUsers(tempUsers);
-
     return filtered;
   };
 
@@ -122,6 +122,18 @@ function MessagePage() {
     }
   };
 
+  const handleAcceptInvite = async (event) => {
+    const messageId = event.target.value;
+    await acceptInvite(messageId);
+    fetchMessages(userId);
+  };
+
+  const handleDeclineInvite = async (event) => {
+    const messageId = event.target.value;
+    await declineInvite(messageId);
+    fetchMessages(userId);
+  };
+
   useEffect(() => {
     // console.log('rendered');
     const pollMessages = setInterval(() => {
@@ -186,6 +198,8 @@ function MessagePage() {
       otherName: otherUsername,
       onSubmitMessage: handleSubmitMessage,
       onFileUpload: handleFileUpload,
+      onAcceptInvite: handleAcceptInvite,
+      onDeclineInvite: handleDeclineInvite,
     });
   }
 

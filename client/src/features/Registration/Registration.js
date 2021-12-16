@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import {
   Button, Card, Col, Container, Form, Row,
@@ -6,11 +6,29 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useDispatch } from 'react-redux';
 import { showModal } from '../common/MessageModal/modalSlice';
-import { postUser } from './fetch';
+import { postFile, postUser } from './fetch';
 
 export default function SignUpPage() {
   const dispatch = useDispatch();
   const history = useHistory();
+
+  const [avatarId, setAvatarId] = useState(null);
+
+  const handleFileUploading = async (event) => {
+    const file = event.target.files[0];
+    const formData = new FormData();
+    formData.append('file', file);
+    const resp = await postFile(formData);
+    if (resp.status !== 200) {
+      dispatch(showModal({
+        headerText: 'File uploading failed',
+        bodyText: 'Unable to upload the file due to network error',
+      }));
+      return;
+    }
+    const uploaded = await resp.json();
+    setAvatarId(uploaded.id);
+  };
 
   const handleSubmit = (event) => {
     const password = document.getElementById('inputRegistrationPassword0').value;
@@ -19,6 +37,7 @@ export default function SignUpPage() {
         document.getElementById('inputRegistrationUsername').value,
         document.getElementById('inputRegistrationEmail').value,
         password,
+        avatarId,
       )
         .then((resp) => {
           switch (resp.status) {
@@ -58,15 +77,16 @@ export default function SignUpPage() {
     <Container className="h-100">
       <Row className="h-100">
         <Col className="my-auto">
-          <Card style={{ width: '30rem' }} className="mx-auto">
+          <Card style={{ width: '40rem' }} className="mx-auto">
             <Card.Header>
               <h2>Sign Up</h2>
             </Card.Header>
             <Card.Body>
               <Form
-                id="formLogin"
-                style={{ width: '25rem' }}
+                id="formRegistration"
+                style={{ width: '35rem' }}
                 className="container"
+                encType="multipart/form-data"
                 onSubmit={handleSubmit}
               >
                 <Row>
@@ -128,9 +148,39 @@ export default function SignUpPage() {
                     </Form.Group>
                   </Col>
                 </Row>
+                <Row>
+                  <Col>
+                    <Form.Group className="mb-3 text-start" controlId="inputRegistrationAvatar">
+                      <Form.Label>Upload Avatar</Form.Label>
+                      <Form.Control
+                        type="file"
+                        onChange={handleFileUploading}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col>
+                    {avatarId != null && (
+                      <img
+                        src={`/api/file/${avatarId}`}
+                        alt="Avatar Preview"
+                        style={{
+                          borderRadius: '50%',
+                          height: '5rem',
+                          width: '5rem',
+                        }}
+                      />
+                    )}
+                  </Col>
+                </Row>
                 <Row style={{ marginTop: '1rem' }}>
                   <Col>
-                    <Button variant="primary" type="submit" form="formLogin">Register</Button>
+                    <Button
+                      variant="primary"
+                      type="submit"
+                      form="formRegistration"
+                    >
+                      Register
+                    </Button>
                   </Col>
                 </Row>
               </Form>

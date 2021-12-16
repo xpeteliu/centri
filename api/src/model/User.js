@@ -14,6 +14,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  avatarId: {
+    type: mongoose.ObjectId,
+    required: false,
+  },
   lockoutCounter: {
     type: Number,
     default: 0,
