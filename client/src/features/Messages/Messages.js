@@ -1,7 +1,7 @@
 /* eslint react/prop-types: 0 */
 
 import React, { useState, useEffect } from 'react';
-// import { useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import {
   Container, Row, Col, Stack, Card, ListGroup, ListGroupItem,
 } from 'react-bootstrap';
@@ -68,7 +68,7 @@ function MessagePage() {
     setConversation(tempConversation);
   };
 
-  const userId = '61a65bf45915a4279a04ac35'; // useSelector((state) => state.user.id);
+  const userId = useSelector((state) => state.user.id);
 
   if (waiting) {
     setMessages(fetchMessages(userId));
