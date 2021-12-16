@@ -3,7 +3,8 @@
 import axios from 'axios';
 import FormData from 'form-data';
 
-const baseUrl = process.env.REACT_APP_API_URL || '/api';
+// const baseUrl = process.env.REACT_APP_API_URL || '/api';
+const baseUrl = 'https://cis557-group20-project.herokuapp.com/api';
 
 export async function getUser(id) {
   try {
@@ -86,6 +87,26 @@ export async function postFile(file) {
     return response.json();
   } catch (err) {
     // console.log('upload post err', err);
+    return {};
+  }
+}
+
+export async function acceptInvite(messageId) {
+  try {
+    const url = baseUrl.concat(`/message/${messageId}/accept`);
+    const response = await axios.put(url);
+    return response;
+  } catch (err) {
+    return {};
+  }
+}
+
+export async function declineInvite(messageId) {
+  try {
+    const url = baseUrl.concat(`/message/${messageId}/decline`);
+    const response = await axios.put(url);
+    return response;
+  } catch (err) {
     return {};
   }
 }
