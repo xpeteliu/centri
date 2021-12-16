@@ -7,6 +7,7 @@ export default function PostDetail() {
   const post = GetPost(postingId);
   const creatorId = post.creatorId;
   const username = GetUsernameById(creatorId);
+  const comments = post.comments;
 //   const attachedFile = post.attachedFile;
 
   return (
@@ -27,7 +28,6 @@ export default function PostDetail() {
         </Card.Text>
         <Link to="/comment"><button className="btn btn-secondary float-right" type="button">Show Comments</button></Link>
       </Card.Body>
-      
     </Card>
   );
 
