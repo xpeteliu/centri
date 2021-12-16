@@ -3,8 +3,7 @@
 import axios from 'axios';
 import FormData from 'form-data';
 
-// const baseUrl = process.env.REACT_APP_API_URL || '/api';
-const baseUrl = 'https://cis557-group20-project.herokuapp.com/api';
+const baseUrl = process.env.REACT_APP_API_URL || '/api';
 
 export async function getUser(id) {
   try {
