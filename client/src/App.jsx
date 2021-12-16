@@ -18,7 +18,7 @@ export default function App() {
         <Route path="/register" component={SignUpPage} />
         <Route path="/group" component={GroupPage} />
         <Route path="/groups" component={GroupListPage} />
-        <Route path="/messaging" component={MessagePage} />
+        <Route path="/messages" component={MessagePage} />
         <Route path="/resetPassword" component={ResetPassword} />
       </Switch>
       <MessageModal />

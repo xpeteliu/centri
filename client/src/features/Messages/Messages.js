@@ -1,7 +1,7 @@
 /* eslint react/prop-types: 0 */
 
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 import {
   Container, Row, Col, Stack, Card, ListGroup, ListGroupItem,
 } from 'react-bootstrap';
@@ -9,7 +9,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Conversation from './Conversation';
 import { HeaderBar } from '../common/HeaderBar';
 import {
-  getUser, getMessagesSender, getMessagesRecipient, postMessage, postFile,
+  getUser, getMessagesSender, getMessagesRecipient, postMessage,
+  postFile, acceptInvite, declineInvite,
 } from './Requests';
 
 function MessagePage() {
@@ -49,7 +50,6 @@ function MessagePage() {
 
     const tempUsers = await Promise.all(tempIds.map((id) => fetchUser(id)));
     setUsers(tempUsers);
-
     return filtered;
   };
 
@@ -68,7 +68,7 @@ function MessagePage() {
     setConversation(tempConversation);
   };
 
-  const userId = useSelector((state) => state.user.id);
+  const userId = '61a65bf45915a4279a04ac35'; // useSelector((state) => state.user.id);
 
   if (waiting) {
     setMessages(fetchMessages(userId));
@@ -120,6 +120,18 @@ function MessagePage() {
         fetchConvo(userId);
       }
     }
+  };
+
+  const handleAcceptInvite = async (event) => {
+    const messageId = event.target.value;
+    await acceptInvite(messageId);
+    fetchMessages(userId);
+  };
+
+  const handleDeclineInvite = async (event) => {
+    const messageId = event.target.value;
+    await declineInvite(messageId);
+    fetchMessages(userId);
   };
 
   useEffect(() => {
@@ -186,6 +198,8 @@ function MessagePage() {
       otherName: otherUsername,
       onSubmitMessage: handleSubmitMessage,
       onFileUpload: handleFileUpload,
+      onAcceptInvite: handleAcceptInvite,
+      onDeclineInvite: handleDeclineInvite,
     });
   }
 
