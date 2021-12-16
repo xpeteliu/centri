@@ -13,15 +13,19 @@ import store from '../common/store';
 
 describe('Registration page', () => {
   const mockServer = setupServer(
-    rest.post('http://localhost:8000/user',
+    rest.post('/api/user',
       (req, res, ctx) => (req.body.username === 'duplicateName'
         ? res(ctx.status(409), ctx.json({ message: 'The username has been registered' }))
-        : res(ctx.status(204)))),
+        : res(ctx.status(200)))),
   );
 
-  beforeAll(() => { mockServer.listen(); });
+  beforeAll(() => {
+    mockServer.listen();
+  });
 
-  afterAll(() => { mockServer.close(); });
+  afterAll(() => {
+    mockServer.close();
+  });
 
   test('should match snapshot', async () => {
     let container;
@@ -34,7 +38,8 @@ describe('Registration page', () => {
         </Provider>,
       ));
     });
-    expect(container).toMatchSnapshot();
+    expect(container)
+      .toMatchSnapshot();
   });
 
   test('should properly handle valid registration info', async () => {
@@ -60,7 +65,10 @@ describe('Registration page', () => {
       userEvent.type(passwordInput1, 'testPwd');
       userEvent.click(submitBtn);
     });
-    await waitFor(() => { expect(history.location.pathname).toEqual('/login'); });
+    await waitFor(() => {
+      expect(history.location.pathname)
+        .toEqual('/login');
+    });
   });
 
   test('should properly handle occupied username', async () => {
@@ -86,7 +94,8 @@ describe('Registration page', () => {
       userEvent.type(passwordInput1, 'testPwd');
       userEvent.click(submitBtn);
     });
-    expect(await screen.findByText(/Unable to Register/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Unable to Register/i))
+      .toBeInTheDocument();
   });
 
   test('should properly handle different passwords for the 2 input boxes', async () => {
@@ -112,6 +121,7 @@ describe('Registration page', () => {
       userEvent.type(passwordInput1, 'diffPwd');
       userEvent.click(submitBtn);
     });
-    expect(await screen.findByText(/Invalid Input/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Invalid Input/i))
+      .toBeInTheDocument();
   });
 });

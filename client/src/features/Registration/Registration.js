@@ -6,7 +6,6 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useDispatch } from 'react-redux';
 import { showModal } from '../common/MessageModal/modalSlice';
-import { MessageModal } from '../common/MessageModal/MessageModal';
 import { postUser } from './fetch';
 
 export default function SignUpPage() {
@@ -20,22 +19,37 @@ export default function SignUpPage() {
         document.getElementById('inputRegistrationUsername').value,
         document.getElementById('inputRegistrationEmail').value,
         password,
-      ).then((resp) => {
-        switch (resp.status) {
-          case 204:
-            history.push('/login');
-            break;
-          case 409:
-            dispatch(showModal({ headerText: 'Unable to Register', bodyText: 'The username has been used. Please try another.' }));
-            break;
-          default:
-            throw new Error('Invalid response');
-        }
-      }).catch(() => {
-        dispatch(showModal({ headerText: 'Network Error', bodyText: 'Unable to connect to the server. Please try again later.' }));
-      });
+      )
+        .then((resp) => {
+          switch (resp.status) {
+            case 200:
+              dispatch(showModal({
+                headerText: 'Register',
+                bodyText: 'Successfully registered a new user! Please log in now.',
+              }));
+              history.push('/login');
+              break;
+            case 409:
+              dispatch(showModal({
+                headerText: 'Unable to Register',
+                bodyText: 'The username has been used. Please try another.',
+              }));
+              break;
+            default:
+              throw new Error('Invalid response');
+          }
+        })
+        .catch(() => {
+          dispatch(showModal({
+            headerText: 'Network Error',
+            bodyText: 'Unable to connect to the server. Please try again later.',
+          }));
+        });
     } else {
-      dispatch(showModal({ headerText: 'Invalid Input', bodyText: 'The passwords do not match.' }));
+      dispatch(showModal({
+        headerText: 'Invalid Input',
+        bodyText: 'The passwords do not match.',
+      }));
     }
     event.preventDefault();
   };
@@ -49,12 +63,22 @@ export default function SignUpPage() {
               <h2>Sign Up</h2>
             </Card.Header>
             <Card.Body>
-              <Form id="formLogin" style={{ width: '25rem' }} className="container" onSubmit={handleSubmit}>
+              <Form
+                id="formLogin"
+                style={{ width: '25rem' }}
+                className="container"
+                onSubmit={handleSubmit}
+              >
                 <Row>
                   <Col>
                     <Form.Group className="mb-3 text-start" controlId="inputRegistrationUsername">
                       <Form.Label className="ms-0">Username</Form.Label>
-                      <Form.Control type="text" placeholder="Enter username here" required />
+                      <Form.Control
+                        type="text"
+                        placeholder="Enter username here"
+                        autoComplete="username"
+                        required
+                      />
                     </Form.Group>
                   </Col>
                 </Row>
@@ -62,7 +86,12 @@ export default function SignUpPage() {
                   <Col>
                     <Form.Group className="mb-3 text-start" controlId="inputRegistrationEmail">
                       <Form.Label>Email</Form.Label>
-                      <Form.Control type="email" placeholder="Enter email here" required />
+                      <Form.Control
+                        type="email"
+                        placeholder="Enter email here"
+                        autoComplete="email"
+                        required
+                      />
                       <Form.Text className="text-muted">
                         Your email will be kept confidential with us.
                       </Form.Text>
@@ -78,6 +107,7 @@ export default function SignUpPage() {
                         placeholder="Enter password here"
                         pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
                         title="A password should contain >=8 characters and include both letters and numbers"
+                        autoComplete="new-password"
                         required
                       />
                     </Form.Group>
@@ -92,6 +122,7 @@ export default function SignUpPage() {
                         placeholder="Enter the same password as above"
                         pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
                         title="A password should contain >=8 characters and include both letters and numbers"
+                        autoComplete="new-password"
                         required
                       />
                     </Form.Group>
@@ -113,7 +144,6 @@ export default function SignUpPage() {
           </Card>
         </Col>
       </Row>
-      <MessageModal />
     </Container>
   );
 }
