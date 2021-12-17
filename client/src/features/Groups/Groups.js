@@ -5,7 +5,6 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useHistory, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { HeaderBar } from '../common/HeaderBar';
 import {
   getMyGroups, createGroup, getGroupById, getPostsByGroupId, getPostById,
   filterGroupsByTag, getPublicGroups, getUsersByName, inviteUser, addTag,
@@ -50,7 +49,6 @@ function GroupListPage() {
   };
   return (
     <Container className="App">
-      <HeaderBar />
       <Stack direction="vertical" gap={5} className="mainContent">
         <Row className="groupButtons">
           <Col xs="4">
@@ -169,7 +167,6 @@ function GroupPage() {
 
   return (
     <Container className="App">
-      <HeaderBar />
       <Stack direction="vertical" gap={5} className="mainContent">
         <Row className="groupHeader">
           <Stack direction="horizontal" gap={4} className="groupListItem">

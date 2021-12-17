@@ -8,11 +8,16 @@ import AdminPage from './features/Groups/AdminPage';
 import MessagePage from './features/Messages/Messages';
 import { MessageModal } from './features/common/MessageModal/MessageModal';
 import ResetPassword from './features/ResetPassword/ResetPassword';
+import CreatePost from './features/Posting/CreatePost';
+import AddComment from './features/Posting/AddComments';
+// import DeletePost from './features/Posting/DeletePost';
+import { HeaderBar } from './features/common/HeaderBar';
 import './App.css';
 
 export default function App() {
   return (
     <div className="App">
+      <HeaderBar />
       <Switch>
         <Route exact path="/" component={HomePage} />
         <Route path="/login" component={SignInPage} />
@@ -22,6 +27,8 @@ export default function App() {
         <Route path="/groups" component={GroupListPage} />
         <Route path="/messaging" component={MessagePage} />
         <Route path="/resetPassword" component={ResetPassword} />
+        <Route path="/group/:groupId/posting" component={CreatePost} />
+        <Route path="/comment" component={AddComment} />
       </Switch>
       <MessageModal />
     </div>
