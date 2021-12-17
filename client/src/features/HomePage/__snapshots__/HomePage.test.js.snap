@@ -1,0 +1,152 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Home page should match snapshot 1`] = `
+<div>
+  <div
+    class="App"
+  >
+    <div
+      class="h-100 container"
+    >
+      <div
+        class="h-100 row"
+      >
+        <div
+          class="my-auto col"
+        >
+          <div
+            class="mx-auto card"
+            style="width: 35rem;"
+          >
+            <div
+              class="card-header"
+            >
+              <h2>
+                Sign In
+              </h2>
+            </div>
+            <div
+              class="card-body"
+            >
+              <form
+                class="container"
+                id="formLogin"
+                style="width: 25rem;"
+              >
+                <div
+                  class="row"
+                >
+                  <div
+                    class="col"
+                  >
+                    <div
+                      class="mb-3 text-start"
+                    >
+                      <label
+                        class="ms-0 form-label"
+                        for="inputLoginUsername"
+                      >
+                        Username
+                      </label>
+                      <input
+                        autocomplete="username"
+                        class="form-control"
+                        id="inputLoginUsername"
+                        placeholder="Enter username here"
+                        required=""
+                        type="text"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="row"
+                >
+                  <div
+                    class="col"
+                  >
+                    <div
+                      class="mb-3 text-start"
+                    >
+                      <label
+                        class="form-label"
+                        for="inputLoginPassword"
+                      >
+                        Password
+                      </label>
+                      <input
+                        autocomplete="current-password"
+                        class="form-control"
+                        id="inputLoginPassword"
+                        pattern="^(?=.*[A-Za-z])(?=.*\\\\d)[A-Za-z\\\\d]{8,}$"
+                        placeholder="Enter password here"
+                        required=""
+                        title="A password should contain >=8 characters and include both letters and numbers"
+                        type="password"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="row"
+                  style="margin-top: 1rem;"
+                >
+                  <div
+                    class="col"
+                  >
+                    <button
+                      class="btn btn-primary"
+                      form="formLogin"
+                      type="submit"
+                    >
+                      Login
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div
+              class="container card-footer"
+            >
+              <div
+                class="text-center row"
+              >
+                <div
+                  class="col"
+                >
+                  <a
+                    class="card-link"
+                    href="/register"
+                  >
+                    Create an account
+                  </a>
+                </div>
+                <div
+                  class="col"
+                >
+                  <a
+                    class="card-link"
+                    href="/resetPassword"
+                  >
+                    Reset password
+                  </a>
+                </div>
+                <div
+                  class="col"
+                >
+                  <a
+                    class="card-link"
+                    href="/"
+                  >
+                    Back to Home Page
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -43,7 +43,7 @@ export default function HomePage() {
         <Col className="my-auto">
           <div className="text-center">
             <h1>Welcome to Our App</h1>
-            <Link to="/Login">
+            <Link to="/login">
               <Button variant="primary">Sign In</Button>
             </Link>
             &nbsp;&nbsp;&nbsp;

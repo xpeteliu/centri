@@ -16,7 +16,7 @@ exports[`Registration page should match snapshot 1`] = `
         >
           <div
             class="mx-auto card"
-            style="width: 30rem;"
+            style="width: 40rem;"
           >
             <div
               class="card-header"
@@ -30,8 +30,9 @@ exports[`Registration page should match snapshot 1`] = `
             >
               <form
                 class="container"
-                id="formLogin"
-                style="width: 25rem;"
+                enctype="multipart/form-data"
+                id="formRegistration"
+                style="width: 35rem;"
               >
                 <div
                   class="row"
@@ -148,6 +149,32 @@ exports[`Registration page should match snapshot 1`] = `
                 </div>
                 <div
                   class="row"
+                >
+                  <div
+                    class="col"
+                  >
+                    <div
+                      class="mb-3 text-start"
+                    >
+                      <label
+                        class="form-label"
+                        for="inputRegistrationAvatar"
+                      >
+                        Upload Avatar
+                      </label>
+                      <input
+                        class="form-control"
+                        id="inputRegistrationAvatar"
+                        type="file"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="col"
+                  />
+                </div>
+                <div
+                  class="row"
                   style="margin-top: 1rem;"
                 >
                   <div
@@ -155,7 +182,7 @@ exports[`Registration page should match snapshot 1`] = `
                   >
                     <button
                       class="btn btn-primary"
-                      form="formLogin"
+                      form="formRegistration"
                       type="submit"
                     >
                       Register

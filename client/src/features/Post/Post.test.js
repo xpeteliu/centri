@@ -1,16 +1,21 @@
 import React from 'react';
 import {
-  act, render, screen,
+  act, render,
 } from '@testing-library/react';
 import { Router } from 'react-router-dom';
-import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
+import { Provider } from 'react-redux';
 import mockServer from '../common/mockServer.test';
 import App from '../../App';
+import store from '../common/store';
 
 describe('Posts page', () => {
-  beforeAll(() => { mockServer.listen(); });
-  afterAll(() => { mockServer.close(); });
+  beforeAll(() => {
+    mockServer.listen();
+  });
+  afterAll(() => {
+    mockServer.close();
+  });
 
   const history = createMemoryHistory({ initialEntries: ['/posts'] });
 
@@ -18,11 +23,14 @@ describe('Posts page', () => {
     let container;
     act(() => {
       ({ container } = render(
-        <Router history={history}>
-          <App />
-        </Router>,
+        <Provider store={store}>
+          <Router history={history}>
+            <App />
+          </Router>
+        </Provider>,
       ));
     });
-    expect(container).toMatchSnapshot();
+    expect(container)
+      .toMatchSnapshot();
   });
 });
