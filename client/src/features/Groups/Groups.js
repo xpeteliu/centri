@@ -161,6 +161,12 @@ function GroupPage() {
     handleClose();
   };
 
+  const deletePostButtonClicked = async (id) => {
+    await deletePost(id);
+    const newPosts = await getPostsByGroupId(groupId);
+    setPosts(newPosts.map((post) => String(post._id)));
+  };
+
   return (
     <Container className="App">
       <HeaderBar />
@@ -182,7 +188,13 @@ function GroupPage() {
         </Row>
         <Row className="groupPostList">
           <Stack direction="vertical" gap={5}>
-            {posts && posts.map((postId) => <GroupPost postId={postId} key={postId} />)}
+            {posts && posts.map((postId) => (
+              <GroupPost
+                postId={postId}
+                key={postId}
+                onDelete={deletePostButtonClicked}
+              />
+            ))}
           </Stack>
         </Row>
       </Stack>
@@ -243,7 +255,7 @@ function GroupListItem(props) {
 }
 
 function GroupPost(props) {
-  const { postId } = props;
+  const { postId, onDelete } = props;
   // TODO: use post id to get title and text
   const [post, setPost] = useState({});
   useEffect(async () => {
@@ -252,15 +264,13 @@ function GroupPost(props) {
       setPost(newPost);
     }
   });
-  const deletePostButtonClicked = async (id) => {
-    await deletePost(id);
-  };
+
   return (
     <Card>
       <Card.Body>
         <Card.Title>
           {`${post.heading}`}
-          <Button onClick={() => deletePostButtonClicked(postId)}>Delete Post</Button>
+          <Button onClick={() => onDelete(postId)}>Delete Post</Button>
         </Card.Title>
         <Card.Text>
           {post.content}
