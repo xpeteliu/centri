@@ -7,7 +7,6 @@ import {
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Conversation from './Conversation';
-import { HeaderBar } from '../common/HeaderBar';
 import {
   getUser, getMessagesSender, getMessagesRecipient, postMessage,
   postFile, acceptInvite, declineInvite,
@@ -180,7 +179,6 @@ function MessagePage() {
   if (users.length === 0) {
     return (
       <Container className="App">
-        <HeaderBar />
         <Container className="w-100">
           <h1>
             You have no messages!
@@ -205,7 +203,6 @@ function MessagePage() {
 
   return (
     <Container className="App">
-      <HeaderBar />
       <Container className="w-100">
         <div className="bg-light">
           <Row className="h-99 p-1">
