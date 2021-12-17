@@ -28,7 +28,7 @@ export default function SignInPage() {
             headerText: 'Log In',
             bodyText: 'Successfully logged in!',
           }));
-          history.push('/');
+          history.push('/groups');
         } else {
           dispatch(showModal({
             headerText: 'Unable to Log In',
