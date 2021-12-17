@@ -1,20 +1,21 @@
-import { useParams } from "react-router";
-import { GetPost, GetUsernameById, GetFile } from "./PostMethods";
-
+/* eslint jsx-a11y/media-has-caption: 0 */
+import React from 'react';
+import { useParams } from 'react-router-dom';
+import { Card } from 'react-bootstrap';
+import { GetPost, GetUsernameById, GetFile } from './PostMethods';
 
 export default function PostDetail() {
   const { postingId } = useParams();
   const post = GetPost(postingId);
-  const creatorId = post.creatorId;
-  const username = GetUsernameById(creatorId);
-  const comments = post.comments;
-  const attachmentId = post.attachmentId;
-  const attachedFile = GetFile(attachmentId);
+  const author = post.creatorId;
+  const username = GetUsernameById(author);
+  const fileId = post.attachmentId;
+  const attachedFile = GetFile(fileId);
 
+  let media;
   if (attachedFile != null) {
-    let media;
-    const attachmentType = post.attachmentType;
-    const attachmentUrl = process.env.REACT_APP_API_URL || `/api/file/${attachmentId}`;
+    const { attachmentType } = post.attachmentType;
+    const attachmentUrl = process.env.REACT_APP_API_URL || `/api/file/${fileId}`;
     if (attachmentType.startsWith('image')) {
       media = (
         <img src={attachmentUrl} alt="attached img" width="360px" />
@@ -25,7 +26,7 @@ export default function PostDetail() {
       );
     } else if (attachmentType.startsWith('video')) {
       media = (
-        <video controls src={attachmentUrl} alt="attached audio" type="{attachmentType}" width="360px" />
+        <video controls src={attachmentUrl} alt="attached video" type="{attachmentType}" width="360px" />
       );
     }
   }
@@ -46,10 +47,9 @@ export default function PostDetail() {
           <br />
           {post.content}
           <br />
-          {post.comments}
+          { post.comments }
         </Card.Text>
       </Card.Body>
     </Card>
   );
-
 }
