@@ -180,7 +180,6 @@ function MessagePage() {
   if (users.length === 0) {
     return (
       <Container className="App">
-        <HeaderBar />
         <Container className="w-100">
           <h1>
             You have no messages!
