@@ -5,7 +5,8 @@
   "main": "src/app.js",
   "scripts": {
     "start": "node --es-module-specifier-resolution=node src/app.js",
-    "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage"
+    "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
+    "lint": "eslint src/ --ext .js,.ts,.jsx,.tsx --ignore-pattern *.test.js --ignore-pattern *.test.tsx"
   },
   "author": "Group 20",
   "license": "ISC",
