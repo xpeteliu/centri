@@ -81,7 +81,7 @@ export const getPostsByGroupId = async (groupId) => {
         groupId,
       },
       sort: {
-        age: 'ascending',
+        age: 'descending',
       },
     };
     const posts = await axios.post(`${url}/posting/filter/paginate`, postsRequest);

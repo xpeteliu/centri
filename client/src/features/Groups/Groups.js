@@ -274,12 +274,18 @@ function GroupListItem(props) {
 
 function GroupPost(props) {
   const { postId, onDelete } = props;
+  const [isAuthor, setIsAuthor] = useState(false);
+  const userId = useSelector((state) => state.user.id);
   // TODO: use post id to get title and text
   const [post, setPost] = useState({});
   useEffect(async () => {
     if (!post.heading) {
       const newPost = await getPostById(postId);
       setPost(newPost);
+      if (newPost.creatorId === userId) {
+        console.log('isAuthor is true');
+        setIsAuthor(true);
+      }
     }
   });
 
@@ -288,7 +294,11 @@ function GroupPost(props) {
       <Card.Body>
         <Card.Title>
           {`${post.heading}`}
-          <Button onClick={() => onDelete(postId)}>Delete Post</Button>
+          {
+            isAuthor
+              ? <Button onClick={() => onDelete(postId)}>Delete Post</Button>
+              : <Button>Flag Post</Button>
+          }
         </Card.Title>
         <Card.Text>
           {post.content}
