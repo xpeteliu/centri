@@ -1,6 +1,7 @@
 import FormData from 'form-data';
 
-const baseUrl = 'http://cis557-group20-project.herokuapp.com/api';
+// const baseUrl = 'http://cis557-group20-project.herokuapp.com/api';
+const baseUrl = '/api';
 const fileUrl = baseUrl.concat('/file');
 const postUrl = baseUrl.concat('/posting');
 const commentUrl = baseUrl.concat('/comment');
@@ -60,15 +61,15 @@ export async function GetUsernameById(userId) {
   return response.json();
 }
 
-export async function GetFile(fileId) {
-  try {
-    const url = baseUrl.concat(`/file/${fileId}`);
-    const response = await fetch(url, {
-      method: 'GET',
-      body: formData,
-    });
-    return response.json();
-  } catch (err) {
-    return null;
-  }
-}
+// export async function GetFile(fileId) {
+//   try {
+//     const url = baseUrl.concat(`/file/${fileId}`);
+//     const response = await fetch(url, {
+//       method: 'GET',
+//       body: formData,
+//     });
+//     return response.json();
+//   } catch (err) {
+//     return null;
+//   }
+// }

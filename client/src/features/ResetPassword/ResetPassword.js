@@ -3,37 +3,46 @@ import { Link, useHistory } from 'react-router-dom';
 import {
   Button, Card, Col, Container, Form, Row,
 } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { useDispatch } from 'react-redux';
 import { showModal } from '../common/MessageModal/modalSlice';
-import { postLogin } from './fetch';
-import { setUserId } from '../common/userSlice';
+import { findUser, resetPassword } from './fetch';
 
-export default function SignInPage() {
+export default function ResetPassword() {
   const dispatch = useDispatch();
   const history = useHistory();
 
   const handleSubmit = (event) => {
-    postLogin(
-      document.getElementById('inputLoginUsername').value,
-      document.getElementById('inputLoginPassword').value,
+    findUser(
+      document.getElementById('inputResetUsername').value,
+      document.getElementById('inputResetEmail').value,
     )
-      .then((resp) => resp.json())
-      .then((body) => {
-        if (body.code == null) {
-          throw new Error('Network Error');
+      .then((resp) => {
+        if (resp.status !== 200) {
+          throw new Error('Invalid response');
         }
-        if (body.code === 0) {
-          dispatch(setUserId(body.id));
+        return resp.json();
+      })
+      .then((data) => {
+        if (data.length === 0) {
           dispatch(showModal({
-            headerText: 'Log In',
-            bodyText: 'Successfully logged in!',
+            headerText: 'Unable to Reset Password',
+            bodyText: 'Cannot verify the user. Please try again.',
           }));
-          history.push('/groups');
-        } else {
+          return null;
+        }
+        return resetPassword(data[0]._id, document.getElementById('inputResetPassword').value);
+      })
+      .then((resp) => {
+        if (resp) {
+          if (resp.status !== 200 && resp.status !== 204) {
+            throw new Error('Invalid response');
+          }
           dispatch(showModal({
-            headerText: 'Unable to Log In',
-            bodyText: body.code === 2 ? 'User has been locked out. Try again later.' : 'Invalid username or password. Please try again.',
+            headerText: 'Reset Password',
+            bodyText: 'Successfully reset the password! Please log in now.',
           }));
+          history.push('/login');
         }
       })
       .catch(() => {
@@ -49,9 +58,9 @@ export default function SignInPage() {
     <Container className="h-100">
       <Row className="h-100">
         <Col className="my-auto">
-          <Card style={{ width: '35rem' }} className="mx-auto">
+          <Card style={{ width: '30rem' }} className="mx-auto">
             <Card.Header>
-              <h2>Sign In</h2>
+              <h2>Reset Password</h2>
             </Card.Header>
             <Card.Body>
               <Form
@@ -62,7 +71,7 @@ export default function SignInPage() {
               >
                 <Row>
                   <Col>
-                    <Form.Group className="mb-3 text-start" controlId="inputLoginUsername">
+                    <Form.Group className="mb-3 text-start" controlId="inputResetUsername">
                       <Form.Label className="ms-0">Username</Form.Label>
                       <Form.Control
                         type="text"
@@ -75,14 +84,27 @@ export default function SignInPage() {
                 </Row>
                 <Row>
                   <Col>
-                    <Form.Group className="mb-3 text-start" controlId="inputLoginPassword">
-                      <Form.Label>Password</Form.Label>
+                    <Form.Group className="mb-3 text-start" controlId="inputResetEmail">
+                      <Form.Label>Email</Form.Label>
+                      <Form.Control
+                        type="email"
+                        placeholder="Enter email here"
+                        autoComplete="email"
+                        required
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Form.Group className="mb-3 text-start" controlId="inputResetPassword">
+                      <Form.Label>New Password</Form.Label>
                       <Form.Control
                         type="password"
                         placeholder="Enter password here"
                         pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
                         title="A password should contain >=8 characters and include both letters and numbers"
-                        autoComplete="current-password"
+                        autoComplete="new-password"
                         required
                       />
                     </Form.Group>
@@ -90,15 +112,14 @@ export default function SignInPage() {
                 </Row>
                 <Row style={{ marginTop: '1rem' }}>
                   <Col>
-                    <Button variant="primary" type="submit" form="formLogin">Login</Button>
+                    <Button variant="primary" type="submit" form="formLogin">Reset</Button>
                   </Col>
                 </Row>
               </Form>
             </Card.Body>
             <Card.Footer className="container">
               <Row className="text-center">
-                <Col><Card.Link to="/register" as={Link}>Create an account</Card.Link></Col>
-                <Col><Card.Link to="/resetPassword" as={Link}>Reset password</Card.Link></Col>
+                <Col><Card.Link to="/login" as={Link}>Already have an account?</Card.Link></Col>
                 <Col><Card.Link to="/" as={Link}>Back to Home Page</Card.Link></Col>
               </Row>
             </Card.Footer>

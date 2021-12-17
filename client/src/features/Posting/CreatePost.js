@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-// import { useDispatch, useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 // import { useDispatch } from 'react-redux';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import {
@@ -13,9 +12,9 @@ import { MakePost, PostFile } from './PostMethods';
 export default function CreatePost() {
   const dispatch = useDispatch();
   const history = useHistory();
-  const creatorId = '61a65336c4a2d7594d3f58f6';
+  // const creatorId = '61a65336c4a2d7594d3f58f6';
   // const groupId = '61b23e2b9e59d62b561baae3';
-  // const creatorId = useSelector((state) => state.user.id);
+  const creatorId = useSelector((state) => state.user.id);
   const [attachedFile, setAttachedFile] = useState(null);
   const { groupId } = useParams();
 
@@ -43,7 +42,7 @@ export default function CreatePost() {
           switch (resp.status) {
             case 200:
               dispatch(showModal({ headerText: 'Post', bodyText: 'Successfully created a new post' }));
-              history.push('/posting');
+              history.push(`/group/${groupId}`);
               break;
             default:
               throw new Error('Invalid response');

@@ -1,150 +1,228 @@
 /* eslint react/prop-types: 0 */
 
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import {
   Container, Row, Col, Stack, Card, ListGroup, ListGroupItem,
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Conversation from './Conversation';
+import { HeaderBar } from '../common/HeaderBar';
+import {
+  getUser, getMessagesSender, getMessagesRecipient, postMessage,
+  postFile, acceptInvite, declineInvite,
+} from './Requests';
 
-function Messages() {
-  const tempUserId = 0;
-  const tempUsers = [
-    { id: 1, name: 'user1' },
-    { id: 2, name: 'user2' },
-  ];
-  const tempInbox = [
-    {
-      creatorId: 1, readerId: 0, content: '1 to 0, A', createdDate: new Date(1995, 11, 17),
-    },
-    {
-      creatorId: 2, readerId: 0, content: '2 to 0, A', createdDate: new Date(1995, 11, 14),
-    },
-    {
-      creatorId: 2, readerId: 0, content: '2 to 0, C', createdDate: new Date(1995, 11, 16),
-    },
-  ];
-
-  const tempConversation1 = [
-    {
-      creatorId: 1, readerId: 0, content: '1 to 0, A', createdDate: new Date(1995, 11, 17),
-    },
-  ];
-
-  const tempConversation2 = [
-    {
-      creatorId: 2, readerId: 0, content: '2 to 0, A', createdDate: new Date(1995, 11, 14),
-    },
-    {
-      creatorId: 2, readerId: 0, content: '2 to 0, C', createdDate: new Date(1995, 11, 16),
-    },
-    {
-      creatorId: 0, readerId: 2, content: '0 to 2, B', createdDate: new Date(1995, 11, 15),
-    },
-  ];
+function MessagePage() {
+  const ACCEPTED_FILE_TYPES = ['image', 'audio', 'video'];
 
   const [otherUserId, setOtherUserId] = useState(-1);
-  const [localMessages, setLocalMessages] = useState([]);
+  const [otherUsername, setOtherUsername] = useState('');
 
-  const userNameDict = {};
+  const [users, setUsers] = useState([]);
 
-  // TODO: Replace with store
-  const userId = tempUserId;
+  const [waiting, setWaiting] = useState(true);
+  const [messages, setMessages] = useState([]);
+  const [conversation, setConversation] = useState([]);
 
-  const handleSelectSender = async (id) => {
-    // await GET request for messages from selected user
-    console.log('id', id);
-    setOtherUserId(id);
+  const [attachedFile, setAttachedFile] = useState(null);
+
+  const fetchUser = async (userId) => {
+    const user = await getUser(userId);
+    return user;
   };
 
-  const handleSubmitMessage = (event) => {
-    event.preventDefault();
-    const messageText = event.target.formMessageText.value;
-    console.log('event', messageText);
-    if (messageText.length > 0) {
-      const newMessage = {
-        creatorId: userId,
-        readerId: otherUserId,
-        content: messageText,
-        createdDate: new Date(),
-      };
-      console.log('message', newMessage);
-      // TODO: Replace with request, wait for POST response before adding
-      // new message to localMessages, clear localMessages after receiving
-      // messages from server
-      // Send and await POST request here
-      setLocalMessages([...localMessages, newMessage]);
+  const fetchMessages = async (userId) => {
+    const messagesSent = await getMessagesSender(userId);
+    const messagesRecieved = await getMessagesRecipient(userId);
+    const messagesAll = messagesSent.concat(messagesRecieved);
+
+    const filtered = messagesAll.filter(((m) => m.recipientId === userId || m.senderId === userId));
+    filtered.sort((a, b) => (((new Date(a.createdAt)) > (new Date(b.createdAt))) ? 1 : -1));
+
+    const tempIds = [];
+    filtered.forEach(async (message) => {
+      const { senderId } = message;
+      if (!tempIds.some((id) => id === senderId) && senderId !== userId) {
+        tempIds.push(senderId);
+      }
+    });
+
+    const tempUsers = await Promise.all(tempIds.map((id) => fetchUser(id)));
+    setUsers(tempUsers);
+    return filtered;
+  };
+
+  const fetchConvo = async (userId) => {
+    const messagesSent = await getMessagesSender(userId);
+    const messagesRecieved = await getMessagesRecipient(userId);
+    const messagesAll = messagesSent.concat(messagesRecieved);
+
+    const id = otherUserId;
+
+    let tempConversation = [];
+    tempConversation = messagesAll.filter(((m) => m.recipientId === id || m.senderId === id));
+
+    tempConversation.sort((a, b) => (((new Date(a.createdAt)) > (new Date(b.createdAt))) ? 1 : -1));
+
+    setConversation(tempConversation);
+  };
+
+  const userId = useSelector((state) => state.user.id);
+
+  if (waiting) {
+    setMessages(fetchMessages(userId));
+    setWaiting(false);
+  }
+
+  const handleSelectSender = async (user) => {
+    setOtherUserId(user.userId);
+    setOtherUsername(user.userName);
+  };
+
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    // console.log('files', event.target.files);
+    if (ACCEPTED_FILE_TYPES.some((type) => file.type.startsWith(type))) {
+      setAttachedFile(file);
     }
   };
 
+  const handleSubmitMessage = async (event) => {
+    event.preventDefault();
+    const messageText = event.target.formMessageText.value;
+    // console.log('event', messageText);
+    if (messageText.length > 0) {
+      if (attachedFile === null) {
+        const newMessage = {
+          content: messageText,
+          attachmentType: 'none',
+          senderId: userId,
+          recipientId: otherUserId,
+        };
+        // console.log('POSTING MESSAGE', newMessage);
+        await postMessage(newMessage);
+        fetchConvo(userId);
+      } else {
+        // console.log('UPLOADING FILE', attachedFile);
+        const response = await postFile(attachedFile);
+        // console.log('UPLOADING FILE RESPONSE', response);
+        const fileId = response.id;
+        const newMessage = {
+          content: messageText,
+          attachmentId: fileId,
+          attachmentType: attachedFile.type,
+          senderId: userId,
+          recipientId: otherUserId,
+        };
+        // console.log('POSTING MESSAGE', newMessage);
+        await postMessage(newMessage);
+        fetchConvo(userId);
+      }
+    }
+  };
+
+  const handleAcceptInvite = async (event) => {
+    const messageId = event.target.value;
+    await acceptInvite(messageId);
+    fetchMessages(userId);
+  };
+
+  const handleDeclineInvite = async (event) => {
+    const messageId = event.target.value;
+    await declineInvite(messageId);
+    fetchMessages(userId);
+  };
+
   useEffect(() => {
-    console.log('switched to user', otherUserId);
+    // console.log('rendered');
+    const pollMessages = setInterval(() => {
+      fetchMessages(userId);
+    }, 10000);
+
+    return () => {
+      clearInterval(pollMessages);
+    };
+  }, []);
+
+  useEffect(() => {
+    // console.log('switched to user', otherUserId);
+    fetchConvo(userId);
+    const pollConvo = setInterval(() => {
+      if (otherUserId !== -1) {
+        fetchConvo(userId);
+      }
+    }, 5000);
+
+    return () => {
+      clearInterval(pollConvo);
+    };
   }, [otherUserId]);
 
   useEffect(() => {
-    console.log('local messages updated', localMessages);
-  }, [localMessages]);
+    // console.log('attached file', attachedFile);
+  }, [attachedFile]);
 
-  // TODO: Replace with GET request
-  const inbox = tempInbox;
-  inbox.sort((a, b) => ((a.createdDate > b.createdDate) ? 1 : -1));
-  const userList = [];
+  useEffect(() => {
+    // console.log('messages updated', messages);
+  }, [messages]);
 
-  inbox.forEach((message) => {
-    const senderId = message.creatorId;
+  useEffect(() => {
+    // console.log('conversation updated', conversation, ', ', otherUserId);
+  }, [conversation]);
 
-    if (!userList.some((user) => user.id === senderId)) {
-      // TODO: Replace with GET request
-      const filtered = tempUsers.filter((user) => user.id === senderId);
-      const senderName = filtered[0].name;
-
-      userList.push({ id: senderId, name: senderName });
-      userNameDict[senderId] = senderName;
-    }
-  });
+  useEffect(() => {
+    // console.log('users updated', users);
+  }, [users]);
 
   let content;
+
+  if (users.length === 0) {
+    return (
+      <Container className="App">
+        <HeaderBar />
+        <Container className="w-100">
+          <h1>
+            You have no messages!
+          </h1>
+        </Container>
+      </Container>
+    );
+  }
+
   if (otherUserId !== -1) {
-    // TODO: Replace with GET request
-    let conversation = [];
-
-    if (otherUserId === 1) {
-      conversation = tempConversation1;
-    } else if (otherUserId === 2) {
-      conversation = tempConversation2;
-    }
-
-    const filtered = localMessages.filter(((message) => message.readerId === otherUserId));
-    conversation = conversation.concat(filtered);
-
-    conversation.sort((a, b) => ((a.createdDate > b.createdDate) ? 1 : -1));
-
     content = Conversation({
       messages: conversation,
       id: userId,
       otherId: otherUserId,
-      otherName: userNameDict[otherUserId],
+      otherName: otherUsername,
       onSubmitMessage: handleSubmitMessage,
+      onFileUpload: handleFileUpload,
+      onAcceptInvite: handleAcceptInvite,
+      onDeclineInvite: handleDeclineInvite,
     });
   }
 
   return (
-    <Container classname="w-75">
-      <div className="bg-light">
-        <Row className="h-99 p-1">
-          <Col className="p-3" xs={3}>
-            <Stack direction="vertical" gap={1}>
-              <UserList
-                users={userList}
-                onSelect={handleSelectSender}
-              />
-            </Stack>
-          </Col>
-          <Col classname="w-75">
-            {content}
-          </Col>
-        </Row>
-      </div>
+    <Container className="App">
+      <HeaderBar />
+      <Container className="w-100">
+        <div className="bg-light">
+          <Row className="h-99 p-1">
+            <Col className="p-3" xs={3}>
+              <Stack direction="vertical" gap={1}>
+                <UserList
+                  users={users}
+                  onSelect={handleSelectSender}
+                />
+              </Stack>
+            </Col>
+            <Col className="w-100">
+              {content}
+            </Col>
+          </Row>
+        </div>
+      </Container>
     </Container>
   );
 }
@@ -154,19 +232,19 @@ function UserList(props) {
   const rows = [];
   users.forEach((user) => {
     rows.push(
-      <Row>
+      <Row key={user._id}>
         <UserTab
-          userId={user.id}
-          userName={user.name}
+          userId={user._id}
+          userName={user.username}
           onSelect={onSelect}
         />
       </Row>,
     );
   });
   const listStyle = {
-    'max-height': '90vh',
-    'overflow-y': 'scroll',
-    'overflow-x': 'clip',
+    maxHeight: '90vh',
+    overflowY: 'scroll',
+    overflowX: 'clip',
   };
   return (
     <div style={listStyle}>
@@ -180,7 +258,7 @@ function UserList(props) {
 function UserTab(props) {
   const { userId, userName, onSelect } = props;
   const handleClick = () => {
-    onSelect(userId);
+    onSelect({ userId, userName });
   };
   return (
     <Container className="App">
@@ -200,4 +278,4 @@ function UserTab(props) {
   );
 }
 
-export default Messages;
+export default MessagePage;
