@@ -25,7 +25,7 @@ export default function App() {
         <Route exact path="/group/:groupId" component={GroupPage} />
         <Route path="/group/:groupId/admin" component={AdminPage} />
         <Route path="/groups" component={GroupListPage} />
-        <Route path="/messaging" component={MessagePage} />
+        <Route path="/messages" component={MessagePage} />
         <Route path="/resetPassword" component={ResetPassword} />
         <Route path="/group/:groupId/posting" component={CreatePost} />
         <Route path="/comment" component={AddComment} />

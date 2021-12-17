@@ -1,5 +1,4 @@
 /* eslint react/prop-types: 0 */
-/* eslint no-unused-vars: 1 */
 
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
@@ -10,11 +9,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Conversation from './Conversation';
 import { HeaderBar } from '../common/HeaderBar';
 import {
-  getUser, getMessagesSender, getMessagesRecipient, postMessage, postFile,
+  getUser, getMessagesSender, getMessagesRecipient, postMessage,
+  postFile, acceptInvite, declineInvite,
 } from './Requests';
 
 function MessagePage() {
-  const ACCEPTED_FILE_TYPES = ['image/jpeg'];
+  const ACCEPTED_FILE_TYPES = ['image', 'audio', 'video'];
 
   const [otherUserId, setOtherUserId] = useState(-1);
   const [otherUsername, setOtherUsername] = useState('');
@@ -37,12 +37,11 @@ function MessagePage() {
     const messagesRecieved = await getMessagesRecipient(userId);
     const messagesAll = messagesSent.concat(messagesRecieved);
 
-    messagesAll.sort((a, b) => (((new Date(a.createdAt)) > (new Date(b.createdAt))) ? 1 : -1));
-
-    // console.log('messages', messagesAll);
+    const filtered = messagesAll.filter(((m) => m.recipientId === userId || m.senderId === userId));
+    filtered.sort((a, b) => (((new Date(a.createdAt)) > (new Date(b.createdAt))) ? 1 : -1));
 
     const tempIds = [];
-    messagesAll.forEach(async (message) => {
+    filtered.forEach(async (message) => {
       const { senderId } = message;
       if (!tempIds.some((id) => id === senderId) && senderId !== userId) {
         tempIds.push(senderId);
@@ -51,8 +50,7 @@ function MessagePage() {
 
     const tempUsers = await Promise.all(tempIds.map((id) => fetchUser(id)));
     setUsers(tempUsers);
-
-    return messagesAll;
+    return filtered;
   };
 
   const fetchConvo = async (userId) => {
@@ -60,16 +58,17 @@ function MessagePage() {
     const messagesRecieved = await getMessagesRecipient(userId);
     const messagesAll = messagesSent.concat(messagesRecieved);
 
+    const id = otherUserId;
+
     let tempConversation = [];
-    tempConversation = messagesAll.filter(((message) => message.recipientId === otherUserId));
+    tempConversation = messagesAll.filter(((m) => m.recipientId === id || m.senderId === id));
 
     tempConversation.sort((a, b) => (((new Date(a.createdAt)) > (new Date(b.createdAt))) ? 1 : -1));
 
     setConversation(tempConversation);
   };
 
-  // const userId = '61a65bf45915a4279a04ac35';
-  const userId = useSelector((state) => state.user._id);
+  const userId = useSelector((state) => state.user.id);
 
   if (waiting) {
     setMessages(fetchMessages(userId));
@@ -84,7 +83,7 @@ function MessagePage() {
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     // console.log('files', event.target.files);
-    if (ACCEPTED_FILE_TYPES.includes(file.type)) {
+    if (ACCEPTED_FILE_TYPES.some((type) => file.type.startsWith(type))) {
       setAttachedFile(file);
     }
   };
@@ -121,6 +120,18 @@ function MessagePage() {
         fetchConvo(userId);
       }
     }
+  };
+
+  const handleAcceptInvite = async (event) => {
+    const messageId = event.target.value;
+    await acceptInvite(messageId);
+    fetchMessages(userId);
+  };
+
+  const handleDeclineInvite = async (event) => {
+    const messageId = event.target.value;
+    await declineInvite(messageId);
+    fetchMessages(userId);
   };
 
   useEffect(() => {
@@ -166,6 +177,19 @@ function MessagePage() {
 
   let content;
 
+  if (users.length === 0) {
+    return (
+      <Container className="App">
+        <HeaderBar />
+        <Container className="w-100">
+          <h1>
+            You have no messages!
+          </h1>
+        </Container>
+      </Container>
+    );
+  }
+
   if (otherUserId !== -1) {
     content = Conversation({
       messages: conversation,
@@ -174,6 +198,8 @@ function MessagePage() {
       otherName: otherUsername,
       onSubmitMessage: handleSubmitMessage,
       onFileUpload: handleFileUpload,
+      onAcceptInvite: handleAcceptInvite,
+      onDeclineInvite: handleDeclineInvite,
     });
   }
 
