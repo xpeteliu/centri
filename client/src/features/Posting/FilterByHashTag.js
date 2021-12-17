@@ -1,6 +1,6 @@
 const baseUrl = 'http://cis557-group20-project.herokuapp.com/api';
 
-export async function FilterCommentsByHashTag(hashTag) {
+export default function FilterCommentsByHashTag(hashTag) {
   const url = baseUrl.concat('/comment/filter/paginate');
   const commentFilter = {
       filter: {
@@ -20,7 +20,7 @@ export async function FilterCommentsByHashTag(hashTag) {
   return comments.json();
 }
 
-export async function FilterPostsByHashTag(hashTag) {
+export default function FilterPostsByHashTag(hashTag) {
     const url = baseUrl.concat('/posting/filter/paginate');
     const postFilter = {
         filter: {
