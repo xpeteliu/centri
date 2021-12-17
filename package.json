@@ -6,7 +6,8 @@
   "scripts": {
     "heroku-prebuild": "cd client && npm install && cd ../api && npm install",
     "heroku-postbuild": "cd client && DISABLE_ESLINT_PLUGIN=true npm run build && cp -rf build ../api",
-    "start": "cd api && npm start"
+    "start": "cd api && npm start",
+    "test:coverage": "cd client && npm run test:coverage && cd ../api && npm run test:coverage"
   },
   "repository": {
     "type": "git",

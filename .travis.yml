@@ -7,22 +7,22 @@ cache:
 branches:
   only:
   - test
+services:
+  - mongodb
+env:
+  - DB_URL="mongodb://127.0.0.1:27017/group20test"
 jobs:
   include:
     - stage: Lint, Test, Build
       name: Lint
       script:
-        - cd client
-        - npm install
+        - npm run heroku-prebuild
         - npm run lint
     - name: Test
       if: branch = test
       script:
-        - cd client
-        - npm install
+        - npm run heroku-prebuild
         - npm run test:coverage
     - name: Build
       script:
-        - cd client
-        - npm install
-        - npm run build
+        - npm run heroku-postbuild
