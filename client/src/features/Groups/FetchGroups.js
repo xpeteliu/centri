@@ -24,13 +24,13 @@ export const getMyGroups = async (userId) => {
   }
 };
 
-export const getPublicGroups = async () => {
+export const getPublicGroups = async (sortMethod) => {
   try {
     const groupRequest = {
       filter: {
         status: 'public',
       },
-      sortMethod: 'latestUpdates',
+      sortMethod,
     };
     const groups = await axios.post(`${url}/group/filter/sort`, groupRequest);
     return groups.data;
@@ -43,6 +43,7 @@ export const filterGroupsByTag = async (tag) => {
   try {
     const groupRequest = {
       filter: {
+        status: 'public',
         tags: tag,
       },
       sortMethod: 'latestUpdates',
@@ -78,6 +79,9 @@ export const getPostsByGroupId = async (groupId) => {
     const postsRequest = {
       filter: {
         groupId,
+      },
+      sort: {
+        age: 'ascending',
       },
     };
     const posts = await axios.post(`${url}/posting/filter/paginate`, postsRequest);
