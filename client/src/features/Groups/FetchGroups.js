@@ -162,3 +162,12 @@ export const leaveGroup = async (groupId, userId) => {
     return 400;
   }
 };
+
+export const deletePost = async (postId) => {
+  try {
+    const result = await axios.delete(`${url}/posting/${postId}`);
+    return result.status;
+  } catch (err) {
+    return 400;
+  }
+};

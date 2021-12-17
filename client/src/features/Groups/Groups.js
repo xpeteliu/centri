@@ -9,7 +9,7 @@ import { HeaderBar } from '../common/HeaderBar';
 import {
   getMyGroups, createGroup, getGroupById, getPostsByGroupId, getPostById,
   filterGroupsByTag, getPublicGroups, getUsersByName, inviteUser, addTag,
-  leaveGroup,
+  leaveGroup, deletePost,
 } from './FetchGroups';
 
 function GroupListPage() {
@@ -160,6 +160,7 @@ function GroupPage() {
     }
     handleClose();
   };
+
   return (
     <Container className="App">
       <HeaderBar />
@@ -172,6 +173,7 @@ function GroupPage() {
             <div className="ms-auto">
               <Stack direction="horizontal" gap={3}>
                 <Button variant="warning" onClick={() => goAdminPage()}>Admin</Button>
+                <Button onClick={() => history.push(`/group/${groupId}/posting`)}>Create Post</Button>
                 <Button onClick={handleOpen}>Edit Group</Button>
                 <Button onClick={() => leaveGroupButtonClicked()}>Leave Group</Button>
               </Stack>
@@ -213,15 +215,18 @@ function GroupPage() {
 function GroupListItem(props) {
   const history = useHistory();
   const { groupId } = props;
+  const userId = useSelector((state) => state.user._id);
   // store group info
   const [group, setGroup] = useState({});
+  const [requested, setRequested] = useState(null);
   useEffect(async () => {
     if (!group.title) {
       const groupData = await getGroupById(groupId);
       setGroup(groupData);
+      setRequested((groupData.pendingMemberIds.includes(userId)
+        || groupData.memberIds.includes(userId) || groupData.adminIds.includes(userId)));
     }
   });
-  const [requested, setRequested] = useState(false);
   return (
     <Stack direction="horizontal" gap={4} className="groupListItem">
       <div>
@@ -247,11 +252,15 @@ function GroupPost(props) {
       setPost(newPost);
     }
   });
+  const deletePostButtonClicked = async (id) => {
+    await deletePost(id);
+  };
   return (
     <Card>
       <Card.Body>
         <Card.Title>
           {`${post.heading}`}
+          <Button onClick={() => deletePostButtonClicked(postId)}>Delete Post</Button>
         </Card.Title>
         <Card.Text>
           {post.content}
