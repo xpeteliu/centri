@@ -3,7 +3,6 @@ import { useParams, useHistory } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { getGroupById, getUserById, acceptUser } from './FetchGroups';
-import { HeaderBar } from '../common/HeaderBar';
 
 function PendingUserItem(props) {
   const { groupId } = useParams();
@@ -43,8 +42,6 @@ function AdminPage() {
   };
   return (
     <div>
-      <HeaderBar />
-      {/* {pendingIds.map((pendingId) => <p key={pendingId}>{pendingId}</p>)} */}
       {pendingIds.map((pendingId) => (
         <PendingUserItem
           userId={pendingId}
