@@ -38,7 +38,7 @@ function MessagePage() {
     const tempIds = [];
     groupsFiltered.forEach((group) => {
       group.memberIds.forEach((newId) => {
-        if (!tempIds.includes(newId)) {
+        if (!tempIds.includes(newId) && newId !== userId) {
           tempIds.push(newId);
         }
       });
