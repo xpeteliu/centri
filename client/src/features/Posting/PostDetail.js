@@ -1,10 +1,13 @@
 /* eslint jsx-a11y/media-has-caption: 0 */
 import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
-import { Card, Button, Stack } from 'react-bootstrap';
+import {
+  Card, Button, Stack, Form, Row, Col,
+} from 'react-bootstrap';
 import {
   GetPost, GetFile, GetComment, DeleteComment,
 } from './PostMethods';
+import { FilterCommentsByHashTag } from './FilterByHashTag';
 
 export default function PostDetail() {
   const { postingId } = useParams();
@@ -27,9 +30,7 @@ export default function PostDetail() {
         setAttachedFile(file);
       }
       commentsField = response.comments;
-      console.log(commentsField);
       setCommentList(commentsField.map((comment) => String(comment._id)));
-      console.log(commentList);
     }
   }, [postingId]);
 
@@ -40,9 +41,11 @@ export default function PostDetail() {
     setCommentList(newComments.map((comment) => String(comment._id)));
   };
 
-  // const EditCommentButtonClicked = async (id) => {
-
-  // }
+  const filterByHashTagButtonClicked = async () => {
+    const hashtag = document.getElementById('hashtagField').value;
+    const filteredComments = await FilterCommentsByHashTag(hashtag);
+    setCommentList(filteredComments.map((comment) => comment._id));
+  };
 
   let media;
   if (attachedFile) {
@@ -82,16 +85,30 @@ export default function PostDetail() {
               commentId={commentId}
               key={commentId}
               onDelete={DeleteCommentButtonClicked}
-              // onEdit={EditCommentButtonClicked}
             />
           ))}
         </Stack>
+        <div className="ms-auto">
+          <Form>
+            <Form.Group as={Row} className="mb-3">
+              <Col xs={2}>
+                <Button onClick={() => filterByHashTagButtonClicked()}>Filter by Hashtag</Button>
+              </Col>
+              <Col xs={2}>
+                <Form.Control id="hashtagField" placeholder="Hashtag" />
+              </Col>
+            </Form.Group>
+          </Form>
+        </div>
       </Card.Body>
     </Card>
   );
 }
 
 function PostComment(props) {
+  const history = useHistory();
+  const { groupId } = useParams();
+  const { postingId } = useParams();
   const { commentId, onDelete } = props;
   const [comment, setComment] = useState({});
   useEffect(async () => {
@@ -106,7 +123,7 @@ function PostComment(props) {
         <Card.Body>
           {`${comment.content}`}
           <Button onClick={() => onDelete(commentId)}>delete</Button>
-          {/* <Button onClick={() => onEdit(commentId)}>edit</Button> */}
+          <Button onClick={() => history.push(`/group/${groupId}/posting/${postingId}/comment/${commentId}`)}>edit</Button>
         </Card.Body>
       </Card.Body>
     </Card>

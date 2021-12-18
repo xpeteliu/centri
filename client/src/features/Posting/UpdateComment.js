@@ -13,28 +13,37 @@ export default function UpdateComment() {
   const baseUrl = 'http://cis557-group20-project.herokuapp.com/api';
   const url = baseUrl.concat(`/comment/${commentId}`);
   const [comment, setComment] = useState(null);
-  let originalContent;
+  const [postingId, setPostingId] = useState(null);
+  const [content, setContent] = useState(null);
 
   useEffect(async () => {
     if (!comment) {
       const response = await GetComment(commentId);
       setComment(response);
-      originalContent = response.content;
+      const id = response.postingId;
+      setPostingId(id);
+      const originalContent = response.content;
+      setContent(originalContent);
     }
   }, [commentId]);
 
+  const handleChange = (event) => {
+    const { value } = event.target;
+    setContent(value);
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    const content = document.getElementById('inputContent').value;
-    const { creatorId } = comment.creatorId;
-    const { postingId } = comment.postingId;
+    setContent(document.getElementById('inputContent').value);
+    // const { creatorId } = comment.creatorId;
+    // const { postingId } = comment.postingId;
     fetch(url, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         commentId,
         content,
-        creatorId,
+        // creatorId,
         postingId,
       }),
     });
@@ -51,7 +60,7 @@ export default function UpdateComment() {
           <Col className="my-auto">
             <form className="post-form">
               <label htmlFor="body">
-                <textarea id="inputContent" className="form-control" name="body" type="textarea" rows={5} cols={300} value={originalContent} required />
+                <textarea id="inputContent" className="form-control" name="body" type="textarea" rows={5} cols={300} value={content} onChange={handleChange} required />
               </label>
               <br />
               <Link to="/"><button className="btn btn-secondary float-right" type="button">Cancel</button></Link>
