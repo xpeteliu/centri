@@ -1,6 +1,7 @@
 /* eslint jsx-a11y/media-has-caption: 0 */
 import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import {
   Card, Button, Stack, Form, Row, Col,
 } from 'react-bootstrap';
@@ -16,15 +17,18 @@ export default function PostDetail() {
   const [post, setPost] = useState(null);
   const [attachedFile, setAttachedFile] = useState(null);
   const [commentList, setCommentList] = useState(undefined);
+  const user = useSelector((state) => state.user.id);
 
   let fileId;
   let commentsField;
+  let creatorId;
 
   useEffect(async () => {
     if (!post) {
       const response = await GetPost(postingId);
       setPost(response);
       fileId = response.attachmentId;
+      creatorId = response.creatorId;
       if (fileId) {
         const file = await GetFile(fileId);
         setAttachedFile(file);
@@ -35,10 +39,12 @@ export default function PostDetail() {
   }, [postingId]);
 
   const DeleteCommentButtonClicked = async (id) => {
-    await DeleteComment(id);
-    const response = await GetPost(postingId);
-    const newComments = response.comments;
-    setCommentList(newComments.map((comment) => String(comment._id)));
+    if (creatorId === user) {
+      await DeleteComment(id);
+      const response = await GetPost(postingId);
+      const newComments = response.comments;
+      setCommentList(newComments.map((comment) => String(comment._id)));
+    }
   };
 
   const filterByHashTagButtonClicked = async () => {
