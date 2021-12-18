@@ -42,6 +42,14 @@ function MessagePage() {
           tempIds.push(newId);
         }
       });
+      group.adminIds.forEach((newId) => {
+        if (!tempIds.includes(newId) && newId !== userId) {
+          tempIds.push(newId);
+        }
+      });
+      if (!tempIds.includes(group.creatorId) && group.creatorId !== userId) {
+        tempIds.push(group.creatorId);
+      }
     });
 
     const tempUsers = await Promise.all(tempIds.map((id) => fetchUser(id)));
