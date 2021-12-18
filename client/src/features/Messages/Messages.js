@@ -58,7 +58,7 @@ function MessagePage() {
     let tempConversation = [];
     tempConversation = messagesAll.filter(((m) => m.recipientId === id || m.senderId === id));
 
-    tempConversation.sort((a, b) => (((new Date(a.createdAt)) > (new Date(b.createdAt))) ? 1 : -1));
+    tempConversation.sort((a, b) => (((new Date(a.createdAt)) < (new Date(b.createdAt))) ? 1 : -1));
 
     setConversation(tempConversation);
   };
