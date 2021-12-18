@@ -103,7 +103,7 @@ function ConversationRow(props) {
 
   let content;
 
-  if ('invitingGroupId' in message) {
+  if ('invitingGroupId' in message && message.invitingGroupId !== null) {
     content = (
       <MessageInvite
         message={message}
