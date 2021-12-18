@@ -6,7 +6,7 @@ import {
   Card, Button, Stack, Form, Row, Col,
 } from 'react-bootstrap';
 import {
-  GetPost, GetFile, GetComment, DeleteComment,
+  GetPost, GetComment, DeleteComment,
 } from './PostMethods';
 import { FilterCommentsByHashTag } from './FilterByHashTag';
 
@@ -30,8 +30,9 @@ export default function PostDetail() {
       fileId = response.attachmentId;
       creatorId = response.creatorId;
       if (fileId) {
-        const file = await GetFile(fileId);
-        setAttachedFile(file);
+        // const file = await GetFile(fileId);
+        // setAttachedFile(file);
+        setAttachedFile(fileId);
       }
       commentsField = response.comments;
       setCommentList(commentsField.map((comment) => String(comment._id)));
@@ -54,9 +55,10 @@ export default function PostDetail() {
   };
 
   let media;
-  if (attachedFile) {
-    const { attachmentType } = post.attachmentType;
-    const attachmentUrl = process.env.REACT_APP_API_URL || `/api/file/${fileId}`;
+  if (attachedFile && post) {
+    const { attachmentType } = post;
+    const attachmentUrl = `/api/file/${attachedFile}`;
+    // const attachmentUrl = process.env.REACT_APP_API_URL || `/api/file/${fileId}`;
     if (attachmentType.startsWith('image')) {
       media = (
         <img src={attachmentUrl} alt="attached img" width="360px" />
