@@ -1,10 +1,11 @@
 /* eslint react/prop-types: 0 */
 
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   Container, Row, Col, Stack, Card, ListGroup, ListGroupItem,
 } from 'react-bootstrap';
+import { showModal } from '../common/MessageModal/modalSlice';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Conversation from './Conversation';
 import {
@@ -13,6 +14,8 @@ import {
 } from './Requests';
 
 function MessagePage() {
+  const dispatch = useDispatch();
+
   const ACCEPTED_FILE_TYPES = ['image', 'audio', 'video'];
 
   const [otherUserId, setOtherUserId] = useState(-1);
@@ -85,9 +88,22 @@ function MessagePage() {
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
+    const megabytes = 1024 * 1024;
     // console.log('files', event.target.files);
     if (ACCEPTED_FILE_TYPES.some((type) => file.type.startsWith(type))) {
-      setAttachedFile(file);
+      if (file.size > 10 * megabytes) {
+        dispatch(showModal({
+          headerText: 'This file is too large!',
+          bodyText: '',
+        }));
+      } else {
+        setAttachedFile(file);
+      }
+    } else {
+      dispatch(showModal({
+        headerText: 'We do not support this file type!',
+        bodyText: '',
+      }));
     }
   };
 
