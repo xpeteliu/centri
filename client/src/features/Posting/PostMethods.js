@@ -76,12 +76,12 @@ export async function GetFile(fileId) {
 }
 
 export async function DeleteComment(commentId) {
-  const url = `https://cis557-group20-project.herokuapp.com/api/${commentId}`;
+  const url = baseUrl.concat(`/comment/${commentId}`);
   fetch(url, {
     method: 'DELETE',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       commentId,
-    })
-  })
-};
+    }),
+  });
+}

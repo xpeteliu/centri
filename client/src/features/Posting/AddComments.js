@@ -65,7 +65,7 @@ export default function AddComment() {
                 <textarea id="inputContent" className="form-control" name="body" type="textarea" rows={5} cols={300} required />
               </label>
               <br />
-              <Button onClick={() => history.push(`/group/${groupId}/posting/${postingId}`)}>Comment</Button>
+              <Button onClick={() => history.push(`/group/${groupId}/posting/${postingId}`)}>cancel</Button>
             &nbsp;&nbsp;&nbsp;
               <Button variant="secondary" onClick={handleSubmit}>Comment</Button>
             </form>

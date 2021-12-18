@@ -1,8 +1,10 @@
 /* eslint jsx-a11y/media-has-caption: 0 */
 import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
-import { Card, Button } from 'react-bootstrap';
-import { GetPost, GetFile, GetComment, DeleteComment } from './PostMethods';
+import { Card, Button, Stack } from 'react-bootstrap';
+import {
+  GetPost, GetFile, GetComment, DeleteComment,
+} from './PostMethods';
 
 export default function PostDetail() {
   const { postingId } = useParams();
@@ -11,6 +13,7 @@ export default function PostDetail() {
   const [post, setPost] = useState(null);
   const [attachedFile, setAttachedFile] = useState(null);
   const [commentList, setCommentList] = useState(undefined);
+
   let fileId;
   let commentsField;
 
@@ -24,9 +27,18 @@ export default function PostDetail() {
         setAttachedFile(file);
       }
       commentsField = response.comments;
+      console.log(commentsField);
       setCommentList(commentsField.map((comment) => String(comment._id)));
+      console.log(commentList);
     }
   }, [postingId]);
+
+  const deleteCommentButtonClicked = async (id) => {
+    await DeleteComment(id);
+    const response = await GetPost(postingId);
+    const newComments = response.comments;
+    setCommentList(newComments.map((comment) => String(comment._id)));
+  };
 
   let media;
   if (attachedFile) {
@@ -57,45 +69,39 @@ export default function PostDetail() {
             {post && post.creatorId}
             <br />
             {post && post.content}
-            <br />
-            <Stack direction="vertical" gap={5}>
-            {commentList && posts.map((postId) => (
-              <GroupPost
-                postId={postId}
-                key={postId}
-                onDelete={deletePostButtonClicked}
-              />
-            ))}
-          </Stack>
           </Card.Text>
         </div>
         <Button onClick={() => history.push(`/group/${groupId}/posting/${postingId}/comment`)}>Comment</Button>
+        <Stack direction="vertical" gap={2}>
+          {commentList && commentList.map((commentId) => (
+            <PostComment
+              commentId={commentId}
+              key={commentId}
+              onDelete={deleteCommentButtonClicked}
+            />
+          ))}
+        </Stack>
       </Card.Body>
     </Card>
   );
 }
 
-const deleteCommentButtonClicked = async (commentId) => {
-  await DeleteComment(commentId);
-};
-
-function PostComments(props) {
-  const { commentId, onDelete, onEdit } = props;
+function PostComment(props) {
+  const { commentId, onDelete } = props;
   const [comment, setComment] = useState({});
   useEffect(async () => {
-    if (!comment) {
+    if (!comment.content) {
       const newComment = await GetComment(commentId);
       setComment(newComment);
     }
   });
-
   return (
     <Card>
       <Card.Body>
         <Card.Body>
           {`${comment.content}`}
           <Button onClick={() => onDelete(commentId)}>delete</Button>
-          <Button onClick={() => onEdit(commentId)}>edit</Button>
+          {/* <Button onClick={() => onEdit(commentId)}>edit</Button> */}
         </Card.Body>
       </Card.Body>
     </Card>
