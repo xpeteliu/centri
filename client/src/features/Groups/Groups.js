@@ -244,10 +244,10 @@ function GroupPage() {
 function GroupListItem(props) {
   const history = useHistory();
   const { groupId } = props;
-  const userId = useSelector((state) => state.user._id);
+  const userId = useSelector((state) => state.user.id);
   // store group info
   const [group, setGroup] = useState({});
-  const [requested, setRequested] = useState(null);
+  const [requested, setRequested] = useState(false);
   useEffect(async () => {
     if (!group.title) {
       const groupData = await getGroupById(groupId);
@@ -256,6 +256,10 @@ function GroupListItem(props) {
         || groupData.memberIds.includes(userId) || groupData.adminIds.includes(userId)));
     }
   });
+  const joinButtonPressed = async () => {
+    await inviteUser(groupId, userId);
+    setRequested(true);
+  };
   return (
     <Stack direction="horizontal" gap={4} className="groupListItem">
       <div>
@@ -266,7 +270,7 @@ function GroupListItem(props) {
       </div>
       <div className="ms-auto">
         {requested ? <Button variant="primary" disabled>Requested</Button>
-          : <Button variant="secondary" onClick={() => setRequested(true)}>Join Group</Button>}
+          : <Button variant="secondary" onClick={() => joinButtonPressed()}>Join Group</Button>}
       </div>
     </Stack>
   );

@@ -81,7 +81,7 @@ export const getPostsByGroupId = async (groupId) => {
         groupId,
       },
       sort: {
-        age: 'descending',
+        age: 'ascending',
       },
     };
     const posts = await axios.post(`${url}/posting/filter/paginate`, postsRequest);
@@ -113,13 +113,16 @@ export const inviteUser = async (groupId, userId) => {
   }
 };
 
-export const acceptUser = async (groupId, userId) => {
+export const acceptUser = async (groupId, userId, accept) => {
   try {
-    const inviteRequest = {
-      role: 'member',
-      // userId,
-    };
-    const result = await axios.put(`${url}/group/${groupId}/member/${userId}`, inviteRequest, { withCredentials: true });
+    if (accept) {
+      const inviteRequest = {
+        role: 'member',
+      };
+      const result = await axios.put(`${url}/group/${groupId}/member/${userId}`, inviteRequest, { withCredentials: true });
+      return result.status;
+    }
+    const result = await axios.delete(`${url}/group/${groupId}/member/${userId}`);
     return result.status;
   } catch (err) {
     return 400;

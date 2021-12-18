@@ -17,7 +17,8 @@ function PendingUserItem(props) {
   return (
     <div>
       <h3>{user.username}</h3>
-      <Button onClick={() => onAccept(groupId, userId)}>Accept</Button>
+      <Button onClick={() => onAccept(groupId, userId, true)}>Accept</Button>
+      <Button onClick={() => onAccept(groupId, userId, false)}>Decline</Button>
     </div>
   );
 }
@@ -36,8 +37,8 @@ function AdminPage() {
       setPendingIds(group.pendingMemberIds);
     }
   });
-  const acceptInvitedUser = async (groupIdInvited, userIdInvited) => {
-    await acceptUser(groupIdInvited, userIdInvited);
+  const acceptInvitedUser = async (groupIdInvited, userIdInvited, accept) => {
+    await acceptUser(groupIdInvited, userIdInvited, accept);
     history.push(`/group/${groupId}`);
   };
   return (
