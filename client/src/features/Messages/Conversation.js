@@ -111,9 +111,7 @@ function ConversationRow(props) {
         onDeclineInvite={onDeclineInvite}
       />
     );
-  }
-
-  if (message.attachmentType === 'none') {
+  } else if (message.attachmentType === 'none') {
     content = (
       <Message
         message={message}
