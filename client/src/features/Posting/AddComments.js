@@ -1,19 +1,22 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, useHistory } from 'react-router-dom';
+// import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { useHistory, useParams } from 'react-router-dom';
 import {
   Button, Row, Col, Card,
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { showModal } from '../common/MessageModal/modalSlice';
 
-export default function AddComment(postingId) {
+export default function AddComment() {
+  const { postingId } = useParams();
+  const { groupId } = useParams();
   const dispatch = useDispatch();
   const history = useHistory();
   const baseUrl = 'https://cis557-group20-project.herokuapp.com/api';
   const url = baseUrl.concat('/comment');
-  // const creatorId = '61a65336c4a2d7594d3f58f6';
-  const creatorId = useSelector((state) => state.user.id);
+  const creatorId = '61a65336c4a2d7594d3f58f6';
+  // const creatorId = useSelector((state) => state.user.id);
   const handleSubmit = (event) => {
     const content = document.getElementById('inputContent').value;
     if (content.length > 0) {
@@ -29,7 +32,7 @@ export default function AddComment(postingId) {
         switch (resp.status) {
           case 200:
             dispatch(showModal({ headerText: 'Post', bodyText: 'Successfully created a new comment' }));
-            history.push('/comment');
+            history.push(`/group/${groupId}/posting/${postingId}`);
             break;
           case 400:
             dispatch(showModal({ headerText: 'Unable to add comment', bodyText: 'Invalid ID supplied' }));
@@ -62,9 +65,8 @@ export default function AddComment(postingId) {
                 <textarea id="inputContent" className="form-control" name="body" type="textarea" rows={5} cols={300} required />
               </label>
               <br />
-              <Link to="/comment"><button className="btn btn-secondary float-right" type="button">Cancel</button></Link>
+              <Button onClick={() => history.push(`/group/${groupId}/posting/${postingId}`)}>Comment</Button>
             &nbsp;&nbsp;&nbsp;
-              {/* <button className="btn btn-primary float-right" type="button">Post</button> */}
               <Button variant="secondary" onClick={handleSubmit}>Comment</Button>
             </form>
           </Col>
