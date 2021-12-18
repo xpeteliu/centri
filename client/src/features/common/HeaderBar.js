@@ -18,7 +18,7 @@ function HeaderBar() {
         setUser(newUser);
       }
     }
-  }, [user]);
+  });
   return (
     <Navbar bg="light" expand="md" className="headerBar">
       <Container>
