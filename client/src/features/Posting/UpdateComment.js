@@ -13,11 +13,11 @@ export default function UpdateComment(commentId) {
   const [comment, setComment] = useState(null);
 
   useEffect(async () => {
-    if (!comment) {
+    if (comment) {
       const response = await GetComment(commentId);
       setComment(response);
     }
-  });
+  }, [commentId]);
 
   const handleSubmit = (event) => {
     const content = document.getElementById('inputContent').value;

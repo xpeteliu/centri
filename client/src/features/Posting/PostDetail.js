@@ -2,62 +2,68 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card } from 'react-bootstrap';
-import { GetPost, GetUsernameById, GetFile } from './PostMethods';
-// import { GetPost, GetFile } from './PostMethods';
+// import { GetPost, GetUsernameById, GetFile } from './PostMethods';
+import { GetPost, GetFile } from './PostMethods';
 
 export default function PostDetail() {
   const { postingId } = useParams();
   const [post, setPost] = useState(null);
+  const [attachedFile, setAttachedFile] = useState(null);
+  let fileId;
+  let authorId;
+  let title;
+  let body;
+  let commentsList;
+
   useEffect(async () => {
     if (!post) {
       const response = await GetPost(postingId);
       setPost(response);
-    }
-  });
-  // const post = GetPost(postingId);
-  if (post) {
-    const author = post.creatorId;
-    const username = GetUsernameById(author);
-    const fileId = post.attachmentId;
-    const attachedFile = GetFile(fileId);
-    let media;
-    if (attachedFile != null) {
-      const { attachmentType } = post.attachmentType;
-      const attachmentUrl = process.env.REACT_APP_API_URL || `/api/file/${fileId}`;
-      if (attachmentType.startsWith('image')) {
-        media = (
-          <img src={attachmentUrl} alt="attached img" width="360px" />
-        );
-      } else if (attachmentType.startsWith('audio')) {
-        media = (
-          <audio controls src={attachmentUrl} alt="attached audio" type="{attachmentType}" width="360px" />
-        );
-      } else if (attachmentType.startsWith('video')) {
-        media = (
-          <video controls src={attachmentUrl} alt="attached video" type="{attachmentType}" width="360px" />
-        );
+      fileId = response.attachmentId;
+      authorId = response.creatorId;
+      title = response.heading;
+      body = response.content;
+      commentsList = response.comments;
+
+      if (fileId) {
+        const file = await GetFile(fileId);
+        setAttachedFile(file);
       }
     }
-    return (
-      <Card>
-        <Card.Body>
-          { media }
-          <Card.Title>
-            { post.heading }
-          </Card.Title>
-          <Card.Text>
-            { username }
-            <br />
-            {post.createdAt}
-            <br />
-            {post.updatedAt}
-            <br />
-            {post.content}
-            <br />
-            { post.comments }
-          </Card.Text>
-        </Card.Body>
-      </Card>
-    );
+  }, [postingId]);
+
+  let media;
+  if (attachedFile) {
+    const { attachmentType } = post.attachmentType;
+    const attachmentUrl = process.env.REACT_APP_API_URL || `/api/file/${fileId}`;
+    if (attachmentType.startsWith('image')) {
+      media = (
+        <img src={attachmentUrl} alt="attached img" width="360px" />
+      );
+    } else if (attachmentType.startsWith('audio')) {
+      media = (
+        <audio controls src={attachmentUrl} alt="attached audio" type="{attachmentType}" width="360px" />
+      );
+    } else if (attachmentType.startsWith('video')) {
+      media = (
+        <video controls src={attachmentUrl} alt="attached video" type="{attachmentType}" width="360px" />
+      );
+    }
   }
+  return (
+    <Card>
+      <Card.Body className="p-4">
+        {media}
+        <div align="left" style={{ whiteSpace: 'pre-wrap' }}>
+          <Card.Text className="mb-2 h6 p-2">
+            {title}
+            {authorId}
+            {body}
+            {commentsList}
+            !!!!!!!!!!!!!!!!!!!!!!!!
+          </Card.Text>
+        </div>
+      </Card.Body>
+    </Card>
+  );
 }
