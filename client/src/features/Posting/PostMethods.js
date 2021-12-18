@@ -74,16 +74,3 @@ export async function GetFile(fileId) {
     return null;
   }
 }
-
-export async function EditComment(content, creatorId, postingId) {
-  const url = commentUrl.concat(`/${commentId}`);
-  const response = await fetch(url, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      content,
-      creatorId,
-      postingId,
-    }),
-  });
-}

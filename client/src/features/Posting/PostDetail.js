@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card } from 'react-bootstrap';
-// import { GetPost, GetUsernameById, GetFile } from './PostMethods';
-import { GetPost, GetFile } from './PostMethods';
+import { GetPost, GetUsernameById, GetFile } from './PostMethods';
+// import { GetPost, GetFile } from './PostMethods';
 
 export default function PostDetail() {
   const { postingId } = useParams();
@@ -47,8 +47,8 @@ export default function PostDetail() {
           { post.heading }
         </Card.Title>
         <Card.Text>
-          {/* { username }
-          <br /> */}
+          { username }
+          <br />
           {post.createdAt}
           <br />
           {post.updatedAt}

@@ -21,11 +21,17 @@ export default function UpdateComment(commentId) {
 
   const handleSubmit = (event) => {
     const content = document.getElementById('inputContent').value;
-    EditComment(
-      content, 
-      comment.creatorId,
-      comment.postingId,
-    )
+    const creatorId = comment.creatorId;
+    const postingId = comment.postingId;
+    fetch(url, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        content,
+        creatorId,
+        postingId,
+      }),
+    });
   };
 
   return (
