@@ -178,3 +178,15 @@ export const deletePost = async (postId) => {
     return 400;
   }
 };
+
+export const promoteAdmin = async (groupId, userId, promote) => {
+  try {
+    const roleRequest = {
+      role: promote ? 'admin' : 'member',
+    };
+    const result = await axios.put(`${url}/group/${groupId}/member/${userId}`, roleRequest);
+    return result.status;
+  } catch (err) {
+    return 400;
+  }
+};

@@ -277,6 +277,7 @@ function GroupListItem(props) {
 }
 
 function GroupPost(props) {
+  const history = useHistory();
   const { postId, onDelete } = props;
   const [isAuthor, setIsAuthor] = useState(false);
   const userId = useSelector((state) => state.user.id);
@@ -287,7 +288,6 @@ function GroupPost(props) {
       const newPost = await getPostById(postId);
       setPost(newPost);
       if (newPost.creatorId === userId) {
-        console.log('isAuthor is true');
         setIsAuthor(true);
       }
     }
@@ -297,7 +297,9 @@ function GroupPost(props) {
     <Card>
       <Card.Body>
         <Card.Title>
-          {`${post.heading}`}
+          <span role="presentation" onClick={() => history.push(`./posting/${postId}`)} onKeyPress={() => null}>
+            {`${post.heading}`}
+          </span>
           {
             isAuthor
               ? <Button onClick={() => onDelete(postId)}>Delete Post</Button>
