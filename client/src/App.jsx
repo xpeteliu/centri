@@ -12,6 +12,7 @@ import CreatePost from './features/Posting/CreatePost';
 import AddComment from './features/Posting/AddComments';
 import { HeaderBar } from './features/common/HeaderBar';
 import PostDetail from './features/Posting/PostDetail';
+import UpdateComment from './features/Posting/UpdateComment';
 import './App.css';
 
 export default function App() {
@@ -30,6 +31,7 @@ export default function App() {
         <Route exact path="/group/:groupId/posting" component={CreatePost} />
         <Route path="/group/:groupId/posting/:postingId/comment" component={AddComment} />
         <Route path="/group/:groupId/posting/:postingId" component={PostDetail} />
+        <Route path="/group/:groupId/posting/:postingId/comment/:commentId" component={UpdateComment}/>
       </Switch>
       <MessageModal />
     </div>

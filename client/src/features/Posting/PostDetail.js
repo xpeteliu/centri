@@ -33,12 +33,16 @@ export default function PostDetail() {
     }
   }, [postingId]);
 
-  const deleteCommentButtonClicked = async (id) => {
+  const DeleteCommentButtonClicked = async (id) => {
     await DeleteComment(id);
     const response = await GetPost(postingId);
     const newComments = response.comments;
     setCommentList(newComments.map((comment) => String(comment._id)));
   };
+
+  // const EditCommentButtonClicked = async (id) => {
+
+  // }
 
   let media;
   if (attachedFile) {
@@ -77,7 +81,8 @@ export default function PostDetail() {
             <PostComment
               commentId={commentId}
               key={commentId}
-              onDelete={deleteCommentButtonClicked}
+              onDelete={DeleteCommentButtonClicked}
+              // onEdit={EditCommentButtonClicked}
             />
           ))}
         </Stack>

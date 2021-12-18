@@ -1,15 +1,14 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Button, Row, Col, Card,
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import { showModal } from '../common/MessageModal/modalSlice';
 import { GetComment } from './PostMethods';
 
 export default function UpdateComment(commentId) {
   const baseUrl = 'http://cis557-group20-project.herokuapp.com/api';
-  const url = baseUrl.concat(`/${commentId}`);
+  const url = baseUrl.concat(`/comment/${commentId}`);
   const [comment, setComment] = useState(null);
 
   useEffect(async () => {
@@ -20,9 +19,10 @@ export default function UpdateComment(commentId) {
   }, [commentId]);
 
   const handleSubmit = (event) => {
+    event.preventDefault();
     const content = document.getElementById('inputContent').value;
-    const creatorId = comment.creatorId;
-    const postingId = comment.postingId;
+    const { creatorId } = comment.creatorId;
+    const { postingId } = comment.postingId;
     fetch(url, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
