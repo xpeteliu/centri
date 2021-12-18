@@ -5,7 +5,7 @@ import {
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 // import { showModal } from '../common/MessageModal/modalSlice';
-import { EditComment, GetComment } from './PostMethods';
+import { GetComment } from './PostMethods';
 
 export default function UpdateComment(commentId) {
   const baseUrl = 'http://cis557-group20-project.herokuapp.com/api';

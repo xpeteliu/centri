@@ -15,49 +15,49 @@ export default function PostDetail() {
     }
   });
   // const post = GetPost(postingId);
-  const author = post.creatorId;
-  const username = GetUsernameById(author);
-  const fileId = post.attachmentId;
-  const attachedFile = GetFile(fileId);
-
-  let media;
-  if (attachedFile != null) {
-    const { attachmentType } = post.attachmentType;
-    const attachmentUrl = process.env.REACT_APP_API_URL || `/api/file/${fileId}`;
-    if (attachmentType.startsWith('image')) {
-      media = (
-        <img src={attachmentUrl} alt="attached img" width="360px" />
-      );
-    } else if (attachmentType.startsWith('audio')) {
-      media = (
-        <audio controls src={attachmentUrl} alt="attached audio" type="{attachmentType}" width="360px" />
-      );
-    } else if (attachmentType.startsWith('video')) {
-      media = (
-        <video controls src={attachmentUrl} alt="attached video" type="{attachmentType}" width="360px" />
-      );
+  if (post) {
+    const author = post.creatorId;
+    const username = GetUsernameById(author);
+    const fileId = post.attachmentId;
+    const attachedFile = GetFile(fileId);
+    let media;
+    if (attachedFile != null) {
+      const { attachmentType } = post.attachmentType;
+      const attachmentUrl = process.env.REACT_APP_API_URL || `/api/file/${fileId}`;
+      if (attachmentType.startsWith('image')) {
+        media = (
+          <img src={attachmentUrl} alt="attached img" width="360px" />
+        );
+      } else if (attachmentType.startsWith('audio')) {
+        media = (
+          <audio controls src={attachmentUrl} alt="attached audio" type="{attachmentType}" width="360px" />
+        );
+      } else if (attachmentType.startsWith('video')) {
+        media = (
+          <video controls src={attachmentUrl} alt="attached video" type="{attachmentType}" width="360px" />
+        );
+      }
     }
+    return (
+      <Card>
+        <Card.Body>
+          { media }
+          <Card.Title>
+            { post.heading }
+          </Card.Title>
+          <Card.Text>
+            { username }
+            <br />
+            {post.createdAt}
+            <br />
+            {post.updatedAt}
+            <br />
+            {post.content}
+            <br />
+            { post.comments }
+          </Card.Text>
+        </Card.Body>
+      </Card>
+    );
   }
-
-  return (
-    <Card>
-      <Card.Body>
-        { media }
-        <Card.Title>
-          { post.heading }
-        </Card.Title>
-        <Card.Text>
-          { username }
-          <br />
-          {post.createdAt}
-          <br />
-          {post.updatedAt}
-          <br />
-          {post.content}
-          <br />
-          { post.comments }
-        </Card.Text>
-      </Card.Body>
-    </Card>
-  );
 }
