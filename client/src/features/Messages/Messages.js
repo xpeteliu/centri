@@ -89,12 +89,13 @@ function MessagePage() {
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     const megabytes = 1024 * 1024;
+    const max_size = 50 * megabytes;
     // console.log('files', event.target.files);
     if (ACCEPTED_FILE_TYPES.some((type) => file.type.startsWith(type))) {
-      if (file.size > 10 * megabytes) {
+      if (file.size > max_size) {
         dispatch(showModal({
           headerText: 'This file is too large!',
-          bodyText: '',
+          bodyText: `Maximum size: ${max_size} MB`,
         }));
       } else {
         setAttachedFile(file);
