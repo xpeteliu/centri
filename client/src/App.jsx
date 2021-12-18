@@ -27,9 +27,9 @@ export default function App() {
         <Route path="/groups" component={GroupListPage} />
         <Route path="/messages" component={MessagePage} />
         <Route path="/resetPassword" component={ResetPassword} />
-        <Route path="/group/:groupId/posting" component={CreatePost} />
+        <Route exact path="/group/:groupId/posting" component={CreatePost} />
         <Route path="/comment" component={AddComment} />
-        <Route path="/posting/:postingId" component={PostDetail} />
+        <Route path="/group/:groupId/posting/:postingId" component={PostDetail} />
       </Switch>
       <MessageModal />
     </div>

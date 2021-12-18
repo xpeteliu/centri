@@ -1,12 +1,20 @@
 /* eslint jsx-a11y/media-has-caption: 0 */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card } from 'react-bootstrap';
-import { GetPost, GetUsernameById, GetFile } from './PostMethods';
+// import { GetPost, GetUsernameById, GetFile } from './PostMethods';
+import { GetPost, GetFile } from './PostMethods';
 
 export default function PostDetail() {
   const { postingId } = useParams();
-  const post = GetPost(postingId);
+  const [post, setPost] = useState(null);
+  useEffect(async () => {
+    if (!post) {
+      const response = await GetPost(postingId);
+      setPost(response);
+    }
+  });
+  // const post = GetPost(postingId);
   const author = post.creatorId;
   const username = GetUsernameById(author);
   const fileId = post.attachmentId;
@@ -39,8 +47,8 @@ export default function PostDetail() {
           { post.heading }
         </Card.Title>
         <Card.Text>
-          { username }
-          <br />
+          {/* { username }
+          <br /> */}
           {post.createdAt}
           <br />
           {post.updatedAt}
