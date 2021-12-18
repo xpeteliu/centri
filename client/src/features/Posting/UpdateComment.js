@@ -1,20 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams, useHistory } from 'react-router-dom';
 import {
   Button, Row, Col, Card,
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { GetComment } from './PostMethods';
 
-export default function UpdateComment(commentId) {
+export default function UpdateComment() {
+  const history = useHistory();
+  const { commentId } = useParams();
+  const { groupId } = useParams();
   const baseUrl = 'http://cis557-group20-project.herokuapp.com/api';
   const url = baseUrl.concat(`/comment/${commentId}`);
   const [comment, setComment] = useState(null);
+  let originalContent;
 
   useEffect(async () => {
-    if (comment) {
+    if (!comment) {
       const response = await GetComment(commentId);
       setComment(response);
+      originalContent = response.content;
     }
   }, [commentId]);
 
@@ -27,11 +32,13 @@ export default function UpdateComment(commentId) {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        commentId,
         content,
         creatorId,
         postingId,
       }),
     });
+    history.push(`/group/${groupId}/posting/${postingId}`);
   };
 
   return (
@@ -44,7 +51,7 @@ export default function UpdateComment(commentId) {
           <Col className="my-auto">
             <form className="post-form">
               <label htmlFor="body">
-                <textarea id="inputContent" className="form-control" name="body" type="textarea" rows={5} cols={300} value={comment.content} required />
+                <textarea id="inputContent" className="form-control" name="body" type="textarea" rows={5} cols={300} value={originalContent} required />
               </label>
               <br />
               <Link to="/"><button className="btn btn-secondary float-right" type="button">Cancel</button></Link>
