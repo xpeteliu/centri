@@ -9,7 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Conversation from './Conversation';
 import {
   getUser, getMessagesSender, getMessagesRecipient, postMessage,
-  postFile, acceptInvite, declineInvite,
+  postFile, acceptInvite, declineInvite, getGroups,
 } from './Requests';
 
 function MessagePage() {
@@ -21,7 +21,6 @@ function MessagePage() {
   const [users, setUsers] = useState([]);
 
   const [waiting, setWaiting] = useState(true);
-  const [messages, setMessages] = useState([]);
   const [conversation, setConversation] = useState([]);
 
   const [attachedFile, setAttachedFile] = useState(null);
@@ -31,25 +30,22 @@ function MessagePage() {
     return user;
   };
 
-  const fetchMessages = async (userId) => {
-    const messagesSent = await getMessagesSender(userId);
-    const messagesRecieved = await getMessagesRecipient(userId);
-    const messagesAll = messagesSent.concat(messagesRecieved);
-
-    const filtered = messagesAll.filter(((m) => m.recipientId === userId || m.senderId === userId));
-    filtered.sort((a, b) => (((new Date(a.createdAt)) > (new Date(b.createdAt))) ? 1 : -1));
-
+  const fetchContacts = async (userId) => {
+    const groups = await getGroups();
+    const groupsFiltered = groups.filter((group) => group.memberIds.includes(userId)
+      || group.adminIds.includes(userId)
+      || group.creatorId === userId);
     const tempIds = [];
-    filtered.forEach(async (message) => {
-      const { senderId } = message;
-      if (!tempIds.some((id) => id === senderId) && senderId !== userId) {
-        tempIds.push(senderId);
-      }
+    groupsFiltered.forEach((group) => {
+      group.memberIds.forEach((newId) => {
+        if (!tempIds.includes()) {
+          tempIds.push(newId);
+        }
+      });
     });
 
     const tempUsers = await Promise.all(tempIds.map((id) => fetchUser(id)));
     setUsers(tempUsers);
-    return filtered;
   };
 
   const fetchConvo = async (userId) => {
@@ -70,7 +66,7 @@ function MessagePage() {
   const userId = useSelector((state) => state.user.id);
 
   if (waiting) {
-    setMessages(fetchMessages(userId));
+    fetchContacts(userId);
     setWaiting(false);
   }
 
@@ -124,19 +120,19 @@ function MessagePage() {
   const handleAcceptInvite = async (event) => {
     const messageId = event.target.value;
     await acceptInvite(messageId);
-    setMessages(fetchMessages(userId));
+    fetchContacts(userId);
   };
 
   const handleDeclineInvite = async (event) => {
     const messageId = event.target.value;
     await declineInvite(messageId);
-    setMessages(fetchMessages(userId));
+    fetchContacts(userId);
   };
 
   useEffect(() => {
     // console.log('rendered');
     const pollMessages = setInterval(() => {
-      setMessages(fetchMessages(userId));
+      fetchContacts(userId);
     }, 10000);
 
     return () => {
@@ -151,7 +147,7 @@ function MessagePage() {
       if (otherUserId !== -1) {
         fetchConvo(userId);
       }
-    }, 5000);
+    }, 3000);
 
     return () => {
       clearInterval(pollConvo);
@@ -161,10 +157,6 @@ function MessagePage() {
   useEffect(() => {
     // console.log('attached file', attachedFile);
   }, [attachedFile]);
-
-  useEffect(() => {
-    // console.log('messages updated', messages);
-  }, [messages]);
 
   useEffect(() => {
     // console.log('conversation updated', conversation, ', ', otherUserId);
@@ -205,7 +197,7 @@ function MessagePage() {
     <Container className="App">
       <Container className="w-100">
         <div className="bg-light">
-          <Row className="h-99 p-1">
+          <Row className="h-90 p-1">
             <Col className="p-3" xs={3}>
               <Stack direction="vertical" gap={1}>
                 <UserList

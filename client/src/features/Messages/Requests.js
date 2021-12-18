@@ -16,6 +16,22 @@ export async function getUser(id) {
   }
 }
 
+export async function getGroups() {
+  try {
+    const url = baseUrl.concat('/group/filter/sort');
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.json();
+  } catch (err) {
+    // console.log('send err', err);
+    return {};
+  }
+}
+
 export async function getMessagesSender(senderId) {
   try {
     const url = baseUrl.concat('/message/filter/paginate');
