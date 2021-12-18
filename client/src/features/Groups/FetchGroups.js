@@ -24,13 +24,13 @@ export const getMyGroups = async (userId) => {
   }
 };
 
-export const getPublicGroups = async () => {
+export const getPublicGroups = async (sortMethod) => {
   try {
     const groupRequest = {
       filter: {
         status: 'public',
       },
-      sortMethod: 'latestUpdates',
+      sortMethod,
     };
     const groups = await axios.post(`${url}/group/filter/sort`, groupRequest);
     return groups.data;
@@ -43,6 +43,7 @@ export const filterGroupsByTag = async (tag) => {
   try {
     const groupRequest = {
       filter: {
+        status: 'public',
         tags: tag,
       },
       sortMethod: 'latestUpdates',
@@ -79,6 +80,9 @@ export const getPostsByGroupId = async (groupId) => {
       filter: {
         groupId,
       },
+      sort: {
+        age: 'ascending',
+      },
     };
     const posts = await axios.post(`${url}/posting/filter/paginate`, postsRequest);
     return posts.data;
@@ -109,13 +113,16 @@ export const inviteUser = async (groupId, userId) => {
   }
 };
 
-export const acceptUser = async (groupId, userId) => {
+export const acceptUser = async (groupId, userId, accept) => {
   try {
-    const inviteRequest = {
-      role: 'member',
-      // userId,
-    };
-    const result = await axios.put(`${url}/group/${groupId}/member/${userId}`, inviteRequest, { withCredentials: true });
+    if (accept) {
+      const inviteRequest = {
+        role: 'member',
+      };
+      const result = await axios.put(`${url}/group/${groupId}/member/${userId}`, inviteRequest, { withCredentials: true });
+      return result.status;
+    }
+    const result = await axios.delete(`${url}/group/${groupId}/member/${userId}`);
     return result.status;
   } catch (err) {
     return 400;
@@ -166,6 +173,18 @@ export const leaveGroup = async (groupId, userId) => {
 export const deletePost = async (postId) => {
   try {
     const result = await axios.delete(`${url}/posting/${postId}`);
+    return result.status;
+  } catch (err) {
+    return 400;
+  }
+};
+
+export const promoteAdmin = async (groupId, userId, promote) => {
+  try {
+    const roleRequest = {
+      role: promote ? 'admin' : 'member',
+    };
+    const result = await axios.put(`${url}/group/${groupId}/member/${userId}`, roleRequest);
     return result.status;
   } catch (err) {
     return 400;

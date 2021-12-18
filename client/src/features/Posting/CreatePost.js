@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // import { useDispatch } from 'react-redux';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import {
   Button, Row, Col, Card,
 } from 'react-bootstrap';
@@ -47,8 +47,7 @@ export default function CreatePost() {
             default:
               throw new Error('Invalid response');
           }
-        }).catch((error) => {
-          console.log(error);
+        }).catch(() => {
           dispatch(showModal({ headerText: 'Network Error', bodyText: 'Unable to connect to the server. Please try again later.' }));
         });
       } else {
@@ -71,8 +70,7 @@ export default function CreatePost() {
             default:
               throw new Error('Invalid response');
           }
-        }).catch((error) => {
-          console.log(error);
+        }).catch(() => {
           dispatch(showModal({ headerText: 'Network Error', bodyText: 'Unable to connect to the server. Please try again later.' }));
         });
       }
@@ -103,9 +101,8 @@ export default function CreatePost() {
                 <input type="file" name="file" onChange={handleFileUpload} />
               </form>
               <br />
-              <Link to="/"><button className="btn btn-secondary float-right" type="button">Cancel</button></Link>
+              <Button variant="secondary" onClick={() => history.push(`/group/${groupId}`)}>Cancel</Button>
               &nbsp;&nbsp;&nbsp;
-              {/* <button className="btn btn-primary float-right" type="button">Post</button> */}
               <Button variant="secondary" onClick={handleSubmitPost}>Post</Button>
             </form>
           </Col>

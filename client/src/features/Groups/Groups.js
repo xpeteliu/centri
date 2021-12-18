@@ -1,6 +1,7 @@
 import { React, useEffect, useState } from 'react';
 import {
-  Button, Stack, Row, Col, Container, Card, Modal, Form,
+  Button, Stack, Row, Col, Container, Card, Modal, Form, DropdownButton,
+  Dropdown,
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useHistory, useParams } from 'react-router-dom';
@@ -39,8 +40,8 @@ function GroupListPage() {
     const filteredGroups = await filterGroupsByTag(tag);
     setGroups(filteredGroups.map((group) => group._id));
   };
-  const publicGroupsButtonClicked = async () => {
-    const publicGroups = await getPublicGroups();
+  const publicGroupsButtonClicked = async (sortMethod) => {
+    const publicGroups = await getPublicGroups(sortMethod);
     setGroups(publicGroups.map((group) => group._id));
   };
   const myGroupsButtonClicked = async () => {
@@ -55,7 +56,7 @@ function GroupListPage() {
             <Button variant="secondary" onClick={() => myGroupsButtonClicked()}>My Groups</Button>
           </Col>
           <Col xs="4">
-            <Button variant="secondary" onClick={() => publicGroupsButtonClicked()}>Public Groups</Button>
+            <Button variant="secondary" onClick={() => publicGroupsButtonClicked('latestUpdates')}>Public Groups</Button>
           </Col>
           <Col xs="4">
             <Button variant="primary" onClick={handleOpen}>Create Group</Button>
@@ -75,6 +76,25 @@ function GroupListPage() {
                 </Col>
                 <Col xs={2}>
                   <Form.Control id="tagField" placeholder="Tag" />
+                </Col>
+                <Col xs={4} className="ms-auto">
+                  <DropdownButton title="Sort Groups">
+                    <Dropdown.Item>
+                      <div role="presentation" onClick={() => publicGroupsButtonClicked('latestUpdates')} onKeyPress={() => null}>
+                        Newest Message
+                      </div>
+                    </Dropdown.Item>
+                    <Dropdown.Item>
+                      <div role="presentation" onClick={() => publicGroupsButtonClicked('numOfPosts')} onKeyPress={() => null}>
+                        Number of Posts
+                      </div>
+                    </Dropdown.Item>
+                    <Dropdown.Item>
+                      <div role="presentation" onClick={() => publicGroupsButtonClicked('numOfMembers')} onKeyPress={() => null}>
+                        Number of Members
+                      </div>
+                    </Dropdown.Item>
+                  </DropdownButton>
                 </Col>
               </Form.Group>
             </Form>
@@ -224,10 +244,10 @@ function GroupPage() {
 function GroupListItem(props) {
   const history = useHistory();
   const { groupId } = props;
-  const userId = useSelector((state) => state.user._id);
+  const userId = useSelector((state) => state.user.id);
   // store group info
   const [group, setGroup] = useState({});
-  const [requested, setRequested] = useState(null);
+  const [requested, setRequested] = useState(false);
   useEffect(async () => {
     if (!group.title) {
       const groupData = await getGroupById(groupId);
@@ -236,29 +256,40 @@ function GroupListItem(props) {
         || groupData.memberIds.includes(userId) || groupData.adminIds.includes(userId)));
     }
   });
+  const joinButtonPressed = async () => {
+    await inviteUser(groupId, userId);
+    setRequested(true);
+  };
   return (
     <Stack direction="horizontal" gap={4} className="groupListItem">
       <div>
         <h3>
           <span role="presentation" onClick={() => history.push(`./group/${groupId}`)} onKeyPress={() => null}>{group.title}</span>
         </h3>
+        <p>{group.status === 'private' ? 'Private' : ''}</p>
       </div>
       <div className="ms-auto">
         {requested ? <Button variant="primary" disabled>Requested</Button>
-          : <Button variant="secondary" onClick={() => setRequested(true)}>Join Group</Button>}
+          : <Button variant="secondary" onClick={() => joinButtonPressed()}>Join Group</Button>}
       </div>
     </Stack>
   );
 }
 
 function GroupPost(props) {
+  const history = useHistory();
   const { postId, onDelete } = props;
+  const [isAuthor, setIsAuthor] = useState(false);
+  const userId = useSelector((state) => state.user.id);
   // TODO: use post id to get title and text
   const [post, setPost] = useState({});
   useEffect(async () => {
     if (!post.heading) {
       const newPost = await getPostById(postId);
       setPost(newPost);
+      if (newPost.creatorId === userId) {
+        setIsAuthor(true);
+      }
     }
   });
 
@@ -266,8 +297,14 @@ function GroupPost(props) {
     <Card>
       <Card.Body>
         <Card.Title>
-          {`${post.heading}`}
-          <Button onClick={() => onDelete(postId)}>Delete Post</Button>
+          <span role="presentation" onClick={() => history.push(`./posting/${postId}`)} onKeyPress={() => null}>
+            {`${post.heading}`}
+          </span>
+          {
+            isAuthor
+              ? <Button onClick={() => onDelete(postId)}>Delete Post</Button>
+              : <Button>Flag Post</Button>
+          }
         </Card.Title>
         <Card.Text>
           {post.content}
