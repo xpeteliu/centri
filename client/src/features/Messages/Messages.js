@@ -124,19 +124,19 @@ function MessagePage() {
   const handleAcceptInvite = async (event) => {
     const messageId = event.target.value;
     await acceptInvite(messageId);
-    fetchMessages(userId);
+    setMessages(fetchMessages(userId));
   };
 
   const handleDeclineInvite = async (event) => {
     const messageId = event.target.value;
     await declineInvite(messageId);
-    fetchMessages(userId);
+    setMessages(fetchMessages(userId));
   };
 
   useEffect(() => {
     // console.log('rendered');
     const pollMessages = setInterval(() => {
-      fetchMessages(userId);
+      setMessages(fetchMessages(userId));
     }, 10000);
 
     return () => {
