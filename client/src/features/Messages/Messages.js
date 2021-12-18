@@ -57,7 +57,7 @@ function MessagePage() {
     const messagesRecieved = await getMessagesRecipient(userId);
     const messagesAll = messagesSent.concat(messagesRecieved);
 
-    const id = otherUserId;
+    const id = userId;
 
     let tempConversation = [];
     tempConversation = messagesAll.filter(((m) => m.recipientId === id || m.senderId === id));
