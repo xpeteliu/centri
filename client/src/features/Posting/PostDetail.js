@@ -58,6 +58,15 @@ export default function PostDetail() {
             <br />
             {post && post.content}
             <br />
+            <Stack direction="vertical" gap={5}>
+            {commentList && posts.map((postId) => (
+              <GroupPost
+                postId={postId}
+                key={postId}
+                onDelete={deletePostButtonClicked}
+              />
+            ))}
+          </Stack>
           </Card.Text>
         </div>
         <Button onClick={() => history.push(`/group/${groupId}/posting/${postingId}/comment`)}>Comment</Button>
