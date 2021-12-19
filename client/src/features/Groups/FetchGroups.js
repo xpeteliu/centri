@@ -249,3 +249,20 @@ export const getFlaggedPosts = async (groupId) => {
     return err;
   }
 };
+
+export const filterPostsByHashTag = async (hashTag, groupId) => {
+  try {
+    const postFilter = {
+      filter: {
+        groupId,
+        content: {
+          $regex: `\\B#${hashTag}\\b`,
+        },
+      },
+    };
+    const posts = await axios.post(`${url}/posting/filter/paginate`, postFilter);
+    return posts.data;
+  } catch (err) {
+    return [];
+  }
+};
