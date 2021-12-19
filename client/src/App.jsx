@@ -13,6 +13,7 @@ import AddComment from './features/Posting/AddComments';
 import { HeaderBar } from './features/common/HeaderBar';
 import PostDetail from './features/Posting/PostDetail';
 import UpdateComment from './features/Posting/UpdateComment';
+import AnalyticsPage from './features/Posting/Analytics';
 import './App.css';
 
 export default function App() {
@@ -24,6 +25,7 @@ export default function App() {
         <Route path="/login" component={SignInPage} />
         <Route path="/register" component={SignUpPage} />
         <Route exact path="/group/:groupId" component={GroupPage} />
+        <Route path="/group/:groupId/analytics" component={AnalyticsPage} />
         <Route path="/group/:groupId/admin" component={AdminPage} />
         <Route path="/groups" component={GroupListPage} />
         <Route path="/messages" component={MessagePage} />

@@ -20,9 +20,14 @@ export default function CreatePost() {
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
-    const { fileSize } = event.target.files[0].size;
+    const fileSize = event.target.files[0].size;
     console.log(fileSize);
-    setAttachedFile(file);
+    if (fileSize > 8000000) {
+      dispatch(showModal({ headerText: 'File too large', bodyText: 'File exceeds 10MB' }));
+      setAttachedFile(null);
+    } else {
+      setAttachedFile(file);
+    }
   };
 
   const handleSubmitPost = async (event) => {
