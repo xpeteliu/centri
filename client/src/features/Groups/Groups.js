@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 import {
   getMyGroups, createGroup, getGroupById, getPostsByGroupId, getPostById,
   filterGroupsByTag, getPublicGroups, getUsersByName, inviteUser, addTag,
-  leaveGroup, deletePost, inviteUserMessage, hidePost,
+  leaveGroup, deletePost, inviteUserMessage, hidePost, flagPost,
 } from './FetchGroups';
 
 function GroupListPage() {
@@ -301,6 +301,9 @@ function GroupPost(props) {
       }
     }
   });
+  const flagButtonClicked = async () => {
+    await flagPost(postId, userId);
+  };
 
   return (
     <Card>
@@ -312,7 +315,7 @@ function GroupPost(props) {
           {
             isAuthor
               ? <Button onClick={() => onDelete(postId)}>Delete Post</Button>
-              : <Button>Flag Post</Button>
+              : <Button onClick={() => flagButtonClicked()}>Flag Post</Button>
           }
           <CloseButton onClick={() => onHide(postId)} />
         </Card.Title>

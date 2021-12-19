@@ -4,6 +4,7 @@ import { Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   getGroupById, getUserById, acceptUser, promoteAdmin,
+  getFlaggedPosts,
 } from './FetchGroups';
 
 function PendingUserItem(props) {
@@ -61,6 +62,25 @@ function MemberItem(props) {
   );
 }
 
+function FlaggedPostItem(props) {
+  // const { groupId } = useParams();
+  const { post } = props;
+  // useEffect(async () => {
+  //   if (!user.username) {
+  //     const userData = await getUserById(memberId);
+  //     setUser(userData);
+  //   }
+  // });
+  return (
+    <div>
+      <h3>{post.heading}</h3>
+      <p>{`Flagged by ${post.flaggerId}`}</p>
+      <Button onClick={() => null}>Delete</Button>
+      <Button onClick={() => null}>Unflag</Button>
+    </div>
+  );
+}
+
 function AdminPage() {
   const history = useHistory();
   const { groupId } = useParams();
@@ -68,6 +88,7 @@ function AdminPage() {
   const [pendingIds, setPendingIds] = useState([]);
   const [adminIds, setAdminIds] = useState([]);
   const [memberIds, setMemberIds] = useState([]);
+  const [flaggedPosts, setFlaggedPosts] = useState([]);
   useEffect(async () => {
     if (!group.title) {
       const groupData = await getGroupById(groupId);
@@ -75,6 +96,8 @@ function AdminPage() {
       setPendingIds(groupData.pendingMemberIds);
       setAdminIds(groupData.adminIds);
       setMemberIds(groupData.memberIds);
+      const flagged = await getFlaggedPosts(groupId);
+      setFlaggedPosts(flagged);
     }
   });
   const acceptInvitedUser = async (groupIdInvited, userIdInvited, accept) => {
@@ -114,6 +137,10 @@ function AdminPage() {
           onPromote={promoteDemoteAdmin}
           key={memberId}
         />
+      ))}
+      <h3>Flagged Posts</h3>
+      {flaggedPosts.map((flaggedPost) => (
+        <FlaggedPostItem post={flaggedPost} />
       ))}
       <Button onClick={() => history.push(`/group/${groupId}`)}>Back to Group</Button>
     </div>

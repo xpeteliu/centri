@@ -220,3 +220,32 @@ export const hidePost = async (postId) => {
     return 400;
   }
 };
+
+export const flagPost = async (postId, userId) => {
+  try {
+    const flagRequest = {
+      flaggerId: userId,
+    };
+    const result = await axios.put(`${url}/posting/${postId}`, flagRequest);
+    return result.data;
+  } catch (err) {
+    return 400;
+  }
+};
+
+export const getFlaggedPosts = async (groupId) => {
+  try {
+    const flaggedPostsRequest = {
+      filter: {
+        groupId,
+        flaggerId: {
+          $ne: null,
+        },
+      },
+    };
+    const result = await axios.post(`${url}/posting/filter/paginate`, flaggedPostsRequest);
+    return result.data;
+  } catch (err) {
+    return err;
+  }
+};
