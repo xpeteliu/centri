@@ -26,7 +26,7 @@ export default function AnalyticsPage() {
         const numberAdmins = admins.length;
         setNumberOfAdmins(numberAdmins);
       }
-      const posts = await getPostsByGroupId(groupId);
+      const posts = await getPostsByGroupId(groupId, null);
       const numberPosts = posts.length;
       setNumberOfPosts(numberPosts);
       if (numberPosts > 0) {
