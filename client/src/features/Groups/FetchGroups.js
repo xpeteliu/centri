@@ -74,11 +74,14 @@ export const getGroupById = async (groupId) => {
   }
 };
 
-export const getPostsByGroupId = async (groupId) => {
+export const getPostsByGroupId = async (groupId, userId) => {
   try {
     const postsRequest = {
       filter: {
         groupId,
+        hiderIds: {
+          $ne: userId,
+        },
       },
       sort: {
         age: 'ascending',
@@ -110,6 +113,21 @@ export const inviteUser = async (groupId, userId) => {
     return result.status;
   } catch (err) {
     return 400;
+  }
+};
+
+export const inviteUserMessage = async (groupId, senderId, recipientId) => {
+  try {
+    const messageRequest = {
+      content: 'You have been invited to join a group!',
+      senderId,
+      recipientId,
+      invitingGroupId: groupId,
+    };
+    const result = await axios.post(`${url}/message`, messageRequest);
+    return result.data;
+  } catch (err) {
+    return {};
   }
 };
 
@@ -188,5 +206,46 @@ export const promoteAdmin = async (groupId, userId, promote) => {
     return result.status;
   } catch (err) {
     return 400;
+  }
+};
+
+export const hidePost = async (postId) => {
+  try {
+    // const newPostRequest = {
+    //   hiderIds: [userId],
+    // };
+    const result = await axios.put(`${url}/posting/${postId}/hide`);
+    return result.status;
+  } catch (err) {
+    return 400;
+  }
+};
+
+export const flagPost = async (postId, userId) => {
+  try {
+    const flagRequest = {
+      flaggerId: userId,
+    };
+    const result = await axios.put(`${url}/posting/${postId}`, flagRequest);
+    return result.data;
+  } catch (err) {
+    return 400;
+  }
+};
+
+export const getFlaggedPosts = async (groupId) => {
+  try {
+    const flaggedPostsRequest = {
+      filter: {
+        groupId,
+        flaggerId: {
+          $ne: null,
+        },
+      },
+    };
+    const result = await axios.post(`${url}/posting/filter/paginate`, flaggedPostsRequest);
+    return result.data;
+  } catch (err) {
+    return err;
   }
 };

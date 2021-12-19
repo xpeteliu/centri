@@ -2,6 +2,7 @@ import { React, useEffect, useState } from 'react';
 import {
   Button, Stack, Row, Col, Container, Card, Modal, Form, DropdownButton,
   Dropdown,
+  CloseButton,
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useHistory, useParams } from 'react-router-dom';
@@ -9,7 +10,7 @@ import { useSelector } from 'react-redux';
 import {
   getMyGroups, createGroup, getGroupById, getPostsByGroupId, getPostById,
   filterGroupsByTag, getPublicGroups, getUsersByName, inviteUser, addTag,
-  leaveGroup, deletePost,
+  leaveGroup, deletePost, inviteUserMessage, hidePost, flagPost,
 } from './FetchGroups';
 
 function GroupListPage() {
@@ -134,17 +135,19 @@ function GroupPage() {
   const { groupId } = useParams();
   const userId = useSelector((state) => state.user.id);
   const [group, setGroup] = useState({});
+  const [isAdmin, setIsAdmin] = useState(false);
   useEffect(async () => {
     if (!group.title) {
       const groupData = await getGroupById(groupId);
       setGroup(groupData);
+      setIsAdmin(groupData.adminIds.includes(userId));
     }
   });
 
   const [posts, setPosts] = useState(undefined);
   useEffect(async () => {
     if (!posts) {
-      const postList = await getPostsByGroupId(groupId);
+      const postList = await getPostsByGroupId(groupId, userId);
       setPosts(postList.map((post) => String(post._id)));
     }
   });
@@ -168,7 +171,8 @@ function GroupPage() {
       const userArray = await getUsersByName(newMemberName);
       if (userArray.length > 0) {
         const newMemberId = userArray[0]._id;
-        await inviteUser(groupId, newMemberId);
+        // await inviteUser(groupId, newMemberId);
+        await inviteUserMessage(groupId, userId, newMemberId);
       }
     }
     // add tag
@@ -181,8 +185,14 @@ function GroupPage() {
 
   const deletePostButtonClicked = async (id) => {
     await deletePost(id);
-    const newPosts = await getPostsByGroupId(groupId);
-    setPosts(newPosts.map((post) => String(post._id)));
+    const newPosts = await getPostsByGroupId(groupId, userId);
+    setPosts(newPosts.map((post) => post._id));
+  };
+
+  const hidePostButtonClicked = async (postId) => {
+    await hidePost(postId);
+    const newPosts = await getPostsByGroupId(groupId, userId);
+    setPosts(newPosts.map((post) => post._id));
   };
 
   return (
@@ -195,7 +205,7 @@ function GroupPage() {
             </div>
             <div className="ms-auto">
               <Stack direction="horizontal" gap={3}>
-                <Button variant="warning" onClick={() => goAdminPage()}>Admin</Button>
+                {isAdmin && <Button variant="warning" onClick={() => goAdminPage()}>Admin</Button>}
                 <Button onClick={() => history.push(`/group/${groupId}/posting`)}>Create Post</Button>
                 <Button onClick={handleOpen}>Edit Group</Button>
                 <Button onClick={() => leaveGroupButtonClicked()}>Leave Group</Button>
@@ -208,8 +218,10 @@ function GroupPage() {
             {posts && posts.map((postId) => (
               <GroupPost
                 postId={postId}
+                isAdmin={isAdmin}
                 key={postId}
                 onDelete={deletePostButtonClicked}
+                onHide={hidePostButtonClicked}
               />
             ))}
           </Stack>
@@ -278,7 +290,9 @@ function GroupListItem(props) {
 
 function GroupPost(props) {
   const history = useHistory();
-  const { postId, onDelete } = props;
+  const {
+    postId, isAdmin, onDelete, onHide,
+  } = props;
   const [isAuthor, setIsAuthor] = useState(false);
   const userId = useSelector((state) => state.user.id);
   // TODO: use post id to get title and text
@@ -292,6 +306,9 @@ function GroupPost(props) {
       }
     }
   });
+  const flagButtonClicked = async () => {
+    await flagPost(postId, userId);
+  };
 
   return (
     <Card>
@@ -301,10 +318,11 @@ function GroupPost(props) {
             {`${post.heading}`}
           </span>
           {
-            isAuthor
+            (isAuthor || isAdmin)
               ? <Button onClick={() => onDelete(postId)}>Delete Post</Button>
-              : <Button>Flag Post</Button>
+              : <Button onClick={() => flagButtonClicked()}>Flag Post</Button>
           }
+          <CloseButton onClick={() => onHide(postId)} />
         </Card.Title>
         <Card.Text>
           {post.content}

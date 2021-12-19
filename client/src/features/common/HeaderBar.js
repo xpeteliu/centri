@@ -22,7 +22,7 @@ function HeaderBar() {
   return (
     <Navbar bg="light" expand="md" className="headerBar">
       <Container>
-        <Navbar.Brand role="presentation" onClick={() => history.push('/')} onKeyPress={() => null}>Logo</Navbar.Brand>
+        <Navbar.Brand role="presentation" onClick={() => history.push('/')} onKeyPress={() => null}>Team20</Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse>
           <Nav className="me-auto">
