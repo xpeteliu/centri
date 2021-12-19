@@ -153,6 +153,7 @@ function MessagePage() {
         // console.log('POSTING MESSAGE', newMessage);
         await postMessage(newMessage);
         fetchConvo(userId);
+        setAttachedFile(null);
       }
     }
   };
