@@ -55,6 +55,13 @@ function MessagePage() {
       }
     });
 
+    const messages = await getMessagesRecipient(userId);
+    messages.forEach((message) => {
+      if (!tempIds.includes(message.senderId)) {
+        tempIds.push(message.senderId);
+      }
+    });
+
     const tempUsers = await Promise.all(tempIds.map((id) => fetchUser(id)));
     const cleanedUsers = tempUsers.filter((user) => Object.keys(user).length !== 0);
     setUsers(cleanedUsers);
