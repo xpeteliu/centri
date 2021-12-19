@@ -56,7 +56,8 @@ function MessagePage() {
     });
 
     const tempUsers = await Promise.all(tempIds.map((id) => fetchUser(id)));
-    setUsers(tempUsers);
+    const cleanedUsers = tempUsers.filter((user) => Object.keys(user).length !== 0);
+    setUsers(cleanedUsers);
   };
 
   const fetchConvo = async (userId) => {
@@ -64,10 +65,10 @@ function MessagePage() {
     const messagesRecieved = await getMessagesRecipient(userId);
     const messagesAll = messagesSent.concat(messagesRecieved);
 
-    const id = userId;
+    const oId = otherUserId;
 
     let tempConversation = [];
-    tempConversation = messagesAll.filter(((m) => m.recipientId === id || m.senderId === id));
+    tempConversation = messagesAll.filter(((m) => m.recipientId === oId || m.senderId === oId));
 
     tempConversation.sort((a, b) => (((new Date(a.createdAt)) > (new Date(b.createdAt))) ? 1 : -1));
 
