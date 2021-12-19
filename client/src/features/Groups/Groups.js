@@ -2,6 +2,7 @@ import { React, useEffect, useState } from 'react';
 import {
   Button, Stack, Row, Col, Container, Card, Modal, Form, DropdownButton,
   Dropdown,
+  CloseButton,
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useHistory, useParams } from 'react-router-dom';
@@ -9,7 +10,7 @@ import { useSelector } from 'react-redux';
 import {
   getMyGroups, createGroup, getGroupById, getPostsByGroupId, getPostById,
   filterGroupsByTag, getPublicGroups, getUsersByName, inviteUser, addTag,
-  leaveGroup, deletePost, inviteUserMessage,
+  leaveGroup, deletePost, inviteUserMessage, hidePost,
 } from './FetchGroups';
 
 function GroupListPage() {
@@ -144,7 +145,7 @@ function GroupPage() {
   const [posts, setPosts] = useState(undefined);
   useEffect(async () => {
     if (!posts) {
-      const postList = await getPostsByGroupId(groupId);
+      const postList = await getPostsByGroupId(groupId, userId);
       setPosts(postList.map((post) => String(post._id)));
     }
   });
@@ -182,8 +183,14 @@ function GroupPage() {
 
   const deletePostButtonClicked = async (id) => {
     await deletePost(id);
-    const newPosts = await getPostsByGroupId(groupId);
-    setPosts(newPosts.map((post) => String(post._id)));
+    const newPosts = await getPostsByGroupId(groupId, userId);
+    setPosts(newPosts.map((post) => post._id));
+  };
+
+  const hidePostButtonClicked = async (postId) => {
+    await hidePost(postId);
+    const newPosts = await getPostsByGroupId(groupId, userId);
+    setPosts(newPosts.map((post) => post._id));
   };
 
   return (
@@ -211,6 +218,7 @@ function GroupPage() {
                 postId={postId}
                 key={postId}
                 onDelete={deletePostButtonClicked}
+                onHide={hidePostButtonClicked}
               />
             ))}
           </Stack>
@@ -279,7 +287,7 @@ function GroupListItem(props) {
 
 function GroupPost(props) {
   const history = useHistory();
-  const { postId, onDelete } = props;
+  const { postId, onDelete, onHide } = props;
   const [isAuthor, setIsAuthor] = useState(false);
   const userId = useSelector((state) => state.user.id);
   // TODO: use post id to get title and text
@@ -306,6 +314,7 @@ function GroupPost(props) {
               ? <Button onClick={() => onDelete(postId)}>Delete Post</Button>
               : <Button>Flag Post</Button>
           }
+          <CloseButton onClick={() => onHide(postId)} />
         </Card.Title>
         <Card.Text>
           {post.content}

@@ -74,11 +74,14 @@ export const getGroupById = async (groupId) => {
   }
 };
 
-export const getPostsByGroupId = async (groupId) => {
+export const getPostsByGroupId = async (groupId, userId) => {
   try {
     const postsRequest = {
       filter: {
         groupId,
+        hiderIds: {
+          $ne: userId,
+        },
       },
       sort: {
         age: 'ascending',
@@ -200,6 +203,18 @@ export const promoteAdmin = async (groupId, userId, promote) => {
       role: promote ? 'admin' : 'member',
     };
     const result = await axios.put(`${url}/group/${groupId}/member/${userId}`, roleRequest);
+    return result.status;
+  } catch (err) {
+    return 400;
+  }
+};
+
+export const hidePost = async (postId) => {
+  try {
+    // const newPostRequest = {
+    //   hiderIds: [userId],
+    // };
+    const result = await axios.put(`${url}/posting/${postId}/hide`);
     return result.status;
   } catch (err) {
     return 400;
