@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 import {
   getMyGroups, createGroup, getGroupById, getPostsByGroupId, getPostById,
   filterGroupsByTag, getPublicGroups, getUsersByName, inviteUser, addTag,
-  leaveGroup, deletePost, inviteUserMessage, hidePost, flagPost,
+  leaveGroup, deletePost, inviteUserMessage, hidePost, flagPost, filterPostsByHashTag,
 } from './FetchGroups';
 
 function GroupListPage() {
@@ -157,7 +157,7 @@ function GroupPage() {
   useEffect(async () => {
     if (!posts) {
       const postList = await getPostsByGroupId(groupId, userId);
-      setPosts(postList.map((post) => String(post._id)));
+      setPosts(postList.map((post) => post._id));
     }
   });
 
@@ -204,6 +204,14 @@ function GroupPage() {
     setPosts(newPosts.map((post) => post._id));
   };
 
+  const filterByHashTagButtonClicked = async () => {
+    const hashtag = document.getElementById('groupHashtagField').value;
+    if (hashtag !== '') {
+      const filteredPosts = await filterPostsByHashTag(hashtag, groupId);
+      setPosts(filteredPosts.map((post) => post._id));
+    }
+  };
+
   return (
     <Container className="App">
       <Stack direction="vertical" gap={5} className="mainContent">
@@ -235,6 +243,18 @@ function GroupPage() {
             ))}
           </Stack>
         </Row>
+        <Stack direction="horizontal" gap={3} className="me-auto">
+          <Form>
+            <Form.Group as={Row} className="mb-3">
+              <Col xs={4}>
+                <Button onClick={() => filterByHashTagButtonClicked()}>Filter by Hashtag</Button>
+              </Col>
+              <Col xs={4}>
+                <Form.Control id="groupHashtagField" placeholder="Hashtag" />
+              </Col>
+            </Form.Group>
+          </Form>
+        </Stack>
       </Stack>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
