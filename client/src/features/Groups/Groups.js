@@ -223,6 +223,7 @@ function GroupPage() {
             <div className="ms-auto">
               <Stack direction="horizontal" gap={3}>
                 {isAdmin && <Button variant="warning" onClick={() => goAdminPage()}>Admin</Button>}
+                <Button onClick={() => history.push(`/group/${groupId}/analytics`)}>Analytics</Button>
                 <Button onClick={() => history.push(`/group/${groupId}/posting`)}>Create Post</Button>
                 <Button onClick={handleOpen}>Edit Group</Button>
                 <Button onClick={() => leaveGroupButtonClicked()}>Leave Group</Button>
