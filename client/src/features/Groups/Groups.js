@@ -31,9 +31,16 @@ function GroupListPage() {
   const createGroupButtonClicked = async () => {
     const groupName = document.getElementById('groupNameField').value;
     const groupType = document.getElementById('groupTypeCheckBox').checked ? 'private' : 'public';
-    await createGroup(userId, groupName, groupType);
+    const groupTag = document.getElementById('groupTopicField').value;
+    let newGroup = {};
+    if (groupName !== '') {
+      newGroup = await createGroup(userId, groupName, groupType);
+    }
+    if (groupTag !== '') {
+      await addTag(newGroup._id, groupTag);
+    }
     const groupList = await getMyGroups(userId);
-    setGroups(groupList.map((group) => String(group._id)));
+    setGroups(groupList.map((group) => group._id));
     handleClose();
   };
   const filterByTagButtonClicked = async () => {
@@ -290,6 +297,7 @@ function GroupListItem(props) {
 
 function GroupPost(props) {
   const history = useHistory();
+  const { groupId } = useParams();
   const {
     postId, isAdmin, onDelete, onHide,
   } = props;
@@ -314,7 +322,7 @@ function GroupPost(props) {
     <Card>
       <Card.Body>
         <Card.Title>
-          <span role="presentation" onClick={() => history.push(`./posting/${postId}`)} onKeyPress={() => null}>
+          <span role="presentation" onClick={() => history.push(`/group/${groupId}/posting/${postId}`)} onKeyPress={() => null}>
             {`${post.heading}`}
           </span>
           {

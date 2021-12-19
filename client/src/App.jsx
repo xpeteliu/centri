@@ -10,8 +10,10 @@ import { MessageModal } from './features/common/MessageModal/MessageModal';
 import ResetPassword from './features/ResetPassword/ResetPassword';
 import CreatePost from './features/Posting/CreatePost';
 import AddComment from './features/Posting/AddComments';
-// import DeletePost from './features/Posting/DeletePost';
 import { HeaderBar } from './features/common/HeaderBar';
+import PostDetail from './features/Posting/PostDetail';
+import UpdateComment from './features/Posting/UpdateComment';
+import AnalyticsPage from './features/Posting/Analytics';
 import './App.css';
 
 export default function App() {
@@ -23,12 +25,15 @@ export default function App() {
         <Route path="/login" component={SignInPage} />
         <Route path="/register" component={SignUpPage} />
         <Route exact path="/group/:groupId" component={GroupPage} />
+        <Route path="/group/:groupId/analytics" component={AnalyticsPage} />
         <Route path="/group/:groupId/admin" component={AdminPage} />
         <Route path="/groups" component={GroupListPage} />
         <Route path="/messages" component={MessagePage} />
         <Route path="/resetPassword" component={ResetPassword} />
-        <Route path="/group/:groupId/posting" component={CreatePost} />
-        <Route path="/comment" component={AddComment} />
+        <Route exact path="/group/:groupId/posting" component={CreatePost} />
+        <Route exact path="/group/:groupId/posting/:postingId/comment" component={AddComment} />
+        <Route exact path="/group/:groupId/posting/:postingId" component={PostDetail} />
+        <Route path="/group/:groupId/posting/:postingId/comment/:commentId" component={UpdateComment} />
       </Switch>
       <MessageModal />
     </div>
