@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseUrl = 'http://cis557-group20-project.herokuapp.com/api';
+const baseUrl = '/api';
 
 export const FilterCommentsByHashTag = async (hashTag) => {
   const url = baseUrl.concat('/comment/filter/paginate');

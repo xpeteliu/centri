@@ -12,7 +12,7 @@ export default function AddComment() {
   const { groupId } = useParams();
   const dispatch = useDispatch();
   const history = useHistory();
-  const baseUrl = 'https://cis557-group20-project.herokuapp.com/api';
+  const baseUrl = '/api';
   const url = baseUrl.concat('/comment');
   // const creatorId = '61a65336c4a2d7594d3f58f6';
   const creatorId = useSelector((state) => state.user.id);

@@ -20,7 +20,7 @@ export default function CreatePost() {
     const file = event.target.files[0];
     const fileSize = event.target.files[0].size;
     // console.log(fileSize);
-    if (fileSize > 8000000) {
+    if (fileSize > 10000000) {
       dispatch(showModal({ headerText: 'File too large', bodyText: 'File exceeds 10MB' }));
       setAttachedFile(null);
     } else {
