@@ -22,6 +22,7 @@ function MessagePage() {
   const [otherUsername, setOtherUsername] = useState('');
 
   const [users, setUsers] = useState([]);
+  const [sharedIds, setSharedIds] = useState([]);
 
   const [waiting, setWaiting] = useState(true);
   const [conversation, setConversation] = useState([]);
@@ -39,19 +40,23 @@ function MessagePage() {
       || group.adminIds.includes(userId)
       || group.creatorId === userId);
     const tempIds = [];
+    const tempSharedIds = [];
     groupsFiltered.forEach((group) => {
       group.memberIds.forEach((newId) => {
         if (!tempIds.includes(newId) && newId !== userId) {
           tempIds.push(newId);
+          tempSharedIds.push(newId);
         }
       });
       group.adminIds.forEach((newId) => {
         if (!tempIds.includes(newId) && newId !== userId) {
           tempIds.push(newId);
+          tempSharedIds.push(newId);
         }
       });
       if (!tempIds.includes(group.creatorId) && group.creatorId !== userId) {
         tempIds.push(group.creatorId);
+        tempSharedIds.push(group.creatorId);
       }
     });
 
@@ -72,6 +77,7 @@ function MessagePage() {
     const tempUsers = await Promise.all(tempIds.map((id) => fetchUser(id)));
     const cleanedUsers = tempUsers.filter((user) => Object.keys(user).length !== 0);
     setUsers(cleanedUsers);
+    setSharedIds(tempSharedIds);
   };
 
   const fetchConvo = async (userId) => {
@@ -127,7 +133,12 @@ function MessagePage() {
     event.preventDefault();
     const messageText = event.target.formMessageText.value;
     // console.log('event', messageText);
-    if (messageText.length > 0) {
+    if (!sharedIds.includes(otherUserId)) {
+      dispatch(showModal({
+        headerText: 'Cannot send message!',
+        bodyText: 'You do not share a group with this user.',
+      }));
+    } else if (messageText.length > 0) {
       if (attachedFile === null) {
         const newMessage = {
           content: messageText,
@@ -153,6 +164,7 @@ function MessagePage() {
         // console.log('POSTING MESSAGE', newMessage);
         await postMessage(newMessage);
         fetchConvo(userId);
+        setAttachedFile(null);
       }
     }
   };
