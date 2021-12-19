@@ -17,18 +17,18 @@ export default function PostDetail() {
   const [post, setPost] = useState(null);
   const [attachedFile, setAttachedFile] = useState(null);
   const [commentList, setCommentList] = useState(undefined);
-  const user = useSelector((state) => state.user.id);
+  // const user = useSelector((state) => state.user.id);
 
   let fileId;
   let commentsField;
-  let creatorId;
+  // let creatorId;
 
   useEffect(async () => {
     if (!post) {
       const response = await GetPost(postingId);
       setPost(response);
       fileId = response.attachmentId;
-      creatorId = response.creatorId;
+      // creatorId = response.creatorId;
       if (fileId) {
         // const file = await GetFile(fileId);
         // setAttachedFile(file);
@@ -40,12 +40,10 @@ export default function PostDetail() {
   }, [postingId]);
 
   const DeleteCommentButtonClicked = async (id) => {
-    if (creatorId === user) {
-      await DeleteComment(id);
-      const response = await GetPost(postingId);
-      const newComments = response.comments;
-      setCommentList(newComments.map((comment) => String(comment._id)));
-    }
+    await DeleteComment(id);
+    const response = await GetPost(postingId);
+    const newComments = response.comments;
+    setCommentList(newComments.map((comment) => String(comment._id)));
   };
 
   const filterByHashTagButtonClicked = async () => {
@@ -115,8 +113,8 @@ export default function PostDetail() {
 
 function PostComment(props) {
   const history = useHistory();
-  const { groupId } = useParams();
-  const { postingId } = useParams();
+  const { groupId, postingId } = useParams();
+  const userId = useSelector((state) => state.user.id);
   const { commentId, onDelete } = props;
   const [comment, setComment] = useState({});
   useEffect(async () => {
@@ -130,8 +128,9 @@ function PostComment(props) {
       <Card.Body>
         <Card.Body>
           {`${comment.content}`}
-          <Button onClick={() => onDelete(commentId)}>delete</Button>
-          <Button onClick={() => history.push(`/group/${groupId}/posting/${postingId}/comment/${commentId}`)}>edit</Button>
+          {comment.creatorId === userId
+            && <Button onClick={() => onDelete(commentId)}>Delete</Button>}
+          {comment.creatorId === userId && <Button onClick={() => history.push(`/group/${groupId}/posting/${postingId}/comment/${commentId}`)}>Edit</Button>}
         </Card.Body>
       </Card.Body>
     </Card>

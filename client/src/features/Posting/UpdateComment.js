@@ -10,7 +10,8 @@ export default function UpdateComment() {
   const history = useHistory();
   const { commentId } = useParams();
   const { groupId } = useParams();
-  const baseUrl = 'http://cis557-group20-project.herokuapp.com/api';
+  // const baseUrl = 'http://cis557-group20-project.herokuapp.com/api';
+  const baseUrl = '/api';
   const url = baseUrl.concat(`/comment/${commentId}`);
   const [comment, setComment] = useState(null);
   const [postingId, setPostingId] = useState(null);
@@ -63,9 +64,8 @@ export default function UpdateComment() {
                 <textarea id="inputContent" className="form-control" name="body" type="textarea" rows={5} cols={300} value={content} onChange={handleChange} required />
               </label>
               <br />
-              <Link to="/"><button className="btn btn-secondary float-right" type="button">Cancel</button></Link>
+              <Link to={`/group/${groupId}/posting/${postingId}`}><button className="btn btn-secondary float-right" type="button">Cancel</button></Link>
             &nbsp;&nbsp;&nbsp;
-              {/* <button className="btn btn-primary float-right" type="button">Post</button> */}
               <Button variant="secondary" onClick={handleSubmit}>Save</Button>
             </form>
           </Col>
