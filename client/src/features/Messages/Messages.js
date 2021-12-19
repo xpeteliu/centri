@@ -55,10 +55,17 @@ function MessagePage() {
       }
     });
 
-    const messages = await getMessagesRecipient(userId);
-    messages.forEach((message) => {
+    const messagesRecieved = await getMessagesRecipient(userId);
+    messagesRecieved.forEach((message) => {
       if (!tempIds.includes(message.senderId)) {
         tempIds.push(message.senderId);
+      }
+    });
+
+    const messagesSent = await getMessagesSender(userId);
+    messagesSent.forEach((message) => {
+      if (!tempIds.includes(message.recipientId)) {
+        tempIds.push(message.recipientId);
       }
     });
 
