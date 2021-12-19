@@ -135,10 +135,12 @@ function GroupPage() {
   const { groupId } = useParams();
   const userId = useSelector((state) => state.user.id);
   const [group, setGroup] = useState({});
+  const [isAdmin, setIsAdmin] = useState(false);
   useEffect(async () => {
     if (!group.title) {
       const groupData = await getGroupById(groupId);
       setGroup(groupData);
+      setIsAdmin(groupData.adminIds.includes(userId));
     }
   });
 
@@ -203,7 +205,7 @@ function GroupPage() {
             </div>
             <div className="ms-auto">
               <Stack direction="horizontal" gap={3}>
-                <Button variant="warning" onClick={() => goAdminPage()}>Admin</Button>
+                {isAdmin && <Button variant="warning" onClick={() => goAdminPage()}>Admin</Button>}
                 <Button onClick={() => history.push(`/group/${groupId}/posting`)}>Create Post</Button>
                 <Button onClick={handleOpen}>Edit Group</Button>
                 <Button onClick={() => leaveGroupButtonClicked()}>Leave Group</Button>
@@ -216,6 +218,7 @@ function GroupPage() {
             {posts && posts.map((postId) => (
               <GroupPost
                 postId={postId}
+                isAdmin={isAdmin}
                 key={postId}
                 onDelete={deletePostButtonClicked}
                 onHide={hidePostButtonClicked}
@@ -287,7 +290,9 @@ function GroupListItem(props) {
 
 function GroupPost(props) {
   const history = useHistory();
-  const { postId, onDelete, onHide } = props;
+  const {
+    postId, isAdmin, onDelete, onHide,
+  } = props;
   const [isAuthor, setIsAuthor] = useState(false);
   const userId = useSelector((state) => state.user.id);
   // TODO: use post id to get title and text
@@ -313,7 +318,7 @@ function GroupPost(props) {
             {`${post.heading}`}
           </span>
           {
-            isAuthor
+            (isAuthor || isAdmin)
               ? <Button onClick={() => onDelete(postId)}>Delete Post</Button>
               : <Button onClick={() => flagButtonClicked()}>Flag Post</Button>
           }
