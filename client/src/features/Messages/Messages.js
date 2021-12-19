@@ -109,16 +109,16 @@ function MessagePage() {
     if (ACCEPTED_FILE_TYPES.some((type) => file.type.startsWith(type))) {
       if (file.size > (maxMegs * megabytes)) {
         dispatch(showModal({
-          headerText: 'This file is too large!',
-          bodyText: `Maximum size: ${maxMegs} MB`,
+          headerText: 'Error attaching file!',
+          bodyText: `This file is too large: Maximum size: ${maxMegs} MB.`,
         }));
       } else {
         setAttachedFile(file);
       }
     } else {
       dispatch(showModal({
-        headerText: 'We do not support this file type!',
-        bodyText: '',
+        headerText: 'Error attaching file!',
+        bodyText: 'We do not support this file type.',
       }));
     }
   };
