@@ -113,6 +113,21 @@ export const inviteUser = async (groupId, userId) => {
   }
 };
 
+export const inviteUserMessage = async (groupId, senderId, recipientId) => {
+  try {
+    const messageRequest = {
+      content: 'You have been invited to join a group!',
+      senderId,
+      recipientId,
+      invitingGroupId: groupId,
+    };
+    const result = await axios.post(`${url}/message`, messageRequest);
+    return result.data;
+  } catch (err) {
+    return {};
+  }
+};
+
 export const acceptUser = async (groupId, userId, accept) => {
   try {
     if (accept) {

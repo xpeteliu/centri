@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import {
   getMyGroups, createGroup, getGroupById, getPostsByGroupId, getPostById,
   filterGroupsByTag, getPublicGroups, getUsersByName, inviteUser, addTag,
-  leaveGroup, deletePost,
+  leaveGroup, deletePost, inviteUserMessage,
 } from './FetchGroups';
 
 function GroupListPage() {
@@ -168,7 +168,8 @@ function GroupPage() {
       const userArray = await getUsersByName(newMemberName);
       if (userArray.length > 0) {
         const newMemberId = userArray[0]._id;
-        await inviteUser(groupId, newMemberId);
+        // await inviteUser(groupId, newMemberId);
+        await inviteUserMessage(groupId, userId, newMemberId);
       }
     }
     // add tag
