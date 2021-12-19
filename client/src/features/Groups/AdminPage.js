@@ -5,6 +5,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   getGroupById, getUserById, acceptUser, promoteAdmin,
   getFlaggedPosts,
+  flagPost,
+  deletePost,
 } from './FetchGroups';
 
 function PendingUserItem(props) {
@@ -64,7 +66,7 @@ function MemberItem(props) {
 
 function FlaggedPostItem(props) {
   // const { groupId } = useParams();
-  const { post } = props;
+  const { post, onHandleFlag } = props;
   // useEffect(async () => {
   //   if (!user.username) {
   //     const userData = await getUserById(memberId);
@@ -75,8 +77,8 @@ function FlaggedPostItem(props) {
     <div>
       <h3>{post.heading}</h3>
       <p>{`Flagged by ${post.flaggerId}`}</p>
-      <Button onClick={() => null}>Delete</Button>
-      <Button onClick={() => null}>Unflag</Button>
+      <Button onClick={() => onHandleFlag(post._id, true)}>Delete</Button>
+      <Button onClick={() => onHandleFlag(post._id, false)}>Unflag</Button>
     </div>
   );
 }
@@ -102,7 +104,12 @@ function AdminPage() {
   });
   const acceptInvitedUser = async (groupIdInvited, userIdInvited, accept) => {
     await acceptUser(groupIdInvited, userIdInvited, accept);
-    history.push(`/group/${groupId}`);
+    const groupData = await getGroupById(groupId);
+    setGroup(groupData);
+    setPendingIds(groupData.pendingMemberIds);
+    setAdminIds(groupData.adminIds);
+    setMemberIds(groupData.memberIds);
+    // history.push(`/group/${groupId}`);
   };
   const promoteDemoteAdmin = async (groupIdAdmin, userIdAdmin, promoteStatus) => {
     await promoteAdmin(groupIdAdmin, userIdAdmin, promoteStatus);
@@ -112,6 +119,17 @@ function AdminPage() {
     setAdminIds(groupData.adminIds);
     setMemberIds(groupData.memberIds);
   };
+  const handleFlaggedPost = async (flaggedPostId, deleteStatus) => {
+    if (deleteStatus) {
+      await deletePost(flaggedPostId);
+    } else {
+      // unflag post
+      await flagPost(flaggedPostId, null);
+    }
+    const flagged = await getFlaggedPosts(groupId);
+    setFlaggedPosts(flagged);
+  };
+
   return (
     <div>
       <h3>Pending Requests</h3>
@@ -140,7 +158,10 @@ function AdminPage() {
       ))}
       <h3>Flagged Posts</h3>
       {flaggedPosts.map((flaggedPost) => (
-        <FlaggedPostItem post={flaggedPost} />
+        <FlaggedPostItem
+          post={flaggedPost}
+          onHandleFlag={handleFlaggedPost}
+        />
       ))}
       <Button onClick={() => history.push(`/group/${groupId}`)}>Back to Group</Button>
     </div>
