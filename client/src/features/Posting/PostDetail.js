@@ -48,8 +48,10 @@ export default function PostDetail() {
 
   const filterByHashTagButtonClicked = async () => {
     const hashtag = document.getElementById('hashtagField').value;
-    const filteredComments = await FilterCommentsByHashTag(hashtag);
-    setCommentList(filteredComments.map((comment) => comment._id));
+    if (hashtag !== '') {
+      const filteredComments = await FilterCommentsByHashTag(hashtag, postingId);
+      setCommentList(filteredComments.map((comment) => comment._id));
+    }
   };
 
   let media;

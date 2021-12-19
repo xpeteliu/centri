@@ -45,8 +45,10 @@ function GroupListPage() {
   };
   const filterByTagButtonClicked = async () => {
     const tag = document.getElementById('tagField').value;
-    const filteredGroups = await filterGroupsByTag(tag);
-    setGroups(filteredGroups.map((group) => group._id));
+    if (tag !== '') {
+      const filteredGroups = await filterGroupsByTag(tag);
+      setGroups(filteredGroups.map((group) => group._id));
+    }
   };
   const publicGroupsButtonClicked = async (sortMethod) => {
     const publicGroups = await getPublicGroups(sortMethod);
@@ -285,7 +287,8 @@ function GroupListItem(props) {
         <h3>
           <span role="presentation" onClick={() => history.push(`./group/${groupId}`)} onKeyPress={() => null}>{group.title}</span>
         </h3>
-        <p>{group.status === 'private' ? 'Private' : ''}</p>
+        {(group.status === 'private') && <p>Private</p>}
+        {!requested && (Math.random() < 0.5) && <p>Suggested Group</p>}
       </div>
       <div className="ms-auto">
         {requested ? <Button variant="primary" disabled>Requested</Button>

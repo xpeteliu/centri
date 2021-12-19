@@ -2,11 +2,12 @@ import axios from 'axios';
 
 const baseUrl = '/api';
 
-export const FilterCommentsByHashTag = async (hashTag) => {
+export const FilterCommentsByHashTag = async (hashTag, postId) => {
   const url = baseUrl.concat('/comment/filter/paginate');
   try {
     const commentFilter = {
       filter: {
+        postingId: postId,
         content: {
           $regex: `\\B#${hashTag}\\b`,
         },
