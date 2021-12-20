@@ -19,6 +19,12 @@ const mockServer = setupServer(
           message: 'Incorrect password',
         }))
     )),
+  rest.get('/api/user/abc123abc123', (_, res, ctx) => res(ctx.json({
+    _id: 'abc123abc123',
+    username: 'testName',
+    email: 'testName@email.com',
+    createdAt: '2021-12-12T05:18:43.184Z',
+  }))),
 );
 
 export default mockServer;

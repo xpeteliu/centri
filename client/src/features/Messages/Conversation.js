@@ -103,7 +103,7 @@ function ConversationRow(props) {
 
   let content;
 
-  if ('invitingGroupId' in message) {
+  if ('invitingGroupId' in message && message.invitingGroupId !== null) {
     content = (
       <MessageInvite
         message={message}
@@ -111,9 +111,7 @@ function ConversationRow(props) {
         onDeclineInvite={onDeclineInvite}
       />
     );
-  }
-
-  if (message.attachmentType === 'none') {
+  } else if (message.attachmentType === 'none') {
     content = (
       <Message
         message={message}

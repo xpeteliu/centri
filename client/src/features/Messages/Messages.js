@@ -1,28 +1,30 @@
 /* eslint react/prop-types: 0 */
 
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   Container, Row, Col, Stack, Card, ListGroup, ListGroupItem,
 } from 'react-bootstrap';
+import { showModal } from '../common/MessageModal/modalSlice';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Conversation from './Conversation';
-import { HeaderBar } from '../common/HeaderBar';
 import {
   getUser, getMessagesSender, getMessagesRecipient, postMessage,
-  postFile, acceptInvite, declineInvite,
+  postFile, acceptInvite, declineInvite, getGroups,
 } from './Requests';
 
 function MessagePage() {
+  const dispatch = useDispatch();
+
   const ACCEPTED_FILE_TYPES = ['image', 'audio', 'video'];
 
   const [otherUserId, setOtherUserId] = useState(-1);
   const [otherUsername, setOtherUsername] = useState('');
 
   const [users, setUsers] = useState([]);
+  const [sharedIds, setSharedIds] = useState([]);
 
   const [waiting, setWaiting] = useState(true);
-  const [messages, setMessages] = useState([]);
   const [conversation, setConversation] = useState([]);
 
   const [attachedFile, setAttachedFile] = useState(null);
@@ -32,25 +34,50 @@ function MessagePage() {
     return user;
   };
 
-  const fetchMessages = async (userId) => {
-    const messagesSent = await getMessagesSender(userId);
-    const messagesRecieved = await getMessagesRecipient(userId);
-    const messagesAll = messagesSent.concat(messagesRecieved);
-
-    const filtered = messagesAll.filter(((m) => m.recipientId === userId || m.senderId === userId));
-    filtered.sort((a, b) => (((new Date(a.createdAt)) > (new Date(b.createdAt))) ? 1 : -1));
-
+  const fetchContacts = async (userId) => {
+    const groups = await getGroups();
+    const groupsFiltered = groups.filter((group) => group.memberIds.includes(userId)
+      || group.adminIds.includes(userId)
+      || group.creatorId === userId);
     const tempIds = [];
-    filtered.forEach(async (message) => {
-      const { senderId } = message;
-      if (!tempIds.some((id) => id === senderId) && senderId !== userId) {
-        tempIds.push(senderId);
+    const tempSharedIds = [];
+    groupsFiltered.forEach((group) => {
+      group.memberIds.forEach((newId) => {
+        if (!tempIds.includes(newId) && newId !== userId) {
+          tempIds.push(newId);
+          tempSharedIds.push(newId);
+        }
+      });
+      group.adminIds.forEach((newId) => {
+        if (!tempIds.includes(newId) && newId !== userId) {
+          tempIds.push(newId);
+          tempSharedIds.push(newId);
+        }
+      });
+      if (!tempIds.includes(group.creatorId) && group.creatorId !== userId) {
+        tempIds.push(group.creatorId);
+        tempSharedIds.push(group.creatorId);
+      }
+    });
+
+    const messagesRecieved = await getMessagesRecipient(userId);
+    messagesRecieved.forEach((message) => {
+      if (!tempIds.includes(message.senderId)) {
+        tempIds.push(message.senderId);
+      }
+    });
+
+    const messagesSent = await getMessagesSender(userId);
+    messagesSent.forEach((message) => {
+      if (!tempIds.includes(message.recipientId)) {
+        tempIds.push(message.recipientId);
       }
     });
 
     const tempUsers = await Promise.all(tempIds.map((id) => fetchUser(id)));
-    setUsers(tempUsers);
-    return filtered;
+    const cleanedUsers = tempUsers.filter((user) => Object.keys(user).length !== 0);
+    setUsers(cleanedUsers);
+    setSharedIds(tempSharedIds);
   };
 
   const fetchConvo = async (userId) => {
@@ -58,10 +85,10 @@ function MessagePage() {
     const messagesRecieved = await getMessagesRecipient(userId);
     const messagesAll = messagesSent.concat(messagesRecieved);
 
-    const id = otherUserId;
+    const oId = otherUserId;
 
     let tempConversation = [];
-    tempConversation = messagesAll.filter(((m) => m.recipientId === id || m.senderId === id));
+    tempConversation = messagesAll.filter(((m) => m.recipientId === oId || m.senderId === oId));
 
     tempConversation.sort((a, b) => (((new Date(a.createdAt)) > (new Date(b.createdAt))) ? 1 : -1));
 
@@ -71,7 +98,7 @@ function MessagePage() {
   const userId = useSelector((state) => state.user.id);
 
   if (waiting) {
-    setMessages(fetchMessages(userId));
+    fetchContacts(userId);
     setWaiting(false);
   }
 
@@ -82,9 +109,23 @@ function MessagePage() {
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
+    const megabytes = 1024 * 1024;
+    const maxMegs = 50;
     // console.log('files', event.target.files);
     if (ACCEPTED_FILE_TYPES.some((type) => file.type.startsWith(type))) {
-      setAttachedFile(file);
+      if (file.size > (maxMegs * megabytes)) {
+        dispatch(showModal({
+          headerText: 'Error attaching file!',
+          bodyText: `This file is too large: Maximum size: ${maxMegs} MB.`,
+        }));
+      } else {
+        setAttachedFile(file);
+      }
+    } else {
+      dispatch(showModal({
+        headerText: 'Error attaching file!',
+        bodyText: 'We do not support this file type.',
+      }));
     }
   };
 
@@ -92,7 +133,12 @@ function MessagePage() {
     event.preventDefault();
     const messageText = event.target.formMessageText.value;
     // console.log('event', messageText);
-    if (messageText.length > 0) {
+    if (!sharedIds.includes(otherUserId)) {
+      dispatch(showModal({
+        headerText: 'Cannot send message!',
+        bodyText: 'You do not share a group with this user.',
+      }));
+    } else if (messageText.length > 0) {
       if (attachedFile === null) {
         const newMessage = {
           content: messageText,
@@ -118,6 +164,7 @@ function MessagePage() {
         // console.log('POSTING MESSAGE', newMessage);
         await postMessage(newMessage);
         fetchConvo(userId);
+        setAttachedFile(null);
       }
     }
   };
@@ -125,19 +172,19 @@ function MessagePage() {
   const handleAcceptInvite = async (event) => {
     const messageId = event.target.value;
     await acceptInvite(messageId);
-    fetchMessages(userId);
+    fetchContacts(userId);
   };
 
   const handleDeclineInvite = async (event) => {
     const messageId = event.target.value;
     await declineInvite(messageId);
-    fetchMessages(userId);
+    fetchContacts(userId);
   };
 
   useEffect(() => {
     // console.log('rendered');
     const pollMessages = setInterval(() => {
-      fetchMessages(userId);
+      fetchContacts(userId);
     }, 10000);
 
     return () => {
@@ -152,7 +199,7 @@ function MessagePage() {
       if (otherUserId !== -1) {
         fetchConvo(userId);
       }
-    }, 5000);
+    }, 3000);
 
     return () => {
       clearInterval(pollConvo);
@@ -164,15 +211,14 @@ function MessagePage() {
   }, [attachedFile]);
 
   useEffect(() => {
-    // console.log('messages updated', messages);
-  }, [messages]);
-
-  useEffect(() => {
     // console.log('conversation updated', conversation, ', ', otherUserId);
   }, [conversation]);
 
   useEffect(() => {
     // console.log('users updated', users);
+    if (otherUserId !== -1) {
+      fetchConvo(userId);
+    }
   }, [users]);
 
   let content;
@@ -180,7 +226,6 @@ function MessagePage() {
   if (users.length === 0) {
     return (
       <Container className="App">
-        <HeaderBar />
         <Container className="w-100">
           <h1>
             You have no messages!
@@ -205,10 +250,9 @@ function MessagePage() {
 
   return (
     <Container className="App">
-      <HeaderBar />
       <Container className="w-100">
         <div className="bg-light">
-          <Row className="h-99 p-1">
+          <Row className="h-90 p-1">
             <Col className="p-3" xs={3}>
               <Stack direction="vertical" gap={1}>
                 <UserList
