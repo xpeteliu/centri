@@ -1,6 +1,10 @@
-export const getLogin = (username, password) => fetch(`${process.env.REACT_APP_API_URL}/user/login`, {
+// const url = 'https://cis557-group20-project.herokuapp.com';
+const url = '';
+
+export const postLogin = (username, password) => fetch(`${url}/api/user/login`, {
+  method: 'POST',
   headers: {
     'Content-Type': 'application/json',
-    Authorization: `Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`,
   },
+  body: JSON.stringify({ username, password }),
 });

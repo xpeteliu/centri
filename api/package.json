@@ -1,0 +1,31 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "Backend API for CIS 557 Group 20 Course Project",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node --es-module-specifier-resolution=node src/app.js",
+    "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
+    "lint": "eslint src/ --ext .js,.ts,.jsx,.tsx --ignore-pattern *.test.js --ignore-pattern *.test.tsx"
+  },
+  "author": "Group 20",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "express": "^4.17.1",
+    "express-session": "^1.17.2",
+    "mongoose": "^6.0.13",
+    "multer": "^1.4.3",
+    "multer-gridfs-storage": "^5.0.2",
+    "passport": "^0.5.0",
+    "passport-local": "^1.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.3.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.3",
+    "jest": "^27.4.5",
+    "supertest": "^6.1.6"
+  },
+  "type": "module"
+}

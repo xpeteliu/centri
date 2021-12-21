@@ -5,155 +5,43 @@ exports[`Group page should match snapshot 1`] = `
   <div
     class="App"
   >
-    <div
-      class="App container"
+    <nav
+      class="headerBar navbar navbar-expand-md navbar-light bg-light"
     >
-      <nav
-        class="headerBar navbar navbar-expand-md navbar-light bg-light"
+      <div
+        class="container"
       >
-        <div
-          class="container"
+        <span
+          class="navbar-brand"
+          role="presentation"
         >
-          <a
-            class="navbar-brand"
-            href="/"
-          >
-            Logo
-          </a>
-          <button
-            aria-label="Toggle navigation"
-            class="navbar-toggler collapsed"
-            type="button"
+          Team20
+        </span>
+        <button
+          aria-label="Toggle navigation"
+          class="navbar-toggler collapsed"
+          type="button"
+        >
+          <span
+            class="navbar-toggler-icon"
+          />
+        </button>
+        <div
+          class="navbar-collapse collapse"
+        >
+          <div
+            class="me-auto navbar-nav"
+          />
+          <div
+            class="hstack gap-2"
           >
             <span
-              class="navbar-toggler-icon"
+              class="navbar-text"
             />
-          </button>
-          <div
-            class="navbar-collapse collapse"
-          >
-            <div
-              class="me-auto navbar-nav"
-            >
-              <a
-                class="nav-link"
-                data-rr-ui-event-key="/groups"
-                href="/groups"
-              >
-                Groups
-              </a>
-              <a
-                class="nav-link"
-                data-rr-ui-event-key="/messages"
-                href="/messages"
-              >
-                Messages
-              </a>
-            </div>
-            <div
-              class="hstack gap-2"
-            >
-              <img
-                class="rounded-circle"
-                height="30"
-                src="./photo.jpg"
-                width="30"
-              />
-              <span
-                class="navbar-text"
-              >
-                Justin Dong
-              </span>
-            </div>
-          </div>
-        </div>
-      </nav>
-      <div
-        class="mainContent vstack gap-5"
-      >
-        <div
-          class="groupHeader row"
-        >
-          <div
-            class="groupListItem hstack gap-4"
-          >
-            <div
-              class="bg-light"
-            >
-              <img
-                class="rounded-circle"
-                height="30"
-                src="./photo.jpg"
-                width="30"
-              />
-            </div>
-            <div>
-              <h3>
-                Group Name
-              </h3>
-            </div>
-            <div
-              class="ms-auto"
-            >
-              <button
-                class="btn btn-primary"
-                type="button"
-              >
-                Edit Group
-              </button>
-            </div>
-          </div>
-        </div>
-        <div
-          class="groupList row"
-        >
-          <div
-            class="vstack gap-5"
-          >
-            <div
-              class="card"
-            >
-              <div
-                class="card-body"
-              >
-                <div
-                  class="card-title h5"
-                >
-                  Post Title (id:
-                  0
-                  )
-                </div>
-                <p
-                  class="card-text"
-                >
-                  Vitae massa id tortor sed tortor, commodo. Platea blandit mauris elementum est maecenas iaculis. Ut sodales diam, nam commodo gravida faucibus nisl. Aliquet id pulvinar id lacinia. Lectus auctor vel elementum tristique. Vitae non morbi dolor quisque amet faucibus justo. Sollicitudin vitae augue tortor lobortis sem ultrices neque. Eget ornare et varius in lectus. Lectus est ante morbi ipsum.         Aliquam sit non viverra suspendisse eleifend. Et mauris, et quam dolor duis. Lacus porttitor felis, a, vel sed enim. Quam nisi, est nulla scelerisque sollicitudin faucibus erat. Tincidunt purus mauris felis fringilla sit. Commodo dignissim amet vel in ultrices sagittis ultrices. Sem malesuada donec nam eget a, risus laoreet. Egestas malesuada ipsum lacus, quis. A eleifend dolor, id tincidunt diam tincidunt. Tellus suspendisse ut luctus mauris bibendum. Eu sed in convallis neque. In amet convallis sit eros, leo. Id volutpat sit morbi sagittis neque.         Dolor, tortor aliquet dictumst mattis mi, netus in. Egestas blandit nunc nulla eget in lacus a, sit. Nulla.
-                </p>
-              </div>
-            </div>
-            <div
-              class="card"
-            >
-              <div
-                class="card-body"
-              >
-                <div
-                  class="card-title h5"
-                >
-                  Post Title (id:
-                  1
-                  )
-                </div>
-                <p
-                  class="card-text"
-                >
-                  Vitae massa id tortor sed tortor, commodo. Platea blandit mauris elementum est maecenas iaculis. Ut sodales diam, nam commodo gravida faucibus nisl. Aliquet id pulvinar id lacinia. Lectus auctor vel elementum tristique. Vitae non morbi dolor quisque amet faucibus justo. Sollicitudin vitae augue tortor lobortis sem ultrices neque. Eget ornare et varius in lectus. Lectus est ante morbi ipsum.         Aliquam sit non viverra suspendisse eleifend. Et mauris, et quam dolor duis. Lacus porttitor felis, a, vel sed enim. Quam nisi, est nulla scelerisque sollicitudin faucibus erat. Tincidunt purus mauris felis fringilla sit. Commodo dignissim amet vel in ultrices sagittis ultrices. Sem malesuada donec nam eget a, risus laoreet. Egestas malesuada ipsum lacus, quis. A eleifend dolor, id tincidunt diam tincidunt. Tellus suspendisse ut luctus mauris bibendum. Eu sed in convallis neque. In amet convallis sit eros, leo. Id volutpat sit morbi sagittis neque.         Dolor, tortor aliquet dictumst mattis mi, netus in. Egestas blandit nunc nulla eget in lacus a, sit. Nulla.
-                </p>
-              </div>
-            </div>
           </div>
         </div>
       </div>
-    </div>
+    </nav>
   </div>
 </div>
 `;
@@ -163,69 +51,46 @@ exports[`Groups page should match snapshot 1`] = `
   <div
     class="App"
   >
+    <nav
+      class="headerBar navbar navbar-expand-md navbar-light bg-light"
+    >
+      <div
+        class="container"
+      >
+        <span
+          class="navbar-brand"
+          role="presentation"
+        >
+          Team20
+        </span>
+        <button
+          aria-label="Toggle navigation"
+          class="navbar-toggler collapsed"
+          type="button"
+        >
+          <span
+            class="navbar-toggler-icon"
+          />
+        </button>
+        <div
+          class="navbar-collapse collapse"
+        >
+          <div
+            class="me-auto navbar-nav"
+          />
+          <div
+            class="hstack gap-2"
+          >
+            <span
+              class="navbar-text"
+            />
+          </div>
+        </div>
+      </div>
+    </nav>
     <div
       class="App container"
     >
-      <nav
-        class="headerBar navbar navbar-expand-md navbar-light bg-light"
-      >
-        <div
-          class="container"
-        >
-          <a
-            class="navbar-brand"
-            href="/"
-          >
-            Logo
-          </a>
-          <button
-            aria-label="Toggle navigation"
-            class="navbar-toggler collapsed"
-            type="button"
-          >
-            <span
-              class="navbar-toggler-icon"
-            />
-          </button>
-          <div
-            class="navbar-collapse collapse"
-          >
-            <div
-              class="me-auto navbar-nav"
-            >
-              <a
-                class="nav-link"
-                data-rr-ui-event-key="/groups"
-                href="/groups"
-              >
-                Groups
-              </a>
-              <a
-                class="nav-link"
-                data-rr-ui-event-key="/messages"
-                href="/messages"
-              >
-                Messages
-              </a>
-            </div>
-            <div
-              class="hstack gap-2"
-            >
-              <img
-                class="rounded-circle"
-                height="30"
-                src="./photo.jpg"
-                width="30"
-              />
-              <span
-                class="navbar-text"
-              >
-                Justin Dong
-              </span>
-            </div>
-          </div>
-        </div>
-      </nav>
       <div
         class="mainContent vstack gap-5"
       >
@@ -239,7 +104,7 @@ exports[`Groups page should match snapshot 1`] = `
               class="btn btn-secondary"
               type="button"
             >
-              Private Groups
+              My Groups
             </button>
           </div>
           <div
@@ -264,110 +129,61 @@ exports[`Groups page should match snapshot 1`] = `
           </div>
         </div>
         <div
-          class="groupList row"
+          class="row"
         >
           <div
             class="vstack gap-5"
+            id="groupList"
+          />
+        </div>
+        <div
+          class="row"
+        >
+          <div
+            class="ms-auto"
           >
-            <div
-              class="groupListItem hstack gap-4"
+            <form
+              class=""
             >
               <div
-                class="bg-light"
+                class="mb-3 row"
               >
-                <img
-                  class="rounded-circle"
-                  height="30"
-                  src="./photo.jpg"
-                  width="30"
-                />
-              </div>
-              <div>
-                <h3>
-                  <a
-                    href="./group"
-                  >
-                    Group Name
-                  </a>
-                </h3>
-              </div>
-              <div
-                class="ms-auto"
-              >
-                <button
-                  class="btn btn-secondary"
-                  type="button"
+                <div
+                  class="col-2"
                 >
-                  Join Group
-                </button>
-              </div>
-            </div>
-            <div
-              class="groupListItem hstack gap-4"
-            >
-              <div
-                class="bg-light"
-              >
-                <img
-                  class="rounded-circle"
-                  height="30"
-                  src="./photo.jpg"
-                  width="30"
-                />
-              </div>
-              <div>
-                <h3>
-                  <a
-                    href="./group"
+                  <button
+                    class="btn btn-primary"
+                    type="button"
                   >
-                    Group Name 2
-                  </a>
-                </h3>
-              </div>
-              <div
-                class="ms-auto"
-              >
-                <button
-                  class="btn btn-secondary"
-                  type="button"
+                    Filter by Tag
+                  </button>
+                </div>
+                <div
+                  class="col-2"
                 >
-                  Join Group
-                </button>
-              </div>
-            </div>
-            <div
-              class="groupListItem hstack gap-4"
-            >
-              <div
-                class="bg-light"
-              >
-                <img
-                  class="rounded-circle"
-                  height="30"
-                  src="./photo.jpg"
-                  width="30"
-                />
-              </div>
-              <div>
-                <h3>
-                  <a
-                    href="./group"
+                  <input
+                    class="form-control"
+                    id="tagField"
+                    placeholder="Tag"
+                  />
+                </div>
+                <div
+                  class="ms-auto col-4"
+                >
+                  <div
+                    class="dropdown"
                   >
-                    Group Name 3
-                  </a>
-                </h3>
+                    <button
+                      aria-expanded="false"
+                      class="dropdown-toggle btn btn-primary"
+                      type="button"
+                    >
+                      Sort Groups
+                    </button>
+                  </div>
+                </div>
               </div>
-              <div
-                class="ms-auto"
-              >
-                <button
-                  class="btn btn-secondary"
-                  type="button"
-                >
-                  Join Group
-                </button>
-              </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>

@@ -4,23 +4,35 @@ node_js:
 cache:
   directories:
     - node_modules
-
+branches:
+  only:
+  - test
+services:
+  - mongodb
+env:
+  - DB_URL="mongodb://127.0.0.1:27017/group20test?replicaSet=testRS"
+before_script:
+  - sudo service mongod stop
+  - sleep 5
+  - sudo mkdir -p /data/db
+  - sudo chmod -R go+w /data/db
+  - mongod --replSet "testRS" --fork --syslog
+  - sleep 5
+  - mongo --eval 'rs.initiate()'
+  - sleep 5
 jobs:
   include:
     - stage: Lint, Test, Build
       name: Lint
       script:
-        - cd client
-        - npm install
+        - npm run heroku-prebuild
         - npm run lint
     - name: Test
       if: branch = test
       script:
-        - cd client
-        - npm install
+        - npm run heroku-prebuild
         - npm run test:coverage
     - name: Build
       script:
-        - cd client
-        - npm install
-        - npm run build
+        - npm run heroku-prebuild
+        - npm run heroku-postbuild

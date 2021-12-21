@@ -5,6 +5,43 @@ exports[`Login page should match snapshot 1`] = `
   <div
     class="App"
   >
+    <nav
+      class="headerBar navbar navbar-expand-md navbar-light bg-light"
+    >
+      <div
+        class="container"
+      >
+        <span
+          class="navbar-brand"
+          role="presentation"
+        >
+          Team20
+        </span>
+        <button
+          aria-label="Toggle navigation"
+          class="navbar-toggler collapsed"
+          type="button"
+        >
+          <span
+            class="navbar-toggler-icon"
+          />
+        </button>
+        <div
+          class="navbar-collapse collapse"
+        >
+          <div
+            class="me-auto navbar-nav"
+          />
+          <div
+            class="hstack gap-2"
+          >
+            <span
+              class="navbar-text"
+            />
+          </div>
+        </div>
+      </div>
+    </nav>
     <div
       class="h-100 container"
     >
@@ -16,7 +53,7 @@ exports[`Login page should match snapshot 1`] = `
         >
           <div
             class="mx-auto card"
-            style="width: 30rem;"
+            style="width: 35rem;"
           >
             <div
               class="card-header"
@@ -49,6 +86,7 @@ exports[`Login page should match snapshot 1`] = `
                         Username
                       </label>
                       <input
+                        autocomplete="username"
                         class="form-control"
                         id="inputLoginUsername"
                         placeholder="Enter username here"
@@ -74,6 +112,7 @@ exports[`Login page should match snapshot 1`] = `
                         Password
                       </label>
                       <input
+                        autocomplete="current-password"
                         class="form-control"
                         id="inputLoginPassword"
                         pattern="^(?=.*[A-Za-z])(?=.*\\\\d)[A-Za-z\\\\d]{8,}$"
@@ -117,6 +156,16 @@ exports[`Login page should match snapshot 1`] = `
                     href="/register"
                   >
                     Create an account
+                  </a>
+                </div>
+                <div
+                  class="col"
+                >
+                  <a
+                    class="card-link"
+                    href="/resetPassword"
+                  >
+                    Reset password
                   </a>
                 </div>
                 <div

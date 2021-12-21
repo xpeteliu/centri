@@ -1,35 +1,114 @@
-import { React, useState } from 'react';
+import { React, useEffect, useState } from 'react';
 import {
-  Button, Image, Stack, Row, Col, Container, Card, Modal, Form,
+  Button, Stack, Row, Col, Container, Card, Modal, Form, DropdownButton,
+  Dropdown,
+  CloseButton,
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { HeaderBar } from '../common/HeaderBar';
+import { useHistory, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import {
+  getMyGroups, createGroup, getGroupById, getPostsByGroupId, getPostById,
+  filterGroupsByTag, getPublicGroups, getUsersByName, inviteUser, addTag,
+  leaveGroup, deletePost, inviteUserMessage, hidePost, flagPost, filterPostsByHashTag,
+} from './FetchGroups';
 
 function GroupListPage() {
+  const userId = useSelector((state) => state.user.id);
   const [show, setShow] = useState(false); // show create group popup
   const handleOpen = () => setShow(true);
   const handleClose = () => setShow(false);
+  // TODO: this will be a list of unique IDs instead when connected to db
+  // console.log(getGroups());
+  // const [groups, setGroups] = useState(['Group Name', 'Group Name 2', 'Group Name 3']);
+  const [groups, setGroups] = useState(undefined);
+  useEffect(async () => {
+    if (!groups) {
+      const groupList = await getPublicGroups();
+      setGroups(groupList.map((group) => String(group._id)));
+    }
+  });
+  const createGroupButtonClicked = async () => {
+    const groupName = document.getElementById('groupNameField').value;
+    const groupType = document.getElementById('groupTypeCheckBox').checked ? 'private' : 'public';
+    const groupTag = document.getElementById('groupTopicField').value;
+    let newGroup = {};
+    if (groupName !== '') {
+      newGroup = await createGroup(userId, groupName, groupType);
+    }
+    if (groupTag !== '') {
+      await addTag(newGroup._id, groupTag);
+    }
+    const groupList = await getMyGroups(userId);
+    setGroups(groupList.map((group) => group._id));
+    handleClose();
+  };
+  const filterByTagButtonClicked = async () => {
+    const tag = document.getElementById('tagField').value;
+    if (tag !== '') {
+      const filteredGroups = await filterGroupsByTag(tag);
+      setGroups(filteredGroups.map((group) => group._id));
+    }
+  };
+  const publicGroupsButtonClicked = async (sortMethod) => {
+    const publicGroups = await getPublicGroups(sortMethod);
+    setGroups(publicGroups.map((group) => group._id));
+  };
+  const myGroupsButtonClicked = async () => {
+    const myGroups = await getMyGroups(userId);
+    setGroups(myGroups.map((group) => group._id));
+  };
   return (
     <Container className="App">
-      <HeaderBar />
       <Stack direction="vertical" gap={5} className="mainContent">
         <Row className="groupButtons">
           <Col xs="4">
-            <Button variant="secondary">Private Groups</Button>
+            <Button variant="secondary" onClick={() => myGroupsButtonClicked()}>My Groups</Button>
           </Col>
           <Col xs="4">
-            <Button variant="secondary">Public Groups</Button>
+            <Button variant="secondary" onClick={() => publicGroupsButtonClicked('latestUpdates')}>Public Groups</Button>
           </Col>
           <Col xs="4">
             <Button variant="primary" onClick={handleOpen}>Create Group</Button>
           </Col>
         </Row>
-        <Row className="groupList">
-          <Stack direction="vertical" gap={5}>
-            <GroupListItem name="Group Name" />
-            <GroupListItem name="Group Name 2" />
-            <GroupListItem name="Group Name 3" />
+        <Row>
+          <Stack direction="vertical" gap={5} id="groupList">
+            {groups && groups.map((group) => <GroupListItem groupId={group} key={group} />)}
           </Stack>
+        </Row>
+        <Row>
+          <div className="ms-auto">
+            <Form>
+              <Form.Group as={Row} className="mb-3">
+                <Col xs={2}>
+                  <Button onClick={() => filterByTagButtonClicked()}>Filter by Tag</Button>
+                </Col>
+                <Col xs={2}>
+                  <Form.Control id="tagField" placeholder="Tag" />
+                </Col>
+                <Col xs={4} className="ms-auto">
+                  <DropdownButton title="Sort Groups">
+                    <Dropdown.Item>
+                      <div role="presentation" onClick={() => publicGroupsButtonClicked('latestUpdates')} onKeyPress={() => null}>
+                        Newest Message
+                      </div>
+                    </Dropdown.Item>
+                    <Dropdown.Item>
+                      <div role="presentation" onClick={() => publicGroupsButtonClicked('numOfPosts')} onKeyPress={() => null}>
+                        Number of Posts
+                      </div>
+                    </Dropdown.Item>
+                    <Dropdown.Item>
+                      <div role="presentation" onClick={() => publicGroupsButtonClicked('numOfMembers')} onKeyPress={() => null}>
+                        Number of Members
+                      </div>
+                    </Dropdown.Item>
+                  </DropdownButton>
+                </Col>
+              </Form.Group>
+            </Form>
+          </div>
         </Row>
       </Stack>
       <Modal show={show} onHide={handleClose}>
@@ -43,20 +122,16 @@ function GroupListPage() {
               <Form.Control id="groupNameField" placeholder="Enter group name" />
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>Admin</Form.Label>
-              <Form.Control id="adminField" placeholder="Add an admin" />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Invite a Member</Form.Label>
-              <Form.Control id="adminField" placeholder="Enter username" />
+              <Form.Label>Topics</Form.Label>
+              <Form.Control id="groupTopicField" placeholder="Add a topic" />
             </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
           <Form.Group className="mb-3 me-auto" controlId="formBasicCheckbox">
-            <Form.Check type="checkbox" label="Make Group Private" />
+            <Form.Check id="groupTypeCheckBox" type="checkbox" label="Make Group Private" />
           </Form.Group>
-          <Button variant="primary" onClick={handleClose}>
+          <Button variant="primary" onClick={() => createGroupButtonClicked()}>
             Create Group
           </Button>
         </Modal.Footer>
@@ -66,32 +141,121 @@ function GroupListPage() {
 }
 
 function GroupPage() {
+  const { groupId } = useParams();
+  const userId = useSelector((state) => state.user.id);
+  const [group, setGroup] = useState({});
+  const [isAdmin, setIsAdmin] = useState(false);
+  useEffect(async () => {
+    if (!group.title) {
+      const groupData = await getGroupById(groupId);
+      setGroup(groupData);
+      setIsAdmin(groupData.adminIds.includes(userId));
+    }
+  });
+
+  const [posts, setPosts] = useState(undefined);
+  useEffect(async () => {
+    if (!posts) {
+      const postList = await getPostsByGroupId(groupId, userId);
+      setPosts(postList.map((post) => post._id));
+    }
+  });
+
   const [show, setShow] = useState(false); // show edit group popup
   const handleOpen = () => setShow(true);
   const handleClose = () => setShow(false);
+  const history = useHistory();
+  const leaveGroupButtonClicked = async () => {
+    await leaveGroup(groupId, userId);
+    history.push('/groups');
+  };
+  const goAdminPage = () => {
+    history.push(`/group/${groupId}/admin`);
+  };
+
+  const editGroupButtonClicked = async () => {
+    // invite user
+    const newMemberName = document.getElementById('inviteField').value;
+    if (newMemberName !== '') {
+      const userArray = await getUsersByName(newMemberName);
+      if (userArray.length > 0) {
+        const newMemberId = userArray[0]._id;
+        // await inviteUser(groupId, newMemberId);
+        await inviteUserMessage(groupId, userId, newMemberId);
+      }
+    }
+    // add tag
+    const newTag = document.getElementById('groupTopicField').value;
+    if (newTag !== '') {
+      await addTag(groupId, newTag);
+    }
+    handleClose();
+  };
+
+  const deletePostButtonClicked = async (id) => {
+    await deletePost(id);
+    const newPosts = await getPostsByGroupId(groupId, userId);
+    setPosts(newPosts.map((post) => post._id));
+  };
+
+  const hidePostButtonClicked = async (postId) => {
+    await hidePost(postId);
+    const newPosts = await getPostsByGroupId(groupId, userId);
+    setPosts(newPosts.map((post) => post._id));
+  };
+
+  const filterByHashTagButtonClicked = async () => {
+    const hashtag = document.getElementById('groupHashtagField').value;
+    if (hashtag !== '') {
+      const filteredPosts = await filterPostsByHashTag(hashtag, groupId);
+      setPosts(filteredPosts.map((post) => post._id));
+    }
+  };
+
   return (
     <Container className="App">
-      <HeaderBar />
       <Stack direction="vertical" gap={5} className="mainContent">
         <Row className="groupHeader">
           <Stack direction="horizontal" gap={4} className="groupListItem">
-            <div className="bg-light">
-              <Image src="./photo.jpg" width="30" height="30" roundedCircle />
-            </div>
             <div>
-              <h3>Group Name</h3>
+              <h3>{group.title}</h3>
             </div>
             <div className="ms-auto">
-              <Button onClick={handleOpen}>Edit Group</Button>
+              <Stack direction="horizontal" gap={3}>
+                {isAdmin && <Button variant="warning" onClick={() => goAdminPage()}>Admin</Button>}
+                <Button onClick={() => history.push(`/group/${groupId}/analytics`)}>Analytics</Button>
+                <Button onClick={() => history.push(`/group/${groupId}/posting`)}>Create Post</Button>
+                <Button onClick={handleOpen}>Edit Group</Button>
+                <Button onClick={() => leaveGroupButtonClicked()}>Leave Group</Button>
+              </Stack>
             </div>
           </Stack>
         </Row>
-        <Row className="groupList">
+        <Row className="groupPostList">
           <Stack direction="vertical" gap={5}>
-            <GroupPost postId={0} />
-            <GroupPost postId={1} />
+            {posts && posts.map((postId) => (
+              <GroupPost
+                postId={postId}
+                isAdmin={isAdmin}
+                key={postId}
+                onDelete={deletePostButtonClicked}
+                onHide={hidePostButtonClicked}
+              />
+            ))}
           </Stack>
         </Row>
+        <Stack direction="horizontal" gap={3} className="me-auto">
+          <Form>
+            <Form.Group as={Row} className="mb-3">
+              <Col xs={4}>
+                <Button onClick={() => filterByHashTagButtonClicked()}>Filter by Hashtag</Button>
+              </Col>
+              <Col xs={4}>
+                <Form.Control id="groupHashtagField" placeholder="Hashtag" />
+              </Col>
+            </Form.Group>
+          </Form>
+        </Stack>
       </Stack>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
@@ -100,25 +264,18 @@ function GroupPage() {
         <Modal.Body>
           <Form>
             <Form.Group className="mb-3">
-              <Form.Label>Name</Form.Label>
-              <Form.Control id="groupNameField" placeholder="Enter group name" />
+              <Form.Label>Topic</Form.Label>
+              <Form.Control id="groupTopicField" placeholder="Add a topic" />
             </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Admin</Form.Label>
-              <Form.Control id="adminField" placeholder="Add an admin" />
-            </Form.Group>
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-3" controlId="usernameField">
               <Form.Label>Invite a Member</Form.Label>
-              <Form.Control id="adminField" placeholder="Enter username" />
+              <Form.Control id="inviteField" placeholder="Enter username" />
             </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Form.Group className="mb-3 me-auto" controlId="formBasicCheckbox">
-            <Form.Check type="checkbox" label="Make Group Private" />
-          </Form.Group>
-          <Button variant="primary" onClick={handleClose}>
-            Create Group
+          <Button variant="primary" onClick={() => editGroupButtonClicked()}>
+            Save Changes
           </Button>
         </Modal.Footer>
       </Modal>
@@ -127,41 +284,80 @@ function GroupPage() {
 }
 
 function GroupListItem(props) {
-  const { name } = props;
+  const history = useHistory();
+  const { groupId } = props;
+  const userId = useSelector((state) => state.user.id);
+  // store group info
+  const [group, setGroup] = useState({});
   const [requested, setRequested] = useState(false);
+  useEffect(async () => {
+    if (!group.title) {
+      const groupData = await getGroupById(groupId);
+      setGroup(groupData);
+      setRequested((groupData.pendingMemberIds.includes(userId)
+        || groupData.memberIds.includes(userId) || groupData.adminIds.includes(userId)));
+    }
+  });
+  const joinButtonPressed = async () => {
+    await inviteUser(groupId, userId);
+    setRequested(true);
+  };
   return (
     <Stack direction="horizontal" gap={4} className="groupListItem">
-      <div className="bg-light">
-        <Image src="./photo.jpg" width="30" height="30" roundedCircle />
-      </div>
       <div>
         <h3>
-          <a href="./group">{name}</a>
+          <span role="presentation" onClick={() => history.push(`./group/${groupId}`)} onKeyPress={() => null}>{group.title}</span>
         </h3>
+        {(group.status === 'private') && <p>Private</p>}
+        {!requested && (Math.random() < 0.5) && <p>Suggested Group</p>}
       </div>
       <div className="ms-auto">
         {requested ? <Button variant="primary" disabled>Requested</Button>
-          : <Button variant="secondary" onClick={() => setRequested(true)}>Join Group</Button>}
+          : <Button variant="secondary" onClick={() => joinButtonPressed()}>Join Group</Button>}
       </div>
     </Stack>
   );
 }
 
 function GroupPost(props) {
-  const { postId } = props;
+  const history = useHistory();
+  const { groupId } = useParams();
+  const {
+    postId, isAdmin, onDelete, onHide,
+  } = props;
+  const [isAuthor, setIsAuthor] = useState(false);
+  const userId = useSelector((state) => state.user.id);
   // TODO: use post id to get title and text
+  const [post, setPost] = useState({});
+  useEffect(async () => {
+    if (!post.heading) {
+      const newPost = await getPostById(postId);
+      setPost(newPost);
+      if (newPost.creatorId === userId) {
+        setIsAuthor(true);
+      }
+    }
+  });
+  const flagButtonClicked = async () => {
+    await flagPost(postId, userId);
+  };
+
   return (
     <Card>
       <Card.Body>
         <Card.Title>
-          Post Title (id:
-          {postId}
-          )
+          <span role="presentation" onClick={() => history.push(`/group/${groupId}/posting/${postId}`)} onKeyPress={() => null}>
+            {`${post.heading}`}
+          </span>
+          {
+            (isAuthor || isAdmin)
+              ? <Button onClick={() => onDelete(postId)}>Delete Post</Button>
+              : <Button onClick={() => flagButtonClicked()}>Flag Post</Button>
+          }
+          <CloseButton onClick={() => onHide(postId)} />
         </Card.Title>
         <Card.Text>
-          {'Vitae massa id tortor sed tortor, commodo. Platea blandit mauris elementum est maecenas iaculis. Ut sodales diam, nam commodo gravida faucibus nisl. Aliquet id pulvinar id lacinia. Lectus auctor vel elementum tristique. Vitae non morbi dolor quisque amet faucibus justo. Sollicitudin vitae augue tortor lobortis sem ultrices neque. Eget ornare et varius in lectus. Lectus est ante morbi ipsum. \
-        Aliquam sit non viverra suspendisse eleifend. Et mauris, et quam dolor duis. Lacus porttitor felis, a, vel sed enim. Quam nisi, est nulla scelerisque sollicitudin faucibus erat. Tincidunt purus mauris felis fringilla sit. Commodo dignissim amet vel in ultrices sagittis ultrices. Sem malesuada donec nam eget a, risus laoreet. Egestas malesuada ipsum lacus, quis. A eleifend dolor, id tincidunt diam tincidunt. Tellus suspendisse ut luctus mauris bibendum. Eu sed in convallis neque. In amet convallis sit eros, leo. Id volutpat sit morbi sagittis neque. \
-        Dolor, tortor aliquet dictumst mattis mi, netus in. Egestas blandit nunc nulla eget in lacus a, sit. Nulla.'}
+          {post.content}
         </Card.Text>
       </Card.Body>
     </Card>

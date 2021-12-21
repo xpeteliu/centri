@@ -5,9 +5,10 @@ import {
 import { Router } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
+import { Provider } from 'react-redux';
 import mockServer from '../common/mockServer.test';
-import GroupListItem from './Groups';
 import App from '../../App';
+import store from '../common/store';
 
 describe('Groups page', () => {
   beforeAll(() => { mockServer.listen(); });
@@ -19,20 +20,25 @@ describe('Groups page', () => {
     let container;
     act(() => {
       ({ container } = render(
-        <Router history={history}>
-          <App />
-        </Router>,
+        <Provider store={store}>
+          <Router history={history}>
+            <App />
+          </Router>
+        </Provider>,
       ));
     });
-    expect(container).toMatchSnapshot();
+    expect(container)
+      .toMatchSnapshot();
   });
 
   test('renders groups', async () => {
     act(() => {
       render(
-        <Router history={history}>
-          <App />
-        </Router>,
+        <Provider store={store}>
+          <Router history={history}>
+            <App />
+          </Router>
+        </Provider>,
       );
     });
     const group1 = await screen.getByText('Group Name');
@@ -46,15 +52,18 @@ describe('Groups page', () => {
   test('creates group', async () => {
     act(() => {
       render(
-        <Router history={history}>
-          <App />
-        </Router>,
+        <Provider store={store}>
+          <Router history={history}>
+            <App />
+          </Router>
+        </Provider>,
       );
     });
     const createBtn = await screen.findByRole('button', { name: /Create Group/ });
     act(() => {
       userEvent.click(createBtn);
     });
+
     const inputName = await screen.getByPlaceholderText('Enter group name');
     act(() => {
       userEvent.type(inputName, 'Group Name 4');
@@ -67,8 +76,12 @@ describe('Groups page', () => {
 });
 
 describe('Group page', () => {
-  beforeAll(() => { mockServer.listen(); });
-  afterAll(() => { mockServer.close(); });
+  beforeAll(() => {
+    mockServer.listen();
+  });
+  afterAll(() => {
+    mockServer.close();
+  });
 
   const history = createMemoryHistory({ initialEntries: ['/group'] });
 
@@ -76,28 +89,36 @@ describe('Group page', () => {
     let container;
     act(() => {
       ({ container } = render(
-        <Router history={history}>
-          <App />
-        </Router>,
+        <Provider store={store}>
+          <Router history={history}>
+            <App />
+          </Router>
+        </Provider>,
       ));
     });
-    expect(container).toMatchSnapshot();
+    expect(container)
+      .toMatchSnapshot();
   });
 
   test('renders group', async () => {
     act(() => {
       render(
-        <Router history={history}>
-          <App />
-        </Router>,
+        <Provider store={store}>
+          <Router history={history}>
+            <App />
+          </Router>
+        </Provider>,
       );
     });
+
     const groupName = await screen.getByText('Group Name');
     expect(groupName).toBeInTheDocument();
+
     const groupPostTitle1 = await screen.getByText(/0/);
     const groupPostTitle2 = await screen.getByText(/1/);
-    expect(groupPostTitle1).toBeInTheDocument();
-    expect(groupPostTitle2).toBeInTheDocument();
+    expect(groupPostTitle1)
+      .toBeInTheDocument();
+    expect(groupPostTitle2)
+      .toBeInTheDocument();
   });
 });
-

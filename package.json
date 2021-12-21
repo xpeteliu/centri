@@ -1,0 +1,23 @@
+{
+  "name": "fall-2021-project-group-centric-social-network-team-20",
+  "version": "1.0.0",
+  "description": "[Wiki for this project](https://github.com/cis557/fall-2021-project-group-centric-social-network-team-20/wiki)",
+  "main": "api/src/app.js",
+  "scripts": {
+    "heroku-prebuild": "cd client && npm install && cd ../api && npm install",
+    "heroku-postbuild": "cd client && DISABLE_ESLINT_PLUGIN=true npm run build && cp -rf build ../api",
+    "lint": "cd client && npm run lint && cd ../api && npm run lint",
+    "start": "cd api && npm start",
+    "test:coverage": "cd client && npm run test:coverage && cd ../api && npm run test:coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cis557/fall-2021-project-group-centric-social-network-team-20.git"
+  },
+  "author": "Group 20",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cis557/fall-2021-project-group-centric-social-network-team-20/issues"
+  },
+  "homepage": "https://github.com/cis557/fall-2021-project-group-centric-social-network-team-20#readme"
+}
