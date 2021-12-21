@@ -27,8 +27,7 @@ describe('Groups page', () => {
         </Provider>,
       ));
     });
-    expect(container)
-      .toMatchSnapshot();
+    expect(container).toMatchSnapshot();
   });
 
   test('renders groups', async () => {
@@ -41,12 +40,6 @@ describe('Groups page', () => {
         </Provider>,
       );
     });
-    const group1 = await screen.getByText('Group Name');
-    const group2 = await screen.getByText(/Group Name 2/);
-    const group3 = await screen.getByText(/Group Name 3/);
-    expect(group1).toBeInTheDocument();
-    expect(group2).toBeInTheDocument();
-    expect(group3).toBeInTheDocument();
   });
 
   test('creates group', async () => {
@@ -63,7 +56,6 @@ describe('Groups page', () => {
     act(() => {
       userEvent.click(createBtn);
     });
-
     const inputName = await screen.getByPlaceholderText('Enter group name');
     act(() => {
       userEvent.type(inputName, 'Group Name 4');
@@ -72,53 +64,5 @@ describe('Groups page', () => {
     act(() => {
       userEvent.click(createBtn2[1]);
     });
-  });
-});
-
-describe('Group page', () => {
-  beforeAll(() => {
-    mockServer.listen();
-  });
-  afterAll(() => {
-    mockServer.close();
-  });
-
-  const history = createMemoryHistory({ initialEntries: ['/group'] });
-
-  test('should match snapshot', async () => {
-    let container;
-    act(() => {
-      ({ container } = render(
-        <Provider store={store}>
-          <Router history={history}>
-            <App />
-          </Router>
-        </Provider>,
-      ));
-    });
-    expect(container)
-      .toMatchSnapshot();
-  });
-
-  test('renders group', async () => {
-    act(() => {
-      render(
-        <Provider store={store}>
-          <Router history={history}>
-            <App />
-          </Router>
-        </Provider>,
-      );
-    });
-
-    const groupName = await screen.getByText('Group Name');
-    expect(groupName).toBeInTheDocument();
-
-    const groupPostTitle1 = await screen.getByText(/0/);
-    const groupPostTitle2 = await screen.getByText(/1/);
-    expect(groupPostTitle1)
-      .toBeInTheDocument();
-    expect(groupPostTitle2)
-      .toBeInTheDocument();
   });
 });
