@@ -52,29 +52,6 @@ export async function GetComment(commentId) {
   return response.json();
 }
 
-export async function GetUsernameById(userId) {
-  const url = baseUrl.concat(`/user/${userId}`);
-  const response = await fetch(url, {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
-  });
-  return response.json();
-}
-
-export async function GetFile(fileId) {
-  try {
-    const formData = new FormData();
-    const url = baseUrl.concat(`/file/${fileId}`);
-    const response = await fetch(url, {
-      method: 'GET',
-      body: formData,
-    });
-    return response.json();
-  } catch (err) {
-    return null;
-  }
-}
-
 export async function DeleteComment(commentId) {
   const url = baseUrl.concat(`/comment/${commentId}`);
   fetch(url, {

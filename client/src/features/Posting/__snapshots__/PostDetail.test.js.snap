@@ -1,0 +1,106 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should match snapshot 1`] = `
+<div>
+  <div
+    class="App"
+  >
+    <nav
+      class="headerBar navbar navbar-expand-md navbar-light bg-light"
+    >
+      <div
+        class="container"
+      >
+        <span
+          class="navbar-brand"
+          role="presentation"
+        >
+          Team20
+        </span>
+        <button
+          aria-label="Toggle navigation"
+          class="navbar-toggler collapsed"
+          type="button"
+        >
+          <span
+            class="navbar-toggler-icon"
+          />
+        </button>
+        <div
+          class="navbar-collapse collapse"
+        >
+          <div
+            class="me-auto navbar-nav"
+          />
+          <div
+            class="hstack gap-2"
+          >
+            <span
+              class="navbar-text"
+            />
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div
+      class="card"
+    >
+      <div
+        class="p-4 card-body"
+      >
+        <div
+          align="left"
+          style="white-space: pre-wrap;"
+        >
+          <p
+            class="mb-2 h6 p-2 card-text"
+          >
+            <br />
+            <br />
+          </p>
+        </div>
+        <button
+          class="btn btn-primary"
+          type="button"
+        >
+          Comment
+        </button>
+        <div
+          class="vstack gap-2"
+        />
+        <div
+          class="ms-auto"
+        >
+          <form
+            class=""
+          >
+            <div
+              class="mb-3 row"
+            >
+              <div
+                class="col-2"
+              >
+                <button
+                  class="btn btn-primary"
+                  type="button"
+                >
+                  Filter by Hashtag
+                </button>
+              </div>
+              <div
+                class="col-2"
+              >
+                <input
+                  class="form-control"
+                  id="hashtagField"
+                  placeholder="Hashtag"
+                />
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

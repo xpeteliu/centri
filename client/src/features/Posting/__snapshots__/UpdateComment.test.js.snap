@@ -1,0 +1,105 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should match snapshot 1`] = `
+<div>
+  <div
+    class="App"
+  >
+    <nav
+      class="headerBar navbar navbar-expand-md navbar-light bg-light"
+    >
+      <div
+        class="container"
+      >
+        <span
+          class="navbar-brand"
+          role="presentation"
+        >
+          Team20
+        </span>
+        <button
+          aria-label="Toggle navigation"
+          class="navbar-toggler collapsed"
+          type="button"
+        >
+          <span
+            class="navbar-toggler-icon"
+          />
+        </button>
+        <div
+          class="navbar-collapse collapse"
+        >
+          <div
+            class="me-auto navbar-nav"
+          />
+          <div
+            class="hstack gap-2"
+          >
+            <span
+              class="navbar-text"
+            />
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div
+      class="card"
+    >
+      <div
+        class="card-title h5"
+      >
+        <h2>
+          Update comment
+        </h2>
+      </div>
+      <div
+        class="card-body"
+      >
+        <div
+          class="h-100 row"
+        >
+          <div
+            class="my-auto col"
+          >
+            <form
+              class="post-form"
+            >
+              <label
+                for="body"
+              >
+                <textarea
+                  class="form-control"
+                  cols="300"
+                  id="inputContent"
+                  name="body"
+                  required=""
+                  rows="5"
+                  type="textarea"
+                />
+              </label>
+              <br />
+              <a
+                href="/group/:groupId/posting/null"
+              >
+                <button
+                  class="btn btn-secondary float-right"
+                  type="button"
+                >
+                  Cancel
+                </button>
+              </a>
+                 
+              <button
+                class="btn btn-secondary"
+                type="button"
+              >
+                Save
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
