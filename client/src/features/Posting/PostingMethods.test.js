@@ -1,6 +1,3 @@
-import renderer from 'react-test-renderer';
-import React from 'react';
-
 import { enableFetchMocks } from 'jest-fetch-mock';
 import { MakePost, GetComment, GetPost, DeleteComment } from './PostMethods';
 
