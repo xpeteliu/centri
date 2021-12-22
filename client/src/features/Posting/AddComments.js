@@ -33,14 +33,6 @@ export default function AddComment() {
             dispatch(showModal({ headerText: 'Post', bodyText: 'Successfully created a new comment' }));
             history.push(`/group/${groupId}/posting/${postingId}`);
             break;
-          case 400:
-            dispatch(showModal({ headerText: 'Unable to add comment', bodyText: 'Invalid ID supplied' }));
-            history.push('/comment');
-            break;
-          case 404:
-            dispatch(showModal({ headerText: 'Unable to add comment', bodyText: 'Posting not found' }));
-            history.push('/comment');
-            break;
           default:
             throw new Error('Invalid response');
         }
