@@ -8,7 +8,7 @@
     "heroku-postbuild": "cd client && DISABLE_ESLINT_PLUGIN=true npm run build && cp -rf build ../api",
     "lint": "cd client && npm run lint && cd ../api && npm run lint",
     "start": "cd api && npm start",
-    "test:coverage": "cd client && npm run test:coverage && cd ../api && npm run test:coverage"
+    "test:coverage": "cd api && npm run test:coverage && cd ../client && npm run test:coverage"
   },
   "repository": {
     "type": "git",
