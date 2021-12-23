@@ -30,6 +30,20 @@ describe('Groups page', () => {
     expect(container).toMatchSnapshot();
   });
 
+  test('should match snapshot', async () => {
+    let container;
+    act(() => {
+      ({ container } = render(
+        <Provider store={store}>
+          <Router history={createMemoryHistory({ initialEntries: ['/group/:groupId'] })}>
+            <App />
+          </Router>
+        </Provider>,
+      ));
+    });
+    expect(container).toMatchSnapshot();
+  });
+
   test('renders groups', async () => {
     act(() => {
       render(
