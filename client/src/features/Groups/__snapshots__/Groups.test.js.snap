@@ -1,52 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Group page should match snapshot 1`] = `
-<div>
-  <div
-    class="App"
-  >
-    <nav
-      class="headerBar navbar navbar-expand-md navbar-light bg-light"
-    >
-      <div
-        class="container"
-      >
-        <span
-          class="navbar-brand"
-          role="presentation"
-        >
-          Team20
-        </span>
-        <button
-          aria-label="Toggle navigation"
-          class="navbar-toggler collapsed"
-          type="button"
-        >
-          <span
-            class="navbar-toggler-icon"
-          />
-        </button>
-        <div
-          class="navbar-collapse collapse"
-        >
-          <div
-            class="me-auto navbar-nav"
-          />
-          <div
-            class="hstack gap-2"
-          >
-            <span
-              class="navbar-text"
-            />
-          </div>
-        </div>
-      </div>
-    </nav>
-  </div>
-</div>
-`;
-
-exports[`Groups page should match snapshot 1`] = `
+exports[`Group List page should match snapshot 1`] = `
 <div>
   <div
     class="App"
@@ -185,6 +139,141 @@ exports[`Groups page should match snapshot 1`] = `
               </div>
             </form>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Group/Admin pages should match snapshot 1`] = `
+<div>
+  <div
+    class="App"
+  >
+    <nav
+      class="headerBar navbar navbar-expand-md navbar-light bg-light"
+    >
+      <div
+        class="container"
+      >
+        <span
+          class="navbar-brand"
+          role="presentation"
+        >
+          Team20
+        </span>
+        <button
+          aria-label="Toggle navigation"
+          class="navbar-toggler collapsed"
+          type="button"
+        >
+          <span
+            class="navbar-toggler-icon"
+          />
+        </button>
+        <div
+          class="navbar-collapse collapse"
+        >
+          <div
+            class="me-auto navbar-nav"
+          />
+          <div
+            class="hstack gap-2"
+          >
+            <span
+              class="navbar-text"
+            />
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div
+      class="App container"
+    >
+      <div
+        class="mainContent vstack gap-5"
+      >
+        <div
+          class="groupHeader row"
+        >
+          <div
+            class="groupListItem hstack gap-4"
+          >
+            <div>
+              <h3 />
+            </div>
+            <div
+              class="ms-auto"
+            >
+              <div
+                class="hstack gap-3"
+              >
+                <button
+                  class="btn btn-primary"
+                  type="button"
+                >
+                  Analytics
+                </button>
+                <button
+                  class="btn btn-primary"
+                  type="button"
+                >
+                  Create Post
+                </button>
+                <button
+                  class="btn btn-primary"
+                  type="button"
+                >
+                  Edit Group
+                </button>
+                <button
+                  class="btn btn-primary"
+                  type="button"
+                >
+                  Leave Group
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="groupPostList row"
+        >
+          <div
+            class="vstack gap-5"
+          />
+        </div>
+        <div
+          class="me-auto hstack gap-3"
+        >
+          <form
+            class=""
+          >
+            <div
+              class="mb-3 row"
+            >
+              <div
+                class="col-4"
+              >
+                <button
+                  class="btn btn-primary"
+                  type="button"
+                >
+                  Filter by Hashtag
+                </button>
+              </div>
+              <div
+                class="col-4"
+              >
+                <input
+                  class="form-control"
+                  id="groupHashtagField"
+                  placeholder="Hashtag"
+                />
+              </div>
+            </div>
+          </form>
         </div>
       </div>
     </div>
