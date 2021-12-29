@@ -20,4 +20,4 @@ We followed the Rest API conventions when designing the backend API. Below is th
 
 ## About this Project
 
-This project contains the React-based frontend code in the folder *client* and the Express-based backend code in the folder *api*. It has been configured to be ready for Heroku deployment. The unit/integration/API tests are kept on the *test* branch, and the end-to-end tests are kept on the *e2e-test* branch.
+This project contains the React-based frontend code in the folder *client* and the Express-based backend code in the folder *api*. It has been configured for building in the Linux environment and is ready for Heroku deployment. The unit/integration/API tests are kept on the *test* branch, and the end-to-end tests are kept on the *e2e-test* branch.
