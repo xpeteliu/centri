@@ -1,7 +1,7 @@
 # Centri
 This is a course project for *Programming for Web (CIS 557)* and is a group work produced by a team of four. The project was originally maintained in a Github Classroom private repo and I migrated the code here. As a result, apart from the source code itself, this repo does not contain any working records (e.g., Pull Request history, CI/CD configurations, etc.) that exist in the original repo.
 
-## My work in this project:
+## My Work in this Project:
 *	Applied Agile Method & Extreme Programming principles to the teamwork; Hosted weekly meetings to track our progresses in each sprint
 *	Utilized Figma for UI/UX design and Swagger for API documentation
 *	Built the frontend using functional components in React, along with Redux, Bootstrap, React Router, etc.
